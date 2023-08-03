@@ -6,10 +6,15 @@ services:
     ports:
       - '4000:4000'
     volumes:
-      - ./back-end:/app
+      - './back-end:/app'
+      - '/app/node_modules'
+
   front-end:
     build: ./front-end
     container_name: front-end
     ports:
       - '8080:8080'
+    volumes:
+      - './front-end:/app'
+      - '/app/node_modules'
     stdin_open: true
