@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  back-end:
+    build: ./back-end
+    container_name: back-end
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./back-end:/app
+  front-end:
+    build: ./front-end
+    container_name: front-end
+    ports:
+      - '8080:8080'
+    stdin_open: true
