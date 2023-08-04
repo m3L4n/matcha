@@ -1,8 +1,18 @@
-const express = require("express");
-const app = express();
-
-const port = process.env.PORT || 4000; // Utilise le port spécifié dans les variables d'environnement, ou 3000 par défaut
-
-app.listen(port, () => {
-  console.log(`Serveur Express en cours d'exécution sur le port ${port}`);
+// import express from "express";
+const { Pool } = require("pg");
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: parseInt(process.env.DB_PORT || "5432"),
 });
+
+const connectToDB = async () => {
+  try {
+    await pool.connect();
+  } catch (err) {
+    console.log(err);
+  }
+};
+connectToDB();
