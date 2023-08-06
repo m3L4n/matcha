@@ -1,4 +1,7 @@
 // import express from "express";
+const express = require("express");
+require("dotenv").config();
+const app = express();
 const { Pool } = require("pg");
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -8,11 +11,14 @@ const pool = new Pool({
   port: parseInt(process.env.DB_PORT || "5432"),
 });
 
-const connectToDB = async () => {
-  try {
-    await pool.connect();
-  } catch (err) {
-    console.log(err);
+pool.connect((err, client, release) => {
+  if (err) {
+    return console.error("Erreur lors de la connexion à la base de données", err);
   }
-};
-connectToDB();
+  console.log("Connecté à la base de données");
+  client.release();
+});
+const PORT = 4000;
+app.listen(PORT, () => {
+  console.log(`Serveur en écoute sur le port ${PORT}`);
+});
