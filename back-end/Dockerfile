@@ -12,5 +12,4 @@ COPY .env .env
 
 EXPOSE 4000
 # required for docker desktop port mapping
-
-CMD ["sh", "-c", "node wait-for-postgres.js && yarn run dev"]
+CMD ["sh", "-c", " sleep 10s && node ./db/init-db.js && yarn run dev"]
