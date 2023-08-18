@@ -12,7 +12,7 @@
 .image-left{
   position: absolute;
   width:15vw;
-  overflow: hidden;
+  /* overflow: hidden; */
   height: 100vh;
   background:  top /cover no-repeat url("../../assets/glasse-img.jpeg");
   background-color: darkolivegreen;
@@ -24,33 +24,28 @@
   padding: 0;
   margin-left: 15vw;
   transform: rotate(90deg);
-  transform-origin: 30%;
+  transform-origin: 80%;
 }
 .matcha-right{
-  height: fit-content;
-  padding: 0;
-  margin-right: 15vw;
-  transform: rotate(90deg);
-  transform-origin: 30%; 
-}
-.matcha-after-img{
-  background-clip: text;
+  background:   url("../../assets/glasse-img.jpeg");
+  background-repeat: repeat;
+  background-position: center right;
   -webkit-background-clip: text;
-  /* color: transparent; */
-  -webkit-font-smoothing: antialiased;
   -webkit-text-fill-color: transparent;
-background-image: url('../../assets/glasse-img.jpeg'); 
-background-repeat: repeat;
--webkit-background-clip: text;
-text-align: center;
-font-weight: bold;
--webkit-font-smoothing: antialiased;
-background-repeat: repeat; 
-margin-left: 15vw;
-  height: 100vh;
-  width: 15vw;
+  -webkit-font-smoothing: antialiased;
+  background-clip: text;
+  width: 100vw;
   padding: 0;
+  padding: 0;
+  transform: rotate(90deg);
+  transform-origin: 0%;
+} 
+.matcha-after-img{
+  margin-left: 15vw;
+  position: absolute;
+  width:15vw;
   overflow: hidden;
+  height: 100vh;
 }
 
 .header-landing-page{
@@ -60,24 +55,79 @@ margin-left: 15vw;
   justify-content: right;
   align-items: center;
   gap: 2%;
-  padding: 3%;
+  top: 2em;
+  right: 2em;
+
+  width: 100%;
+  position: absolute;
 }
 .center-landing-page{
   display: flex;
   flex-flow: column;
+  gap: 1em;
+  /* top: 0;
+  left: 50%; */
+  /* transform: translate(-50%, -50%); */
   margin: 10%  auto  auto auto;
+
 }
 .button{
   border: none;
   font-size: 1rem;
   background-color: transparent;
-  border-bottom: 2px solid transparent;
+  border-bottom: 4px solid transparent;
   transition: border-bottom 0.3s ;
 }
+
 .button:hover{
-  border-bottom: 2px solid var(--green);
+  border-bottom: 4px solid var(--green);
+}
+.button-action{
+  background-color: var(--green);
+  border: none;
+  width: 21.125rem;
+  height: 4.188rem
 }
 
-button{
-  cursor: pointer;
+.image-absolute-left{
+  width: 218px;
+  background: top /cover no-repeat  url("../../assets/coffe-img.jpeg");
+  height: 428px;
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  transform: translateY(-50%);
+}
+.container-image-absolute-left{
+  width: 218px;
+  height: 428px;
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  margin-right: 2%;
+  transform: translateY(-50%); 
+}
+.container-image-absolute-left::after{
+  display: block;
+  height: 100%;
+  content: "";
+  width: calc(100% + 10px);
+  border-right: 10px solid var(--green);
+  position: relative;
+}
+
+.container-image-absolute-bottom{
+  width: 553px;
+  height: 300px;
+  position: absolute;
+  background: center / no-repeat  url("../../assets/matcha-img.jpeg");
+  background-color: red;
+  top: 80%;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* top: 50%; */
+  /* right: 2%;
+  margin-right: 2%;
+  transform: translateY(-50%);   */
 }

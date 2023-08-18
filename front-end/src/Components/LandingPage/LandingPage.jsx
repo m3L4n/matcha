@@ -18,7 +18,12 @@ export default function LandingPage() {
       <span className='title-2'> Date at your favorite coffee shop</span>
       <button className='title-1 button-action'> Start dating now !</button>
       </div>
-      <p className='test'> test</p>
+      <div className='container-image-absolute-left'>
+        <div className='image-absolute-left'></div>
+        </div>
+        <div className='container-image-absolute-bottom'>
+
+        </div>
       </div>
   )
 }
