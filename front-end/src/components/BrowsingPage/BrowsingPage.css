@@ -15,6 +15,7 @@ nav {
   justify-content: center;
   align-items: center;
   gap: 40px;
+  margin-bottom: 50px;
 }
 
 .searchbar {
@@ -48,4 +49,21 @@ nav {
   font-size: 2rem;
   vertical-align: middle;
   cursor: pointer;
+}
+
+.matches {
+  display: flex;
+  flex-flow: row wrap;
+  width: 80%;
+  max-width: 856px;
+  justify-content: center;
+  align-items: self-start;
+  gap: 50px;
+  margin: auto;
+}
+
+@media (min-width: 2560px) {
+  .matches {
+    max-width: 70%;
+  }
 }
