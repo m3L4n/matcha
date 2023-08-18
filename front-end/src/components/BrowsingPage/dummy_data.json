@@ -1,0 +1,38 @@
+[
+  {
+    "firstName": "Manon",
+    "age": 21,
+    "city": "Paris",
+    "profilePicture": "http://placekitten.com/252/300"
+  },
+  {
+    "firstName": "Justine",
+    "age": 29,
+    "city": "Rennes",
+    "profilePicture": "http://placekitten.com/252/300"
+  },
+  {
+    "firstName": "Bernard",
+    "age": 66,
+    "city": "Toulouse",
+    "profilePicture": "http://placekitten.com/252/300"
+  },
+  {
+    "firstName": "Paul",
+    "age": 33,
+    "city": "Paris",
+    "profilePicture": "http://placekitten.com/252/300"
+  },
+  {
+    "firstName": "Yorick",
+    "age": 29,
+    "city": "Nice",
+    "profilePicture": "http://placekitten.com/252/300"
+  },
+  {
+    "firstName": "Louis",
+    "age": 23,
+    "city": "Prison",
+    "profilePicture": "http://placekitten.com/252/300"
+  }
+]
