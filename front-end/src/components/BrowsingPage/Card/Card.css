@@ -1,0 +1,28 @@
+.card {
+  color: var(--white);
+  width: 252px;
+  height: 300px;
+  position: relative;
+  /* border-radius: 20px; */
+}
+
+.user-infos {
+  position: absolute;
+  bottom: 0;
+  margin: 0 0 1rem 0.5rem;
+}
+
+.like-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--green);
+  background-color: var(--cream);
+  width: 87px;
+  height: 87px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -10px;
+  border: 1px solid var(--green);
+  left: 190px;
+}
