@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const checkDatabaseConnection = async () => {
   let retries = 5;
+  
   while (retries) {
     try {
       await pool.query("SELECT NOW()");

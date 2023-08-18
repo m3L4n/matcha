@@ -1,0 +1,83 @@
+.container{
+  display: flex;
+  flex-flow: column;
+  min-width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  background-color: var(--cream);
+}
+.position-relative{
+  position: relative;
+}
+.image-left{
+  position: absolute;
+  width:15vw;
+  overflow: hidden;
+  height: 100vh;
+  background:  top /cover no-repeat url("../../assets/glasse-img.jpeg");
+  background-color: darkolivegreen;
+}
+.matcha-left{
+  /* padding-bottom: 2ch; */
+  color: #E7E2DA;
+  height: fit-content;
+  padding: 0;
+  margin-left: 15vw;
+  transform: rotate(90deg);
+  transform-origin: 30%;
+}
+.matcha-right{
+  height: fit-content;
+  padding: 0;
+  margin-right: 15vw;
+  transform: rotate(90deg);
+  transform-origin: 30%; 
+}
+.matcha-after-img{
+  background-clip: text;
+  -webkit-background-clip: text;
+  /* color: transparent; */
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-fill-color: transparent;
+background-image: url('../../assets/glasse-img.jpeg'); 
+background-repeat: repeat;
+-webkit-background-clip: text;
+text-align: center;
+font-weight: bold;
+-webkit-font-smoothing: antialiased;
+background-repeat: repeat; 
+margin-left: 15vw;
+  height: 100vh;
+  width: 15vw;
+  padding: 0;
+  overflow: hidden;
+}
+
+.header-landing-page{
+  height: fit-content;
+  display: flex;
+  flex-flow: row;
+  justify-content: right;
+  align-items: center;
+  gap: 2%;
+  padding: 3%;
+}
+.center-landing-page{
+  display: flex;
+  flex-flow: column;
+  margin: 10%  auto  auto auto;
+}
+.button{
+  border: none;
+  font-size: 1rem;
+  background-color: transparent;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom 0.3s ;
+}
+.button:hover{
+  border-bottom: 2px solid var(--green);
+}
+
+button{
+  cursor: pointer;
+}

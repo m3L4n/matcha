@@ -3,10 +3,10 @@ const express = require("express");
 const router = express.Router();
 
 // Importer le pool de connexion à la base de données
-const pool = require("../../db/db"); // Assure-toi que db.js est correctement configuré
+const pool = require("../../db/db");
 
 // Route POST pour ajouter un utilisateur
-router.post("/add", async (req, res) => {
+router.post("/", async (req, res) => {
   const { username, email } = req.body;
 
   try {
