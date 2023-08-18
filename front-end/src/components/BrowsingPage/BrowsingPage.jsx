@@ -4,7 +4,7 @@ import dummy from './dummy_data.json'
 import Card from './Card/Card'
 
 export default function BrowsingPage() {
-  console.log(`Parent: ${dummy[0].firstName}`);
+  const cards = dummy.map(user => <Card key={user.id} user={user} />)
   return (
     <>
       <header>
@@ -14,8 +14,8 @@ export default function BrowsingPage() {
         <input className='searchbar' placeholder='Search' />
         <div className='filter'> <BsFilter /> </div>  
       </nav>
-      <section>
-        <Card user={dummy[0]} />
+      <section className='matches'>
+        {cards}
       </section>
     </>
   );
