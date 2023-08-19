@@ -3,17 +3,21 @@
   flex-flow: column;
   min-width: 100vw;
   min-height: 100vh;
+  height: fit-content;
   position: relative;
   background-color: var(--cream);
 }
 .position-relative{
   position: relative;
 }
+.header-vertical{
+  display: none;
+}
 .image-left{
-  position: absolute;
-  width:15vw;
-  /* overflow: hidden; */
-  height: 100vh;
+  position: fixed;
+  width:5vw;
+  min-height: 100vh;
+  height: 100%;
   background:  top /cover no-repeat url("../../assets/glasse-img.jpeg");
   background-color: darkolivegreen;
 }
@@ -22,7 +26,7 @@
   color: #E7E2DA;
   height: fit-content;
   padding: 0;
-  margin-left: 15vw;
+  margin-left: 5vw;
   transform: rotate(90deg);
   transform-origin: 80%;
 }
@@ -34,18 +38,19 @@
   -webkit-text-fill-color: transparent;
   -webkit-font-smoothing: antialiased;
   background-clip: text;
-  width: 100vw;
+  min-width: 100vw;
   padding: 0;
   padding: 0;
   transform: rotate(90deg);
   transform-origin: 0%;
 } 
 .matcha-after-img{
-  margin-left: 15vw;
-  position: absolute;
-  width:15vw;
+  margin-left: 5vw;
+  position: fixed;
+  width:10vw;
   overflow: hidden;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
 }
 
 .header-landing-page{
@@ -57,19 +62,28 @@
   gap: 2%;
   top: 2em;
   right: 2em;
-
   width: 100%;
   position: absolute;
+}
+.body-landing-page{
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  height: fit-content;
+  flex-flow: column;
+  justify-content: center;
 }
 .center-landing-page{
   display: flex;
   flex-flow: column;
-  gap: 1em;
-  /* top: 0;
-  left: 50%; */
-  /* transform: translate(-50%, -50%); */
-  margin: 10%  auto  auto auto;
-
+  margin-top: auto;
+  gap: 2em;
+text-align: center;
+justify-content: center;
+  min-height: 60vh;
+  padding-top: 10%;
+  padding-right: 5%;
+  padding-left: 5%;
 }
 .button{
   border: none;
@@ -81,35 +95,36 @@
 
 .button:hover{
   border-bottom: 4px solid var(--green);
+  opacity: 0.6;
 }
 .button-action{
   background-color: var(--green);
   border: none;
-  width: 21.125rem;
-  height: 4.188rem
+width: fit-content;
+display: flex;
+justify-content: center;
+margin-left: auto;
+margin-right: auto;
+padding: 3%;
+transition: opacity 0.4s;
 }
-
-.image-absolute-left{
-  width: 218px;
-  background: top /cover no-repeat  url("../../assets/coffe-img.jpeg");
-  height: 428px;
-  position: absolute;
-  top: 50%;
-  right: 2%;
-  transform: translateY(-50%);
+.button-action:hover{
+  opacity: 0.7;
 }
 .container-image-absolute-left{
-  width: 218px;
-  height: 428px;
-  position: absolute;
-  top: 50%;
-  right: 2%;
-  margin-right: 2%;
-  transform: translateY(-50%); 
+  width: 50vw;
+  min-width: 230px;
+  height: 500px;
+  position: relative;
+  background: top /cover no-repeat  url("../../assets/Matcha-latte.jpeg");
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2px;
 }
 .container-image-absolute-left::after{
   display: block;
-  height: 100%;
+  height: 500px;
+  min-height: 500px;
   content: "";
   width: calc(100% + 10px);
   border-right: 10px solid var(--green);
@@ -117,17 +132,80 @@
 }
 
 .container-image-absolute-bottom{
-  width: 553px;
-  height: 300px;
-  position: absolute;
-  background: center / no-repeat  url("../../assets/matcha-img.jpeg");
-  background-color: red;
-  top: 80%;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* top: 50%; */
-  /* right: 2%;
-  margin-right: 2%;
-  transform: translateY(-50%);   */
+display: none;
+}
+
+  @media screen and (min-width: 950px) {
+    .image-left{
+      width:15vw;
+    }
+    .matcha-left{
+      /* padding-bottom: 2ch; */
+      color: #E7E2DA;
+      height: fit-content;
+      padding: 0;
+      margin-left: 15vw;
+      transform: rotate(90deg);
+      transform-origin: 80%;
+    }
+    .matcha-right{
+      min-width: 100vw;
+      padding: 0;
+      padding: 0;
+      transform: rotate(90deg);
+      transform-origin: 0%;
+    }
+    .matcha-after-img{
+      margin-left: 15vw;
+      position: fixed;
+      width:15vw;
+      overflow: hidden;
+      min-height: 100vh;
+      height: 100%;
+    }
+    .center-landing-page{
+      margin: auto;
+      gap: 2em;
+      text-align: left;
+    }
+    .container-image-absolute-bottom{
+      min-width: 553px;
+      width: 40vw;
+      min-height: 195px;
+      height: 20vh;
+      bottom: -1%;
+      display: flex;
+      justify-content: center;
+      margin-left: auto;
+      margin-right: auto;
+      background:  center /cover no-repeat  url("../../assets/love.jpeg");
+    }
+    .container-image-absolute-left{
+      width: 12vw;
+      min-width: 230px;
+      min-height: 420px;
+      height: 40vh;
+      position: absolute;
+      top: 50%;
+      background: top /cover no-repeat  url("../../assets/Matcha-latte.jpeg");
+      right: 1%;
+      margin-bottom: 21vh;
+      margin-right: 2%;
+      transform: translateY(-50%); 
+    }
+    .container-image-absolute-left::after{
+      min-height: 420px;
+      height: 40vh;
+    }
+    .header-vertical{
+      display: inherit;
+    }
+    .button-action{
+      width: 21.125rem;
+      height: 4.188rem;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0%;
+margin-right: 0;
+    }
 }
