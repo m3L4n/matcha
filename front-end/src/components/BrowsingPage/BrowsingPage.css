@@ -1,0 +1,51 @@
+header {
+  width: 80%;
+  margin: auto;
+}
+
+h1 {
+  margin: 50px 0;
+  color: var(--green);
+  text-align: center;
+  user-select: none;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.searchbar {
+  border: 1px solid var(--green);
+  color: var(--green);
+  border-radius: 20px;
+  padding: 0.7rem;
+  width: 60%;
+  background-color: var(--cream);
+}
+
+.searchbar::placeholder {
+  color: var(--green);
+  opacity: 0.8;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 0.3rem;
+}
+
+.searchbar:focus {
+  outline: none;
+}
+
+.searchbar:text {
+  color: var(--green);
+}
+
+.filter {
+  color: var(--green);
+  font-size: 2rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
