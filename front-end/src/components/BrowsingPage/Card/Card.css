@@ -24,4 +24,5 @@
   bottom: -10px;
   border: 1px solid var(--green);
   left: 190px;
+  cursor: pointer;
 }
