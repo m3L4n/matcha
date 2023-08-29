@@ -1,16 +1,16 @@
-header {
+.title {
   width: 80%;
   margin: auto;
 }
 
-h1 {
+.header-title {
   margin: 50px 0;
   color: var(--green);
   text-align: center;
   user-select: none;
 }
 
-nav {
+.searchForm {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,13 +18,38 @@ nav {
   margin-bottom: 50px;
 }
 
-.searchbar {
+form {
+  width: 65%;
+  display: flex;
+  padding: 2px;
   border: 1px solid var(--green);
-  color: var(--green);
   border-radius: 20px;
+}
+
+.searchbar {
+  color: var(--green);
   padding: 0.7rem;
-  width: 60%;
+  width: 100%;
   background-color: var(--cream);
+  border: none;
+  margin-left: 0.5rem;
+}
+
+button[type="submit"] {
+  overflow: hidden;
+  background-color: var(--cream);
+  color: var(--green);
+  width: 40px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  cursor: pointer;
+  padding-right: .7rem;
+}
+
+button[type="submit"]:hover {
+  opacity: 1;
 }
 
 .searchbar::placeholder {
