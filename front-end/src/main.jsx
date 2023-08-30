@@ -34,10 +34,12 @@ const router = createBrowserRouter([
 function NavbarWrapper(){
     const currentPath = window.location.pathname;
     return (
-    <div>
+    <div className='container'>
       { currentPath !== '/' && <Navbar/>}
-      <Outlet/>
-      { currentPath !== '/' && <Footer />}
+      <section className="content">
+        <Outlet/>
+        { currentPath !== '/' && <Footer />}
+      </section>
     </div>
     )
 }
