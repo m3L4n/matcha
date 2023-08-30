@@ -10,11 +10,13 @@ export default function Navbar() {
 
   return (
     <nav className={sidebar ? 'navbar navbar-deployed' : 'navbar' }>
-      <button className='sidebar-toogle' onClick={toggleSidebar}>
-        <span className="burger">-</span>
-        <span className="burger">-</span>
-        <span className="burger">-</span>
-      </button>
+      <a className={sidebar ? 'sidebar-toggle nav-open' : 'sidebar-toggle'} 
+         onClick={toggleSidebar}
+      >
+        <span className="burger menu-toggle-bar--top"></span>
+        <span className="burger menu-toggle-bar--middle"></span>
+        <span className="burger menu-toggle-bar--bottom"></span>
+      </a>
       <ul>
         {pages.map((page) => (
           <li key={pages.indexOf(page)}>
