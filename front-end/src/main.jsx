@@ -24,6 +24,14 @@ const router = createBrowserRouter([
                  path: "/match",
                  element: <BrowsingPage/>
              },
+             {
+               path: "/profile",
+               element: <div>Profile</div>
+             },
+             {
+               path: "/message",
+               element: <div>Message</div>
+             },
         ],
     }
 ])

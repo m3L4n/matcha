@@ -8,7 +8,7 @@ export default function BrowsingPage() {
   return (
     <>
       <header className='title'>
-        <h1 className='header-title'>Matcha</h1>
+        <h1 className='header-title header'>Matcha</h1>
       </header>
       <nav className="searchForm">
         <form action="">

@@ -3,7 +3,7 @@ import './Navbar.scoped.css';
 import { NavLink } from 'react-router-dom';
 
 export default function Navbar() {
-  const pages = ['match', 'profile', 'messages', 'disconnect'];
+  const pages = ['match', 'profile', 'message', 'disconnect'];
   const [sidebar, setSidebar] = useState(false);
 
   const toggleSidebar = () => (setSidebar(!sidebar));
