@@ -8,6 +8,12 @@
   left: 0;
   height: 100%;
   padding-top: 2rem;
+  transition: width .5s;
+}
+
+.navbar-deployed {
+  width: 13.89%;
+  min-width: 110px;
 }
 
 .navbar .sidebar-toogle {
@@ -80,13 +86,12 @@
   border-bottom: 4px solid white;
 }
 
-.navbar-deployed {
-  width: 13.89%;
-  min-width: 110px;
-}
-
 @media (max-width: 768px) {
   .navbar {
+    background-color: transparent;
+  }
+
+  .navbar-deployed {
     background-color: var(--cream);
   }
 
