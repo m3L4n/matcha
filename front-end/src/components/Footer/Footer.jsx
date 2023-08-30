@@ -1,4 +1,4 @@
-import './Footer.css';
+import './Footer.scoped.css';
 import { BsDiscord, BsGithub, BsTwitter } from 'react-icons/bs';
 
 export default function Footer() {

@@ -1,4 +1,4 @@
-import './BrowsingPage.css';
+import './BrowsingPage.scoped.css';
 import { BsFilter, BsSearch } from 'react-icons/bs'
 import dummy from './dummy_data.json'
 import Card from './Card/Card'
