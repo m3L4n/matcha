@@ -3,15 +3,12 @@ import * as ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider,
-  Outlet,
 } from "react-router-dom";
+import NavbarWrapper from './components/NabvarWrapper/NavbarWrapper';
 import LandingPage from './components/LandingPage/LandingPage';
 import ErrorPage from './components/ErrorPage/ErrorPage';
 import BrowsingPage from './components/BrowsingPage/BrowsingPage';
 import './index.css'
-import Footer from './components/Footer/Footer';
-import Navbar from './components/Navbar/Navbar';
-
 
 const router = createBrowserRouter([
     {
@@ -30,19 +27,6 @@ const router = createBrowserRouter([
         ],
     }
 ])
-
-function NavbarWrapper(){
-    const currentPath = window.location.pathname;
-    return (
-    <div className='container'>
-      { currentPath !== '/' && <Navbar/>}
-      <section className="content">
-        <Outlet/>
-        { currentPath !== '/' && <Footer />}
-      </section>
-    </div>
-    )
-}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
