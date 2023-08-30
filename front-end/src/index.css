@@ -18,6 +18,8 @@
 
 body {
   background-color: var(--cream);
+  height: 100%;
+  width: 100%;
 }
 
 .header {
@@ -49,4 +51,17 @@ body {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
+}
+
+.container {
+  border: 10px blue;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: nowrap row;
+}
+
+.content {
+  width: 100%;
+  margin: auto;
 }

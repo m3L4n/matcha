@@ -1,3 +1,5 @@
 export default function Root() {
-  return <div>hello world from root</div>;
+  return <div>
+    hello world from root
+  </div>;
 }

@@ -1,0 +1,13 @@
+.nav-icon {
+  width: 55px;
+  background-color: var(--green);
+  display: flex;
+  flex-flow: nowrap column;
+  padding: .5rem;
+  z-index: 99;
+}
+
+.nav-icon .sidebard-toogle {
+  margin-top: 10rem;
+  border: 2px solid red;
+}

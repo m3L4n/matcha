@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import './Card.css'
+import './Card.scoped.css'
 import { BsFillSuitHeartFill } from 'react-icons/bs'
 
 export default function Card({user}) {
