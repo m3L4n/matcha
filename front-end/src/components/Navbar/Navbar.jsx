@@ -10,6 +10,7 @@ export default function Navbar() {
 
   return (
     <nav className={sidebar ? 'navbar navbar-deployed' : 'navbar' }>
+    <div className="burger-icon">
       <a className={sidebar ? 'sidebar-toggle nav-open' : 'sidebar-toggle'} 
       onClick={toggleSidebar}
       >
@@ -17,6 +18,7 @@ export default function Navbar() {
       <span className="burger menu-toggle-bar--middle"></span>
       <span className="burger menu-toggle-bar--bottom"></span>
       </a>
+    </div>
       <ul>
       {pages.map((page) => (
         <li key={pages.indexOf(page)}>
