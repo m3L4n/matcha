@@ -1,14 +1,14 @@
-header {
+/* header {
   width: 80%;
   margin: auto;
-}
+} */
 
-h1 {
+/* h1 {
   margin: 50px 0;
   color: var(--green);
   text-align: center;
   user-select: none;
-}
+} */
 
 nav {
   display: flex;

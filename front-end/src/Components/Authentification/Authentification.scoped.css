@@ -1,3 +1,181 @@
 .container{
   background-color: var(--cream);
+  width: 100vw;
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-flow: row;
+  position: relative;
+  /* justify-content: center; */
+}
+
+.container-auth{
+  width: 100%;
+  display: flex;
+  gap: 1em;
+  flex-flow: column;
+  padding-top: 10%;
+  justify-content: center;
+}
+header{
+  background-color: red;
+}
+.header{
+  width: 100%; 
+  /* height: fit-content; */
+  margin: 0;
+  display: flex;
+  flex-flow: column;
+  gap: 0.8em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.button-discord{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  /* width: 100%; */
+  background-color: var(--green);
+  justify-content: center;
+  gap: 10%;
+  /* gap: 2ch; */
+  border: none;
+  width: 80%;
+  border-radius: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2%;
+/* padding:2% 5% 2% 5%; */
+/* margin: 1% 15% 1% 15% */
+}
+.hr{
+  border: none;
+  border-top: 1px solid var(--green);
+  color: #333;
+  overflow: visible;
+  text-align: center;
+  height: 5px;
+  width: 80%;
+  /* margin-left: auto;
+  margin-right: auto; */
+  margin: 1.2em auto 0.4em auto;
+}
+.hr::after{
+  background: var(--cream);
+  content: 'or';
+  width: 100px;
+  font-family: Montserrat;
+  color: var(--green);
+  padding: 2px 10px;
+  position: relative;
+  top: -13px;
+  
+}
+.container-form{
+  display: flex;
+  flex-flow: column;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 0.8em;
+}
+.input{
+  border: none;
+  outline: none;
+  background-color: transparent;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--green);
+  padding: 2%;
+  border-radius: 20px;
+  font-family: montserrat;
+  text-align: left;
+  text-indent: 1ch;
+  line-height: 1.5em;
+}
+.label{
+  color: var(--green);
+}
+.button-submit{
+  display: flex;
+  flex-flow: row;
+  background-color: var(--green);
+  border: none;
+  justify-content: center;
+  border-radius: 20px;
+  padding: 2%;
+  width: 80%;
+  margin: 1em auto 0em auto;
+}
+
+.login{
+  background-color: transparent;
+  border: none;
+  width: fit-content;
+  margin-right: auto;  
+  margin-left: auto;
+}
+.container-img{
+  /* width: 40vw; */
+  width: 500px;
+  height: 100vh;
+  display: none;
+  margin-top: auto;
+  position: relative;
+  box-sizing: border-box;
+  /* top: 50%; */
+  /* transform: translateY(-50%);  */
+}
+.img-right{
+  width: 570px;
+  position: absolute;
+  height: 90%;
+  right: 2%;
+  top: 50%;
+  flex-shrink: 190px;
+  transform: translateY(-50%); 
+  background:center/ cover no-repeat  url("../../assets/coffee-love.jpeg");
+}
+@media screen and (min-width: 800px) {
+  .container{
+    padding-left: 10vw;
+  }
+  .container-img{
+    /* background-color: red; */
+    display: flex;
+    flex: 1;
+  }
+  .container-auth{
+    flex: 1;
+    /* width: 60%; */
+    padding-top: 2em;
+    margin-left: auto;
+    width: 70%;
+    max-width: 500px;
+    margin-right: auto;
+  }
+  .header{
+    text-align: left;
+    justify-content: left;
+    margin-left: auto;
+    display: flex;
+    flex-flow: column;
+    gap: 0.2em;
+    width: 80%;
+    max-width: 500px;
+    margin-right: auto;
+    /* background-color: black; */
+  }
+  .button-discord{
+    margin-top: 0.5em;
+    padding: 1%;
+    width: 100%;
+  }
+  .hr{
+    width: 70%;
+    max-width: 500px;
+  }
+  /* .container-form{
+    margin-top: 1em;
+  } */
 }

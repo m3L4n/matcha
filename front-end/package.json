@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "http://localhost:4000",
   "scripts": {
     "dev": "vite",
     "start": "vite",
@@ -13,11 +14,16 @@
   "dependencies": {
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
+    "postcss": "^8.4.28",
+    "postcss-modules": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
     "react-router-dom": "^6.14.2",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-react-scoped-css": "^0.8.2",
     "sort-by": "^1.2.0",
+    "vite-plugin-eslint": "^1.8.1",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
