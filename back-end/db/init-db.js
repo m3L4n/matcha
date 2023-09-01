@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const checkDatabaseConnection = async () => {
   let retries = 5;
-  
+
   while (retries) {
     try {
       await pool.query("SELECT NOW()");
@@ -45,8 +45,9 @@ async function createType(client) {
 }
 async function createTableUsers(client) {
   await client.query(`
+  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
   CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     username VARCHAR(10) NOT NULL,
     email TEXT NOT NULL,
     firstName TEXT NOT NULL,
@@ -58,8 +59,10 @@ async function createTableUsers(client) {
     description VARCHAR(255),
     rate_frame INT,
     position TEXT,
-    created_at TIMESTAMP,
-    profile_picture BYTEA
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    profile_picture BYTEA,
+    "valided" BOOLEAN DEFAULT false,
+    PRIMARY KEY (id)  
   );
 `);
 }
@@ -67,7 +70,7 @@ async function createTablePictures(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS pictures (
     id UUID PRIMARY KEY,
-    id_users UUID REFERENCES users(id),
+    id_user UUID REFERENCES users ON DELETE CASCADE,
     picture BYTEA
      );
      `);
@@ -76,10 +79,10 @@ async function createTableMatch(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS matchs (
     id UUID PRIMARY KEY,
-    "like"  boolean NOT NULL,
-    "block"  boolean NOT NULL,
-    id_user_requester UUID REFERENCES users(id),
-    id_user_receiver UUID REFERENCES users(id)
+    "like"  boolean DEFAULT true,
+    "block"  boolean DEFAULT false,
+    id_user_requester UUID REFERENCES users ON DELETE CASCADE,
+    id_user_receiver UUID REFERENCES users ON DELETE CASCADE
      );
      `);
 }
@@ -87,8 +90,8 @@ async function createTableNotifications(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS notifications (
     id UUID PRIMARY KEY,
-    id_user_requester UUID REFERENCES users(id),
-    id_user_receiver UUID REFERENCES users(id),
+    id_user_requester UUID REFERENCES users ON DELETE SET NULL,
+    id_user_receiver UUID REFERENCES users ON DELETE CASCADE,
     action TEXT
      );
      `);
@@ -97,8 +100,8 @@ async function createTableConversations(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS conversations (
     id UUID PRIMARY KEY,
-    id_user_1 UUID REFERENCES users(id),
-    id_user_2 UUID REFERENCES users(id)
+    id_user_1 UUID REFERENCES users(id) ON DELETE SET NULL,
+    id_user_2 UUID REFERENCES users(id) ON DELETE SET NULL
      );
      `);
 }
@@ -107,10 +110,10 @@ async function createTableMessages(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS messages (
     id UUID PRIMARY KEY,
-    id_user_requester UUID REFERENCES users(id),
-    id_user_receiver UUID REFERENCES users(id),
+    id_user_requester UUID REFERENCES users(id) ON DELETE CASCADE,
+    id_user_receiver UUID REFERENCES users(id) ON DELETE CASCADE,
     content VARCHAR(255),
-    id_conversation UUID REFERENCES conversations(id)
+    id_conversation UUID REFERENCES conversations(id) ON DELETE CASCADE
      );
      `);
 }
@@ -119,8 +122,17 @@ async function createTableprofilViewer(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS profilViewer (
     id UUID PRIMARY KEY,
-    id_watcher UUID REFERENCES users(id),
-    id_watched UUID REFERENCES users(id)
+    id_watcher UUID REFERENCES users ON DELETE SET NULL,
+    id_watched UUID REFERENCES users ON DELETE SET NULL
+     );
+     `);
+}
+async function createTableToken(client) {
+  await client.query(`
+  CREATE TABLE IF NOT EXISTS token (
+    id UUID REFERENCES users ON DELETE CASCADE,
+    token TEXT NOT NULL,
+    PRIMARY KEY (id)
      );
      `);
 }
@@ -135,6 +147,7 @@ async function createTable() {
     await createTableMessages(client);
     await createTableprofilViewer(client);
     await createTableNotifications(client);
+    await createTableToken(client);
     console.log('Table "users" créée avec succès.');
   } catch (error) {
     console.error("Erreur lors de la création de la table :", error);
