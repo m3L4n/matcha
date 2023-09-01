@@ -12,22 +12,23 @@
 }
 
 .like-button {
+  color: var(--green);
+  background-color: var(--cream);
+  border: 1px solid var(--green);
+  cursor: pointer;
+  border-radius: 50%;
+  width: 87px;
+  height: 87px;
+  position: relative;
+  top: 220px;
+  left: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--green);
-  background-color: var(--cream);
-  width: 87px;
-  height: 87px;
-  border-radius: 50%;
-  position: absolute;
-  bottom: -10px;
-  border: 1px solid var(--green);
-  left: 190px;
-  cursor: pointer;
-  transition: all 0.4s ease;
+  transition: background-color 1s ease-out, color 2s ease-out, border 0.4s ease, transform 0.15s linear;
 }
 
-.like-button:hover {
-  border: 3px solid var(--green);
+.like-button-active {
+  background-color: var(--green);
+  color: var(--cream);
 }
