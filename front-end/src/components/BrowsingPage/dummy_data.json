@@ -4,41 +4,41 @@
     "firstName": "Manon",
     "age": 21,
     "city": "Paris",
-    "profilePicture": "http://placekitten.com/252/300"
+    "profilePicture": "http://placekitten.com/253/300"
   },
   {
     "id": 1,
     "firstName": "Justine",
     "age": 29,
     "city": "Rennes",
-    "profilePicture": "http://placekitten.com/252/300"
+    "profilePicture": "http://placekitten.com/252/301"
   },
   {
     "id": 2,
     "firstName": "Bernard",
     "age": 66,
     "city": "Toulouse",
-    "profilePicture": "http://placekitten.com/252/300"
+    "profilePicture": "http://placekitten.com/252/307"
   },
   {
     "id": 3,
     "firstName": "Paul",
     "age": 33,
     "city": "Paris",
-    "profilePicture": "http://placekitten.com/252/300"
+    "profilePicture": "http://placekitten.com/254/300"
   },
   {
     "id": 4,
     "firstName": "Yorick",
     "age": 29,
     "city": "Nice",
-    "profilePicture": "http://placekitten.com/252/300"
+    "profilePicture": "http://placekitten.com/259/300"
   },
   {
     "id": 5,
     "firstName": "Louis",
     "age": 23,
     "city": "Prison",
-    "profilePicture": "http://placekitten.com/252/300"
+    "profilePicture": "http://placekitten.com/252/306"
   }
 ]
