@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const userModel = require("../../models/Usermodel");
 const tokenModal = require("../../models/Tokenmodel");
+const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
 
 const signup = async (req, res) => {
   try {
@@ -22,31 +23,18 @@ const signup = async (req, res) => {
       valided,
     };
     const user = await userModel.createUser(data);
-    const token = crypto.randomBytes(16).toString("hex");
-    if (user) {
-      let setToken = await tokenModal.createToken({
-        user_id: id,
-        token: token,
-      });
-
-      if (setToken) {
-        sendingMail({
-          from: "no-reply@matcha-42.com",
-          to: `${email}`,
-          subject: "Account Verification Link",
-          text: `Hello, ${username} Please verify your email by
-                clicking this link :
-                http://localhost:4000/users/verify-email/${id}/${token} `,
-        });
-      } else {
-        return res.status(400).send("token not created");
-      }
+    // if (user) {
+    const emailSend = await sendingEmailVerification(username);
+    if (emailSend) {
       return res.status(201).send(user);
     } else {
-      return res.status(409).send("Details are not correct");
+      return res.status(400).send("token not created");
     }
   } catch (error) {
-    console.log(error);
+    if (error == "user doesnt exist") {
+      return res.status(409).send("Details are not correct");
+    }
+    return res.status(500).send({ error: error });
   }
 };
 
@@ -92,10 +80,7 @@ const verifyEmail = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log("REQ", req.cookies);
     const user = await userModel.findbyId("username", username);
-
-    console.log(user);
     if (user) {
       const isSame = await bcrypt.compare(password, user.password);
 
@@ -105,20 +90,59 @@ const login = async (req, res) => {
           const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
             expiresIn: 1 * 24 * 60 * 60 * 1000,
           });
-          // secure on false for dev
-          return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, samesite: "none" }).status(201).send({ access_token: token });
+          return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ access_token: token });
         } else {
-          return res.status(401).send("User not verified");
+          return res.status(401).send({ msg: "User not verified" });
         }
       } else {
-        return res.status(401).send("Authentication failed");
+        return res.status(401).send({ msg: "Authentication failed" });
       }
     } else {
-      return res.status(401).send("Authentication failed");
+      return res.status(401).send({ msg: "Authentication failed" });
     }
   } catch (error) {
     console.log(error);
   }
+};
+const sendEmailVerification = async (req, res) => {
+  const username = req.body.username;
+  try {
+    const token = sendingEmailVerification(username);
+    if (!token) {
+      return res.status(401).json("email not in the db");
+    }
+    return res.status(200).json("email resend");
+  } catch (error) {
+    return res.status(500).json("can't send email, please write us");
+  }
+};
+const sendEmailResetPassword = async (req, res) => {
+  const email = req.body.email;
+  try {
+    const user = await userModel.findbyId("email", email);
+    sendingMail({
+      from: "no-reply@matcha-42.com",
+      to: `${user.email}`,
+      subject: "reset your password",
+      text: `Hello, ${user.username}
+        if you want to reset you password you can with this link :
+          http://localhost:3000/reset-password `,
+    });
+    return res.status(200).json("password email send");
+  } catch (error) {
+    return res.status(500).json("email are not in the db");
+  }
+};
+const getUser = async (req, res) => {
+  try {
+    const { id, username } = req.authUser;
+    const user = await userModel.findbyIwithouthPassword("id", id);
+    return res.status(200).send(user);
+  } catch (e) {
+    return res.status(400).send("this user doesnt exist");
+  }
+  console.log(req.authUser);
+  return res.status(200).send("getuser");
 };
 
 //exporting the modules
@@ -126,4 +150,7 @@ module.exports = {
   signup,
   login,
   verifyEmail,
+  sendEmailVerification,
+  sendEmailResetPassword,
+  getUser,
 };

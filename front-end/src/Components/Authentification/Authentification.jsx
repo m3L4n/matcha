@@ -13,8 +13,7 @@ export default function Authentification() {
     }
     else if(window.location.pathname === "/login"){
       setRegister(false);
-    } 
-
+    }
   }, [window.location.pathname])
  
   return(

@@ -132,6 +132,7 @@ async function createTableToken(client) {
   CREATE TABLE IF NOT EXISTS token (
     id UUID REFERENCES users ON DELETE CASCADE,
     token TEXT NOT NULL,
+    expire_at TIMESTAMP,
     PRIMARY KEY (id)
      );
      `);

@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FaDiscord } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
+import { notify } from "../../Global/toast-notify";
 import  "./Register.scoped.css"
 export default function Register() {
   const navigate = useNavigate();
@@ -22,7 +23,10 @@ export default function Register() {
     navigate("/login");
   } 
   function creationOfUser(){
-    console.log(JSON.stringify(user));
+    if (user.username.length == 0 || user.password.length == 0 || user.firstName.length == 0 || user.lastName.length == 0 || user.email.length == 0){
+      notify('error',"you have to fill all the parameter");
+      return
+    }
     const options = {
       method: 'POST',
       headers: {
@@ -31,8 +35,21 @@ export default function Register() {
       body: JSON.stringify(user)
     };
     fetch("http://localhost:4000/users", options)
-    .then(response => response.json())
-    .then(data => console.log(data))
+    .then(response => {
+      if (response.status == 201)
+      {
+        notify('sucess', "your acount is created, please verify your email");
+      }
+      return response.json()}
+      )
+    .then(data => {
+      if (data.msg == "token not created"){
+        notify('error', "please retry later, a error appear and we are on this work")
+      }
+      else if( data.msg == 'Details are not correct"'){
+        notify('error', "email or username are already token , please retry with another ") 
+      }
+    })
       .catch((error) => console.log(error));
   }
   return (<div className="container">

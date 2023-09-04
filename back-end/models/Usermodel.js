@@ -13,7 +13,16 @@ const createUser = async (userData) => {
 };
 const findbyId = async (paramToSearch, valueToCompare) => {
   try {
-    const query = `SELECT * FROM users WHERE ${paramToSearch} = $1`;
+    const query = `SELECT *  FROM users WHERE ${paramToSearch} = $1`;
+    const user = await db.query(query, [valueToCompare]);
+    return user.rows[0];
+  } catch (error) {
+    throw error;
+  }
+};
+const findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
+  try {
+    const query = `SELECT username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_frame, position , profile_picture, valided FROM users WHERE ${paramToSearch} = $1`;
     const user = await db.query(query, [valueToCompare]);
     return user.rows[0];
   } catch (error) {
@@ -34,5 +43,6 @@ const update = async (userId, paramToUpdate, valueToChange) => {
 module.exports = {
   createUser,
   findbyId,
+  findbyIwithouthPassword,
   update,
 };

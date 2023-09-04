@@ -2,8 +2,11 @@
 import { useState } from "react";
 import { FaDiscord } from "react-icons/fa6";
 import "./SignIn.scoped.css"
+import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { notify } from "../../Global/toast-notify";
 export default function SignIn() {
-
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -14,6 +17,10 @@ export default function SignIn() {
   }
 
   function signIn(){
+    if (user.username.length == 0 || user.password.length == 0){
+      notify('error',"you have to put a username and password");
+      return
+    }
     const options = {
       method: 'POST',
       headers: {
@@ -23,9 +30,22 @@ export default function SignIn() {
       body: JSON.stringify(user)
     };
     fetch("http://localhost:4000/users/login", options)
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch((error) => console.log(error));
+      .then(response =>
+        response.json()
+        )
+        .then(data =>{
+          if ( data.msg == "Authentication failed"){
+            notify('warning', "please sign up , we cant match username and password")
+          }
+          else if (data.msg == "User not verified" ){
+            
+            notify('warning', "please verify your email  we send you a mail to verify your email")
+                navigate("/reset", { state: { datae: user.username }});
+                return;
+          }
+
+      } )
+      .catch((error) => notify('error', error));
 }
 
   return (
@@ -49,7 +69,7 @@ export default function SignIn() {
           <input className="input" name="password" type="password" value={user.password} onChange={handleChange} />
         </div>
         <button className="button-submit title-1" onClick={signIn}> Signin</button>
-        <button className="login body" > Forgot your password ? <br/> Reset</button>
+        <Link to="/reset-password"  className="body">  Forgot your password ? <br/> Reset</Link>
       </div>
       <div className="container-img">
         <div className="img-right"></div>
