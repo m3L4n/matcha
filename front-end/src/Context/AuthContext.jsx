@@ -7,12 +7,15 @@ export const AuthProvider = ({children}) => {
   const [user, setUser] = useState({});
 
   useEffect(() =>{
-    if (Object.keys(user).length == 0){
+
+    return () =>{
       getUserConnected()
     }
   }, [])
-
+  
   async function getUserConnected() {
+    console.log("HERE ici", Object.keys(user));
+    if (Object.keys(user).length == 0){
     const option = {
       method: 'GET',
       headers: {
@@ -23,11 +26,10 @@ export const AuthProvider = ({children}) => {
     fetch("http://localhost:4000/users/whoami", option)
       .then(response =>  response.json())
       .then(data => {
-        console.log("data", data);
         setUser(data);
       })
       .catch(e => console.log(e))
-  }
+  }}
 
   return (
     <AuthContext.Provider value={user}>

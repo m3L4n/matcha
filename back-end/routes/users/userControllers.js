@@ -120,13 +120,16 @@ const sendEmailResetPassword = async (req, res) => {
   const email = req.body.email;
   try {
     const user = await userModel.findbyId("email", email);
+    if (!user) {
+      return res.status(401).json("email are not in the db");
+    }
     sendingMail({
       from: "no-reply@matcha-42.com",
       to: `${user.email}`,
       subject: "reset your password",
       text: `Hello, ${user.username}
         if you want to reset you password you can with this link :
-          http://localhost:3000/reset-password `,
+          http://localhost:3000/reset-password/${user.id}`,
     });
     return res.status(200).json("password email send");
   } catch (error) {
@@ -141,8 +144,6 @@ const getUser = async (req, res) => {
   } catch (e) {
     return res.status(400).send("this user doesnt exist");
   }
-  console.log(req.authUser);
-  return res.status(200).send("getuser");
 };
 
 //exporting the modules

@@ -3,28 +3,25 @@ import { useEffect } from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { notify } from '../../Global/toast-notify';
-import { AuthContext } from '../../../Context/AuthContext';
-import { useContext } from 'react';
 export default function HomeNoneVerified() {
   const { state } = useLocation();
   const navigate = useNavigate()
-  // const store = useContext(AuthContext);
+  let count = 0;
 
   useEffect(() =>{
-    console.log("here");
-    verifyData();
+    if (count == 0){
+      verifyData();
+    }
+    count = 1;
   }, [])
 
   function verifyData(){
     if (!state?.datae){
-        // notify('error', "you have to be connected to see this page");
+        notify('error', "you have to be connected to see this page");
         navigate('/login')
         return
 
     }
-    console.log(state?.datae?.length)
-    //   return;
-    // }
   }
   function resendEmail(){
     const username =state.datae; 
