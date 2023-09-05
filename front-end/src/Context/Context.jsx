@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function Context() {
-  return (
-    <div>Context</div>
-  )
+  return <div>Context</div>;
 }
