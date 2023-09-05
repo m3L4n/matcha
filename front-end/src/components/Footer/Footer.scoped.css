@@ -1,0 +1,22 @@
+footer {
+  text-align: right;
+  margin-top: 3rem;
+  padding: 20px;
+}
+
+footer a {
+  color: var(--green);
+  font-size: 1.5rem;
+  padding-right: 1rem;
+  transition: all 0.5s ease;
+}
+
+footer a:hover {
+  color: var(--dark-green);
+}
+
+@media (max-width: 768px) {
+  footer {
+    border-top: 1px solid var(--green);
+  }
+}

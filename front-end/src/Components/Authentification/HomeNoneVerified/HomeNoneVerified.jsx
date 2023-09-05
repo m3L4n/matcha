@@ -1,7 +1,9 @@
 import React from 'react'
+import { useContext } from 'react';
 import { useEffect } from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { AuthContext } from '../../../Context/AuthContext';
 import { notify } from '../../Global/toast-notify';
 export default function HomeNoneVerified() {
   const { state } = useLocation();

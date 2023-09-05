@@ -1,16 +1,25 @@
-import './BrowsingPage.module.css';
-import { BsFilter } from 'react-icons/bs'
+import './BrowsingPage.scoped.css';
+import { BsFilter, BsSearch } from 'react-icons/bs'
+import dummy from './dummy_data.json'
+import Card from './Card/Card'
 
 export default function BrowsingPage() {
+  const cards = dummy.map(user => <Card key={user.id} user={user} />)
   return (
     <>
-      <header>
-        <h1 className='header'>Matcha</h1>
+      <header className='title'>
+        <h1 className='header-title header'>Matcha</h1>
       </header>
-      <nav>
-        <input className='searchbar' placeholder='Search' />
+      <nav className="searchForm">
+        <form action="">
+          <input className='searchbar' placeholder='Search' />
+          <button type="submit"><BsSearch size={16}/></button>
+        </form>
         <div className='filter'> <BsFilter /> </div>  
       </nav>
+      <section className='matches'>
+        {cards}
+      </section>
     </>
   );
 }

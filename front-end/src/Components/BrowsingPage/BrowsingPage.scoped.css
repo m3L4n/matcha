@@ -1,0 +1,97 @@
+.title {
+  width: 80%;
+  margin: auto;
+}
+
+.header-title {
+  margin: 50px 0;
+  color: var(--green);
+  text-align: center;
+  user-select: none;
+}
+
+.searchForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+form {
+  width: 65%;
+  display: flex;
+  padding: 2px;
+  border: 1px solid var(--green);
+  border-radius: 20px;
+}
+
+.searchbar {
+  color: var(--green);
+  padding: 0.7rem;
+  width: 100%;
+  background-color: var(--cream);
+  border: none;
+  margin-left: 0.5rem;
+}
+
+button[type="submit"] {
+  overflow: hidden;
+  background-color: var(--cream);
+  color: var(--green);
+  width: 40px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  cursor: pointer;
+  padding-right: .7rem;
+}
+
+button[type="submit"]:hover {
+  opacity: 1;
+  color: var(--dark-green);
+  transition: all 0.5s ease;
+  font-size: 24px;
+}
+
+.searchbar::placeholder {
+  color: var(--green);
+  opacity: 0.8;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 0.3rem;
+}
+
+.searchbar:focus {
+  outline: none;
+}
+
+.searchbar:text {
+  color: var(--green);
+}
+
+.filter {
+  color: var(--green);
+  font-size: 2rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.matches {
+  display: flex;
+  flex-flow: row wrap;
+  width: 80%;
+  max-width: 856px;
+  justify-content: center;
+  align-items: self-start;
+  gap: 50px;
+  margin: auto;
+}
+
+@media (min-width: 2560px) {
+  .matches {
+    max-width: 70%;
+  }
+}
