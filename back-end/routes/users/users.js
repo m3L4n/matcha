@@ -1,7 +1,7 @@
 // routes/users.js
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4 } = requir("uuid");
 const userController = require("./userControllers");
 const { signup, verifyEmail, login, sendEmailVerification, sendEmailResetPassword, getUser } = userController;
 const pool = require("../../db/db");
