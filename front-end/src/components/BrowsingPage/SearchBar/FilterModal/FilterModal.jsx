@@ -4,7 +4,7 @@ const FilterModal = () => {
   return (
     <div className="filter-menu">
       <form action="">
-        <div className="select-effect">
+        <div className="select-effect body">
           <div className="filter-matches-wrapper">
             <input type="radio" name="filter-menu-effect" id="filter-matches" checked/>
             <label htmlFor="filter-matches">filter</label>

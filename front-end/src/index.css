@@ -14,6 +14,7 @@
   /* dark theme */
   --dark-brown: #6D4930;
   --brown: #B9A084;
+  --form-control-color: var(--green);
 }
 
 body {

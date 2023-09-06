@@ -1,8 +1,24 @@
 .filter-menu {
-  /* border: 2px solid red; */
+  border: 1px solid var(--green);
+  border-radius: 20px;
+  padding: 1rem;
   position: absolute;
   top: 250px;
   right: 100px;
   z-index: 999;
   background-color: var(--cream);
+}
+
+.select-effect {
+  display: flex;
+  flex-flow: wrap row;
+  justify-content: start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  text-transform: capitalize;
+  color: var(--green);
+}
+
+.select-effect input {
+  margin-right: .5rem;
 }
