@@ -6,12 +6,13 @@ import LandingPage from "./components/LandingPage/LandingPage";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import BrowsingPage from "./components/BrowsingPage/BrowsingPage";
 import Authentification from "./components/Authentification/Authentification";
-import "./index.css";
 import HomeNoneVerified from "./components/Authentification/HomeNoneVerified/HomeNoneVerified";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./Context/AuthContext";
+import "./index.css";
+
 const router = createBrowserRouter([
   {
     path: "/",
