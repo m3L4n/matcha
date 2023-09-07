@@ -1,6 +1,8 @@
 import "./FilterModal.scoped.css";
+import { AiOutlineRight } from "react-icons/ai";
 
 const FilterModal = () => {
+  const FILTER_OPTIONS = ["Age", "Location", "Fame rating", "Common tags"];
   return (
     <div className="filter-menu">
       <form className="form-control">
@@ -15,18 +17,13 @@ const FilterModal = () => {
           </div>
         </div>
         <div className="filter-options">
-          <div className="filter-age">
-            <input type="range" min="18" max="100" value="18" className="slider" id="minAge" />
-            <input type="range" min="18" max="100" value="18" className="slider" id="maxAge" />
-          </div>
-          <div className="filter-fame">
-            <input type="range" min="0" max="420" value="100" className="slider" id="minFame" />
-            <input type="range" min="0" max="420" value="100" className="slider" id="maxFame" />
-          </div>
-          <div className="filter-tags">
-            <input type="text" name="" id="tags" />
-          </div>
+          { FILTER_OPTIONS.map((option) => {
+            return (<div className="options" key={option}>
+              <p>{option}</p><p> <AiOutlineRight /> </p>
+            </div>);
+          })} 
         </div>
+        <input className="filter-submit" type="submit" value="Apply" />
       </form>
     </div>
   )
