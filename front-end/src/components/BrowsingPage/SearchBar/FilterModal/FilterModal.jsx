@@ -3,13 +3,13 @@ import "./FilterModal.scoped.css";
 const FilterModal = () => {
   return (
     <div className="filter-menu">
-      <form action="">
+      <form className="form-control">
         <div className="select-effect body">
           <div className="filter-matches-wrapper">
-            <input type="radio" name="filter-menu-effect" id="filter-matches" checked/>
+            <input type="radio" name="filter-menu-effect" id="filter-matches" />
             <label htmlFor="filter-matches">filter</label>
           </div>
-          <div className="sort-matchs-wrapper">
+          <div className="sort-matches-wrapper">
             <input type="radio" name="filter-menu-effect" id="sort-matches" />
             <label htmlFor="sort-matches">sort</label>
           </div>
