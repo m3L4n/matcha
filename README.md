@@ -2,6 +2,13 @@
 
 *Because, love too can be industrialized.*
 
+## Project:
+
+[Design](https://shorturl.at/orDGI)  
+[Production](link of the prod website)
+
+![screenshot of landing page](./presentation.png)
+
 ## Introduction
 
 This project aims to create a dating website
