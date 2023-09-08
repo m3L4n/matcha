@@ -30,7 +30,13 @@ export default function SignIn() {
       body: JSON.stringify(user)
     };
     fetch("http://localhost:4000/users/login", options)
-      .then(response => response.json())
+      .then(response => {
+        if ( response.status == 200){
+
+          notify("sucess", "login sucess")
+        }
+        return response.json()
+      })
       .then(data => {
         if (data.msg == "Authentication failed") {
           notify(

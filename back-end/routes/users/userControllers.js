@@ -90,7 +90,7 @@ const login = async (req, res) => {
           const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
             expiresIn: 1 * 24 * 60 * 60 * 1000,
           });
-          return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ access_token: token });
+          return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(200).send({ access_token: token });
         } else {
           return res.status(401).send({ msg: "User not verified" });
         }
@@ -136,6 +136,17 @@ const sendEmailResetPassword = async (req, res) => {
     return res.status(500).json("email are not in the db");
   }
 };
+const changePassword = async (req, res) => {
+  try {
+    const { id, password } = req.body;
+    console.log("id AND PASSWORD", id, password);
+    const psswdCrypt = await bcrypt.hash(password, 10);
+    await userModel.update(id, "password", psswdCrypt);
+    return res.status(200).send("update sucessfuly");
+  } catch (error) {
+    return res.status(500).send("id are not in the db");
+  }
+};
 const getUser = async (req, res) => {
   try {
     const { id, username } = req.authUser;
@@ -153,5 +164,6 @@ module.exports = {
   verifyEmail,
   sendEmailVerification,
   sendEmailResetPassword,
+  changePassword,
   getUser,
 };
