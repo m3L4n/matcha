@@ -1,0 +1,23 @@
+.inputcontainer {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+}
+
+.inputcontainer input {
+  border: 1px solid var(--green);
+  border-radius: 20px;
+  padding: .5em 1em;
+  background-color: var(--cream);
+}
+
+.inputcontainer input:focus {
+  outline: 1px solid var(--green);
+}
+
+.inputcontainer input::placeholder {
+  color: var(--green)
+}

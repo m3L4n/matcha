@@ -1,6 +1,8 @@
 import "./FilterModal.scoped.css";
 import SelectOptionWrapper from "./SelectOptionWrapper/SelectOptionWrapper";
 import Slider from "../../../Global/FormInput/Slider/Slider";
+import Input from "../../../Global/FormInput/Input/Input";
+import Select from "../../../Global/FormInput/Select/Select";
 
 const FilterModal = () => {
   const FILTER_OPTIONS = ["Age", "Location", "Fame rating", "Common tags"];
@@ -21,8 +23,10 @@ const FilterModal = () => {
           { FILTER_OPTIONS.map((option) => {
             return (
               <SelectOptionWrapper key={option} option={option}>
-                {option == "Age" && <Slider min={18} max={100} defaultValue={21} />}
-                {option == "Fame rating" && <Slider min={0} max={420} defaultValue={100} />}
+                {option === "Age" && <Slider min={18} max={100} defaultValue={21} />}
+                {option === "Fame rating" && <Slider min={0} max={420} defaultValue={100} />}
+                {option === "Location" && <Select options={["Paris", "Montpellier", "Bondy"]} />}
+                {option === "Common tags" && <Input placeholder={"#tea, #coffee, #nature ..."}/>}
               </SelectOptionWrapper>
             );
           })} 
