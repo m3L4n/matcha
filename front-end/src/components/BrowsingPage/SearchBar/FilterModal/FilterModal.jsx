@@ -1,5 +1,6 @@
 import "./FilterModal.scoped.css";
-import { AiOutlineRight } from "react-icons/ai";
+import SelectOptionWrapper from "./SelectOptionWrapper/SelectOptionWrapper";
+import Slider from "../../../Global/FormInput/Slider/Slider";
 
 const FilterModal = () => {
   const FILTER_OPTIONS = ["Age", "Location", "Fame rating", "Common tags"];
@@ -18,9 +19,12 @@ const FilterModal = () => {
         </div>
         <div className="filter-options">
           { FILTER_OPTIONS.map((option) => {
-            return (<div className="options" key={option}>
-              <p>{option}</p><p> <AiOutlineRight /> </p>
-            </div>);
+            return (
+              <SelectOptionWrapper key={option} option={option}>
+                {option == "Age" && <Slider min={18} max={100} defaultValue={21} />}
+                {option == "Fame rating" && <Slider min={0} max={420} defaultValue={100} />}
+              </SelectOptionWrapper>
+            );
           })} 
         </div>
         <input className="filter-submit" type="submit" value="Apply" />
