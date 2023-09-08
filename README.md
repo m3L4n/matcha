@@ -23,15 +23,15 @@ client-side.
 
 - For this project, you are free to use any programming language of your choice.
 
-- You are fre to use UI libraries such as React, Angular, Vue, Bootstrap, Semantic or any combination of them.
+- You are free to use UI libraries such as React, Angular, Vue, Bootstrap, Semantic or any combination of them.
 
 - No security breaches are allowed. You must handle at least what's in the mandatory part, but we encourage you to go even further. Everything depends on it.
 
-- We will consider that a "micro-frameworks" includes a router and possibly templating, but does not include an ORM, validators, or a User Account Manager. As long as you respet these constraints you are free to use what you like.
+- We will consider that a "micro-frameworks" includes a router and possibly templating, but does not include an ORM, validators, or a User Account Manager. As long as you respect these constraints you are free to use what you like.
 
 - You should use a relational or graph-oriented database. The database should be a free one such as MySQL, MariaDB, PostgreSQL, Cassandra, InfluxDB, Neo4j, etc. You will also need to create your queries manually, like mature developers do. Homewever, if your're clever, you can create your own library to simplify your queries.
 
-- You are free to choose the web server that best suits your needs, whether it is Apache, Nging or a built-in web server.
+- You are free to choose the web server that best suits your needs, whether it is Apache, Nginx or a built-in web server.
 
 - Your entire app must be compatible with at least the latest versions of Firefox and Chrome.
 
