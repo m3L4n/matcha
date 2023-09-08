@@ -23,4 +23,11 @@ export default defineConfig({
     strictPort: true,
     port: 3000,
   },
+  resolve: {
+    alias: {
+      src: "/src",
+      components: "/src/components",
+      assets: "/src/assets",
+    },
+  },
 });
