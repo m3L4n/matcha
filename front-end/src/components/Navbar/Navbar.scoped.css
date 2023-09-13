@@ -4,8 +4,9 @@
   background-color: var(--green);
   padding: .5rem;
   z-index: 99;
-  position: fixed;
+  position: absolute;
   left: 0;
+  top: 0;
   height: 100%;
   padding-top: 2rem;
   transition: width .5s;

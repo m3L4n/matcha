@@ -8,6 +8,7 @@ import BrowsingPage from "./components/BrowsingPage/BrowsingPage";
 import Authentification from "./components/Authentification/Authentification";
 import HomeNoneVerified from "./components/Authentification/HomeNoneVerified/HomeNoneVerified";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
+import Message from "./components/Message/Message";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./Context/AuthContext";
