@@ -1,32 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { notify } from "components/Global/toast-notify";
 import { useParams } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import "./ResetPassword.scoped.css"
 function ComponentsResendEmailPassword({email, handleChange, handleReset}){
 
 return (
-  <>
-    <h1>resend email</h1>
-    <form>
+  <div className="container-resetEmail">
+       <h1 className="header header-matcha"> MATCHA</h1>
+    <p className="body">Enter the email address associated with your  account and we’ll send you a link to reset your password.</p>
+    <form className="form">
     <input
       type={"email"}
       value={email}
       placeholder="email"
       onInput={handleChange}
+      className="input"
     />
-    <input type={"submit"} onClick={handleReset}/> 
+    <input type={"submit"} onClick={handleReset} value="send email" className="input-submit body-highlight"/> 
   </form>
-</>
+  <Link to="/login" className="link body"> go back login</Link>
+</div>
 )}
 
 function ComponentsresetPassword({password, confirmPassword, handleChange, handleResetPassWord}){
 
   return (
-    <>
-      <input type={"password"}  name={"password"} value={password} placeholder="password" onChange={handleChange}/>
-      <input  type={"password"} name={"confirmPassword"} value={confirmPassword} placeholder="confirm you password" onChange={handleChange}/>
-      <input type={"submit"}  onClick={handleResetPassWord}/>
-    </>
+    <div className="container-resetEmail">
+      <h1 className="header header-matcha"> MATCHA</h1>
+      <p className="body">Enter your new password.</p>
+      <form className="form">
+        <input type={"password"}  name={"password"} value={password} placeholder="password" onChange={handleChange}  className="input"/>
+        <input  type={"password"} name={"confirmPassword"} value={confirmPassword} placeholder="confirm you password" onChange={handleChange}  className="input"/>
+        <input type={"submit"}  onClick={handleResetPassWord} value="send email" className="input-submit body-highlight"/>
+      </form>
+      <Link to="/login" className="link body"> go back login</Link>
+    </div>
   )
 }
 
@@ -47,11 +56,19 @@ export default function ResetPassword() {
       setSendEmail(1); 
     }
   }, [res])
+  
+  async function handleChange(event) {
+    console.log(event.target.value);
+    setEmail(event.target.value);
+  }
+  function handleChangePassWord(event){
+    setPassword({...password, [event.target.name] : event.target.value});
+  }
 
   async function handleReset(e) {
     e.preventDefault();
     if (email.length == 0) {
-      notify("warning", " you have to fill with your email adresse");
+      notify("warning", " you have to fill with your email adress");
     }
     const options = {
       method: "POST",
@@ -66,7 +83,7 @@ export default function ResetPassword() {
         if (response.status == 401) {
           notify("error", "email doesnt match");
           return response.json();
-        } else if (response.status == 201) {
+        } else if (response.status == 200) {
           notify("sucess", "check your email");
           return response.json();
         }
@@ -75,16 +92,10 @@ export default function ResetPassword() {
       .then(data => console.log(data))
       .catch(error => {
         notify("error", "email doesnt match");
+        console.log(error);
       });
   }
 
-  async function handleChange(event) {
-    console.log(event.target.value);
-    setEmail(event.target.value);
-  }
-  function handleChangePassWord(event){
-    setPassword({...password, [event.target.name] : event.target.value});
-  }
   function handleResetPassword(event){
     event.preventDefault();
     if (password.password.length == 0 || password.confirmPassword.length == 0 ){
@@ -121,14 +132,13 @@ export default function ResetPassword() {
     })
     .then(data => {
     })
-    .catch(error => console.log(error));
+    .catch(error => {console.log(error)});
   }
 
   return (
-    <div>
-
-      {sendEmail && <ComponentsResendEmailPassword email={email} handleChange={handleChange} handleReset={handleReset}/>}
+    <div className="container">
       {!sendEmail && <ComponentsresetPassword password={password.password} confirmPassword={password.confirmPassword}  handleChange={handleChangePassWord} handleResetPassWord={handleResetPassword}/>}
+      {sendEmail && <ComponentsResendEmailPassword email={email} handleChange={handleChange} handleReset={handleReset}/>}
     </div>
   );
 }

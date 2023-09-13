@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./Navbar.scoped.css";
 import { NavLink } from "react-router-dom";
+import { disconect } from "../Authentification/disconnect/disconnect";
+import { AuthContext } from "src/Context/AuthContext";
 
 export default function Navbar() {
-  const pages = ["match", "profile", "message", "disconnect"];
+  let pages = ["match", "profile", "message"];
   const [sidebar, setSidebar] = useState(false);
+  const store = useContext(AuthContext);
+//   if (!store.user){
+console.log("vo rien", store);
+//   }
+  if (Object.keys(store?.user)?.length == 0){
+    pages = ['login','register']
+  }
 
   const toggleSidebar = () => setSidebar(!sidebar);
 
@@ -20,7 +29,7 @@ export default function Navbar() {
           <span className="burger menu-toggle-bar--bottom"></span>
         </a>
       </div>
-      <ul>
+      <ul className={sidebar ? "navbar-content navbar-content-visible" : "navbar-content"}>
         {pages.map(page => (
           <li key={pages.indexOf(page)}>
             {sidebar && (
@@ -30,6 +39,9 @@ export default function Navbar() {
             )}
           </li>
         ))}
+          <li>
+          {(sidebar && Object.keys(store?.user)?.length > 0) && <button onClick={disconect}>  disconect</button>}
+          </li>
       </ul>
     </nav>
   );

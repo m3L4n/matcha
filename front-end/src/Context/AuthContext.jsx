@@ -10,9 +10,7 @@ export const AuthProvider = ({ children }) => {
       getUserConnected();
     };
   }, []);
-
   async function getUserConnected() {
-    console.log("HERE ici", Object.keys(user));
     if (Object.keys(user).length == 0) {
       const option = {
         method: "GET",
@@ -22,13 +20,20 @@ export const AuthProvider = ({ children }) => {
         credentials: "include"
       };
       fetch("http://localhost:4000/users/whoami", option)
-        .then(response => response.json())
+        .then(response => {
+          if ( response.status == 401){
+            setUser({});
+          }
+          return response.json()})
         .then(data => {
-          setUser(data);
+          if (Object.keys(data).length > 1){
+            setUser(data);
+
+          }
         })
         .catch(e => console.log(e));
     }
   }
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{user}}>{children}</AuthContext.Provider>;
 };

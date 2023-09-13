@@ -90,7 +90,7 @@ export default function SignIn() {
           {" "}
           Signin
         </button>
-        <Link to="/reset-password" className="body">
+        <Link to="/reset-password" className="body link">
           {" "}
           Forgot your password ? <br /> Reset
         </Link>

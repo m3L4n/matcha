@@ -23,7 +23,6 @@ const signup = async (req, res) => {
       valided,
     };
     const user = await userModel.createUser(data);
-    // if (user) {
     const emailSend = await sendingEmailVerification(username);
     if (emailSend) {
       return res.status(201).send(user);
@@ -139,7 +138,6 @@ const sendEmailResetPassword = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const { id, password } = req.body;
-    console.log("id AND PASSWORD", id, password);
     const psswdCrypt = await bcrypt.hash(password, 10);
     await userModel.update(id, "password", psswdCrypt);
     return res.status(200).send("update sucessfuly");
@@ -156,6 +154,10 @@ const getUser = async (req, res) => {
     return res.status(400).send("this user doesnt exist");
   }
 };
+const disconectUser = async (req, res) => {
+  res.clearCookie("jwt");
+  res.end();
+};
 
 //exporting the modules
 module.exports = {
@@ -166,4 +168,5 @@ module.exports = {
   sendEmailResetPassword,
   changePassword,
   getUser,
+  disconectUser,
 };
