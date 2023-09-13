@@ -5,6 +5,7 @@ import dummy from './dummy-data.json';
 const Message = () => {
   const conversations = dummy.map(conversation => <Conversation
     key={conversation.id}
+    id={conversation.id}
     firstName={conversation.firstName}
     lastMessage={conversation.lastMessage}
   />)
