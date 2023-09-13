@@ -19,3 +19,7 @@
   margin-bottom: 1em;
   border-bottom: 4px solid var(--green);
 }
+
+a {
+  text-decoration: none;
+}
