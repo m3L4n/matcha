@@ -2,8 +2,9 @@ import { useState } from "react";
 import "./Navbar.scoped.css";
 import { NavLink } from "react-router-dom";
 
+const PAGES = ["match", "profile", "message", "disconnect"];
+
 export default function Navbar() {
-  const pages = ["match", "profile", "message", "disconnect"];
   const [sidebar, setSidebar] = useState(false);
 
   const toggleSidebar = () => setSidebar(!sidebar);
@@ -21,8 +22,8 @@ export default function Navbar() {
         </a>
       </div>
       <ul>
-        {pages.map(page => (
-          <li key={pages.indexOf(page)}>
+        {PAGES.map(page => (
+          <li key={PAGES.indexOf(page)}>
             {sidebar && (
               <NavLink className={`body`} to={page}>
                 {page}

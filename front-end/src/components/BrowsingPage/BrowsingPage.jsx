@@ -10,7 +10,7 @@ export default function BrowsingPage() {
       <header className='title'>
         <h1 className='header-title header'>Matcha</h1>
       </header>
-      <SearchBar /> 
+      <SearchBar />
       <section className='matches'>
         {cards}
       </section>
