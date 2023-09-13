@@ -13,6 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./Context/AuthContext";
 import "./index.css";
+import { element } from "prop-types";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/messages",
         element: <Message />
+      },
+      {
+        path: "/messages/:id",
+        element: <div>coucou</div>
       },
       {
         path: "/register",
