@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -L index.js",
+    "init-db": "sleep 10s && node ./db/init-db.js",
+    "seed": "yarn init-db && sleep 10 && node ./seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -21,5 +23,8 @@
     "nodemailer": "^6.9.4",
     "pg": "^8.11.2",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2"
   }
 }
