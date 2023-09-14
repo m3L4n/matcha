@@ -14,6 +14,11 @@ export default function Navbar() {
     pages = ['login','register']
   }
 
+  useEffect(() => {
+
+    console.log("store",store.user);
+  }, [])
+
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () =>{
     disconect();
