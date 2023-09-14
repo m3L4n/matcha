@@ -48,7 +48,7 @@ async function createTableUsers(client) {
   CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
   CREATE TABLE IF NOT EXISTS users (
     id UUID DEFAULT uuid_generate_v4(),
-    username VARCHAR(10) NOT NULL,
+    username VARCHAR(20) NOT NULL,
     email TEXT NOT NULL,
     firstName TEXT NOT NULL,
     gender gender_enum,
@@ -57,7 +57,7 @@ async function createTableUsers(client) {
     lastName TEXT NOT NULL,
     password TEXT,
     description VARCHAR(255),
-    rate_frame INT,
+    rate_fame INT,
     position TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile_picture BYTEA,

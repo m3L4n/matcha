@@ -1,29 +1,36 @@
 // init-db.js
-const { Pool } = require("pg");
+const { faker } = require('@faker-js/faker');
+const { v4: uuidv4 } = require("uuid");
+const db = require('./db/db');
 require("dotenv").config();
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT || "5432"),
-});
 
-async function insertUser() {
-  const client = await pool.connect();
+async function generateUser() {
+  const random = Math.floor(Math.random() * 10);
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const email = `${firstName}.${lastName}@mail.com`;
+  const username = firstName + lastName;
+  const gender = random % 2 == 0 ? "male" : "female";
+  const beverage = random % 2 == 0 ? "matcha" : "coffee";
+  const sexual_preference = random % 2 == 0 ? "male" : "female";
+  const password = faker.string.alphanumeric();
+  const description = faker.string.alphanumeric(200);
+  const rate_fame = Math.floor(Math.random() * 420);
+  const profile_picture = faker.image.avatar();
+  const valided = true;
+  const position = faker.location.nearbyGPSCoordinate();
+  const query = "INSERT INTO \
+  users(id, username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided) \
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)";
+  const params = [uuidv4(), username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided];
   try {
-    await client.query(`
-      INSERT INTO users (username, email)
-      VALUES
-        ('john_doe', 'john@example.com');
-    `);
-
-    console.log("Utilisateur inséré avec succès.");
+    await db.query(query, params);
   } catch (error) {
-    console.error("Erreur lors de l'insertion de l'utilisateur :", error);
-  } finally {
-    client.release();
+    console.error(error)
+    throw error;
   }
 }
 
-insertUser();
+for (let i = 0; i < 42; i++) {
+  generateUser();
+}
