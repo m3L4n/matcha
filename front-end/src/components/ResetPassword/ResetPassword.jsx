@@ -7,7 +7,7 @@ function ComponentsResendEmailPassword({email, handleChange, handleReset}){
 
 return (
   <div className="container-resetEmail">
-       <h1 className="header header-matcha"> MATCHA</h1>
+  <h1 className="header header-matcha"> MATCHA</h1>
     <p className="body">Enter the email address associated with your  account and we’ll send you a link to reset your password.</p>
     <form className="form">
     <input

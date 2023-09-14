@@ -67,7 +67,7 @@
   margin-left: 0px;
   display: flex;
   flex-flow: column;
-  transition: margin ease-in-out 0.3s;
+  transition: margin ease-in-out 0.4s;
 }
 .navbar ul {
   margin-top: 4rem;

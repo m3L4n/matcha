@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Navbar.scoped.css";
 import { NavLink } from "react-router-dom";
 import { disconect } from "../Authentification/disconnect/disconnect";
@@ -8,12 +8,14 @@ export default function Navbar() {
   let pages = ["match", "profile", "message"];
   const [sidebar, setSidebar] = useState(false);
   const store = useContext(AuthContext);
-//   if (!store.user){
-console.log("vo rien", store);
-//   }
   if (Object.keys(store?.user)?.length == 0){
     pages = ['login','register']
   }
+
+  useEffect(() => {
+
+    console.log("store",store.user);
+  }, [])
 
   const toggleSidebar = () => setSidebar(!sidebar);
 

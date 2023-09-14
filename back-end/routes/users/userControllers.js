@@ -1,9 +1,7 @@
 const { sendingMail } = require("../../mailing/mailing");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
-const db = require("../../db/db");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const userModel = require("../../models/Usermodel");
 const tokenModal = require("../../models/Tokenmodel");
 const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");

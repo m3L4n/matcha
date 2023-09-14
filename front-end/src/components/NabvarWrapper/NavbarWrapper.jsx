@@ -1,10 +1,9 @@
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 export default function NavbarWrapper() {
-  const currentPath = window.location.pathname;
-
+  const currentPath = useLocation().pathname;
   return (
     <div className="container">
       {currentPath !== "/" && <Navbar />}
