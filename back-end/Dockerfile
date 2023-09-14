@@ -1,15 +1,15 @@
-FROM node:17-alpine
+FROM node:18-alpine
 
-RUN yarn global  add  nodemon
+RUN yarn global add nodemon
 
 WORKDIR /app
 
 COPY package.json .
 
-RUN yarn install
+RUN yarn
 COPY . .
 COPY .env .env
 
 EXPOSE 4000
 # required for docker desktop port mapping
-CMD ["sh", "-c", " sleep 10s && node ./db/init-db.js && yarn run dev"]
+CMD ["sh", "-c", "yarn seed && yarn dev"]
