@@ -1,4 +1,4 @@
-import express from "express";
+const express = require("express");
 const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -11,7 +11,7 @@ app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 app.use(cookieParser());
 
 app.use("/users", userRouter);
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.header("content-type", "application/json;charset=utf-8");
   res.header("access-control-allow-credentials", true);
   res.header("access-control-allow-headers", "origin, x-requested-with, content-type, accept");
