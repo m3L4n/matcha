@@ -1,5 +1,6 @@
 const db = require("../db/db");
 const { v4: uuidv4 } = require("uuid");
+
 const createUser = async (userData) => {
   try {
     const { id, username, firstName, lastName, email, password } = userData;
@@ -11,6 +12,7 @@ const createUser = async (userData) => {
     throw error;
   }
 };
+
 const findbyId = async (paramToSearch, valueToCompare) => {
   try {
     const query = `SELECT *  FROM users WHERE ${paramToSearch} = $1`;
