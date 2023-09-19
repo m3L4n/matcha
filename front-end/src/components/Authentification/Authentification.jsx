@@ -8,17 +8,17 @@ export default function Authentification() {
   const location = useLocation().pathname;
 
   useEffect(() => {
-    if (location === "/register") {
+    if (location === "/login") {
       setRegister(false);
-    } else if (location === "/login") {
+    } else if (location === "/register") {
       setRegister(true);
     }
   }, [location]);
 
   return (
     <>
-      {!register && <Register />}
-      {register && <SignIn />}
+      {register && <Register />}
+      {!register && <SignIn />}
     </>
   );
 }
