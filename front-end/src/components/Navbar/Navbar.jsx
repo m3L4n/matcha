@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import "./Navbar.scoped.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { disconect } from "../Authentification/disconnect/disconnect";
-import { AuthContext } from "src/Context/AuthContext";
+import { AuthContext, useAuth } from "src/Context/AuthContext";
 
 export default function Navbar() {
+  const {setLoading, setUser,setTriggerReload } = useAuth();
+  const navigate = useNavigate();
   let pages = ["match", "profile", "message"];
   const [sidebar, setSidebar] = useState(false);
   const store = useContext(AuthContext);
@@ -13,6 +15,12 @@ export default function Navbar() {
   }
 
   const toggleSidebar = () => setSidebar(!sidebar);
+  const handleDisconnect = async () =>{
+    disconect();
+    setTriggerReload(true);
+    navigate("/");
+    
+  }
 
   return (
     <nav className={sidebar ? "navbar navbar-deployed" : "navbar"}>
@@ -37,7 +45,7 @@ export default function Navbar() {
           </li>
         ))}
           <li>
-          {(sidebar && Object.keys(store?.user)?.length > 0) && <button onClick={disconect}>  disconect</button>}
+          {(sidebar && Object.keys(store?.user)?.length > 0) && <button onClick={handleDisconnect}>  disconect</button>}
           </li>
       </ul>
     </nav>

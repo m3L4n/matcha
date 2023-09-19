@@ -9,6 +9,7 @@ import ResetPassword from "components/ResetPassword/ResetPassword";
 import { PrivateRoute } from "./ProtectedRoute";
 import { useContext } from "react";
 import { AuthContext } from "src/Context/AuthContext";
+import { NoneConnectedRoute } from "./NoneConnectedRoute";
 
 
 export const router = createBrowserRouter([
@@ -19,8 +20,10 @@ export const router = createBrowserRouter([
       children: [
         {
           path: "/",
-          element: 
+          element:
+          <NoneConnectedRoute>
             <LandingPage />
+          </NoneConnectedRoute>
         },
         {
           path: "/match",
@@ -31,34 +34,52 @@ export const router = createBrowserRouter([
         },
         {
           path: "/profile",
-          element: <div>Profile</div>
+          element: 
+          <PrivateRoute>
+          <div>Profile</div>
+          </PrivateRoute>
         },
         {
           path: "/message",
-          element: <div>Message</div>
+          element:
+          <PrivateRoute>
+           <div>Message</div>
+           </PrivateRoute>
         },
         {
           path: "/register",
-          element: <Authentification />
+          element:
+          <NoneConnectedRoute>
+          <Authentification />
+          </NoneConnectedRoute>
         },
         {
           path: "/login",
-          element: <Authentification />
+          element: 
+          <NoneConnectedRoute>
+          <Authentification />
+          </NoneConnectedRoute>
         },
         {
           path: "/reset",
           element:
-          <PrivateRoute>
+          <NoneConnectedRoute>
            <HomeNoneVerified />
-           </PrivateRoute>
+          </NoneConnectedRoute>
         },
         {
           path: "/reset-password",
-          element: <ResetPassword />
+          element: 
+          <NoneConnectedRoute>
+          <ResetPassword />
+          </NoneConnectedRoute>
         },
         {
           path: "/reset-password/:id",
-          element: <ResetPassword />
+          element: 
+          <NoneConnectedRoute>
+          <ResetPassword />
+          </NoneConnectedRoute>
         }
       ]
     }

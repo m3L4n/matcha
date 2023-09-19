@@ -5,8 +5,10 @@ import "./SignIn.scoped.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { notify } from "../../Global/toast-notify";
+import { useAuth } from "src/Context/AuthContext";
 export default function SignIn() {
   const navigate = useNavigate();
+  const {setTriggerReload} = useAuth();
   const [user, setUser] = useState({
     username: "",
     password: ""
@@ -34,6 +36,8 @@ export default function SignIn() {
         if ( response.status == 200){
 
           notify("sucess", "login sucess")
+          setTriggerReload(true);
+          navigate('/match')
         }
         return response.json()
       })

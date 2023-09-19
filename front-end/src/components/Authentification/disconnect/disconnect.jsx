@@ -1,6 +1,5 @@
 import { notify } from "../../Global/toast-notify";
-import { useNavigate } from 'react-router-dom';
-export async  function disconect(){
+export async  function disconect(setLoading){
   const options = {
     method: "delete",
     headers: {
@@ -16,6 +15,7 @@ export async  function disconect(){
           "sucess",
           "disconected"
         );
+        setLoading(false);
       }
       return response.json();
     })
