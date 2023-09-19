@@ -6,7 +6,7 @@ const { isAuth } = require("../../Middlewares/userAuth");
 
 router.post("/", UserController.signup);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);
-router.post("/login", login);
+router.post("/login", UserController.login);
 router.post("/send-email-verification", UserController.sendEmailVerification);
 router.post("/send-password-reset", UserController.sendEmailResetPassword);
 router.get("/whoami", isAuth, UserController.getUser);
