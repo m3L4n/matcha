@@ -15,6 +15,7 @@
 .navbar-deployed {
   width: 13.89%;
   min-width: 110px;
+  transition: all 0.3s ease;
 }
 
 .burger-icon {
@@ -58,6 +59,17 @@
   transform: translate(0, -4px) rotate(-45deg);
 }
 
+.navbar-content{
+  display: flex;
+  flex-flow: column;
+  margin-left: -100px;
+}
+.navbar-content-visible{
+  margin-left: 0px;
+  display: flex;
+  flex-flow: column;
+  transition: margin ease-in-out 0.4s;
+}
 .navbar ul {
   margin-top: 4rem;
   list-style-type: none;

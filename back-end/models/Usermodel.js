@@ -2,7 +2,6 @@ const { PBKDF2 } = require("crypto-js");
 const db = require("../db/db");
 
 class UserModel {
-
   static createUser = async (userData) => {
     try {
       const { id, username, firstName, lastName, email, password, valided } = userData;

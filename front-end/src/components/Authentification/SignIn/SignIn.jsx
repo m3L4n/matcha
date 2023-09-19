@@ -5,8 +5,10 @@ import "./SignIn.scoped.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { notify } from "../../Global/toast-notify";
+import { useAuth } from "src/Context/AuthContext";
 export default function SignIn() {
   const navigate = useNavigate();
+  const {setTriggerReload} = useAuth();
   const [user, setUser] = useState({
     username: "",
     password: ""
@@ -30,14 +32,22 @@ export default function SignIn() {
       body: JSON.stringify(user)
     };
     fetch("http://localhost:4000/users/login", options)
-      .then(response => response.json())
+      .then(response => {
+        if ( response.status == 200){
+
+          notify("sucess", "login sucess")
+          setTriggerReload(true);
+          navigate('/match')
+        }
+        return response.json()
+      })
       .then(data => {
         if (data.msg == "Authentication failed") {
           notify(
             "warning",
             "please sign up , we cant match username and password"
           );
-        } else if (data.msg == "User not verified") {
+        } else if (data.msg === "User not verified") {
           notify(
             "warning",
             "please verify your email  we send you a mail to verify your email"
@@ -84,7 +94,7 @@ export default function SignIn() {
           {" "}
           Signin
         </button>
-        <Link to="/reset-password" className="body">
+        <Link to="/reset-password" className="body link">
           {" "}
           Forgot your password ? <br /> Reset
         </Link>

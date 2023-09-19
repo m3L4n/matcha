@@ -12,4 +12,9 @@ router.post("/send-password-reset", UserController.sendEmailResetPassword);
 router.get("/whoami", isAuth, UserController.getUser);
 router.get("/matches", isAuth, UserController.getUsers);
 
+router.put("/changePassword", UserController.changePassword);
+router.delete("/disconnect", isAuth, UserController.disconnectUser);
+router.get("/verify-email/:id/:token", UserController.verifyEmail);
+
+
 module.exports = router;

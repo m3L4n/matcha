@@ -154,6 +154,22 @@ class UserController {
     let users = await UserModel.getAll(id);
     res.json(checkAndChange(users));
   }
+
+  static changePassword = async (req, res) => {
+    try {
+      const { id, password } = req.body;
+      const psswdCrypt = await bcrypt.hash(password, 10);
+      await UserModel.update(id, "password", psswdCrypt);
+      return res.status(200).send("update sucessfuly");
+    } catch (error) {
+      return res.status(500).send("id are not in the db");
+    }
+  };
+
+  static disconnectUser = async (_, res) => {
+    res.clearCookie("jwt");
+    res.end();
+  };
 }
 
 module.exports = {
