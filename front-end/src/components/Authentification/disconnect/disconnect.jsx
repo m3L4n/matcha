@@ -10,18 +10,18 @@ export async  function disconect(){
   };
   fetch("http://localhost:4000/users/disconect", options)
     .then(response => {
-      console.log(response);
       if (response.status == 200) {
         notify(
           "sucess",
           "disconected"
         );
+        return {}
       }
       return response.json();
     })
     .then(data => console.log(data))
     .catch(error => {
-      notify("error", "we can't send email for the moment, please retry");
+      notify("error", "we can't disconnect you, please retry");
     });
 
 }

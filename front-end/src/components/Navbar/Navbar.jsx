@@ -8,17 +8,12 @@ export default function Navbar() {
   const {setLoading, setUser,setTriggerReload } = useAuth();
   const navigate = useNavigate();
   let pages = ["match", "profile", "message"];
-  const pages = ["match", "profile", "messages", "disconnect"];
   const [sidebar, setSidebar] = useState(false);
   const store = useContext(AuthContext);
   if (Object.keys(store?.user)?.length == 0){
     pages = ['login','register']
   }
 
-  useEffect(() => {
-
-    console.log("store",store.user);
-  }, [])
 
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () =>{

@@ -47,7 +47,7 @@ export default function SignIn() {
             "warning",
             "please sign up , we cant match username and password"
           );
-        } else if (data.msg == "User not verified") {
+        } else if (data.msg === "User not verified") {
           notify(
             "warning",
             "please verify your email  we send you a mail to verify your email"
