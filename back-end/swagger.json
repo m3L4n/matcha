@@ -1,0 +1,203 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API Documentation",
+    "description": "Documentation for your API"
+  },
+  "basePath": "/",
+  "paths": {
+    "/": {
+      "post": {
+        "summary": "Create a new user",
+        "operationId": "signup",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User data for registration",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "Username of the new user"
+                },
+                "firstName": {
+                  "type": "string",
+                  "description": "firstName of the new user" 
+                },
+                "lasstName": {
+                  "type": "string",
+                  "description": "lastName of the new user" 
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email address of the new user"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Password for the new user"
+                }
+              },
+              "required": ["username", "email", "password, firstName, lastName"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User created successfully"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "User login",
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User login credentials",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "username of the user"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Password of the user"
+                }
+              },
+              "required": ["username", "password"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User logged in successfully"
+          }
+        }
+      }
+    },
+    "/verify-email/{id}/{token}": {
+      "get": {
+        "summary": "Verify email",
+        "operationId": "verifyEmail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verified successfully"
+          }
+        }
+      }
+    },
+    "/send-email-verification": {
+      "post": {
+        "summary": "Send email verification",
+        "operationId": "sendEmailVerification",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of the user to send email verification"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verification sent successfully"
+          }
+        }
+      }
+    },
+    "/send-password-reset": {
+      "post": {
+        "summary": "Send password reset email",
+        "operationId": "sendEmailResetPassword",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of the user to send password reset email"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password reset email sent successfully"
+          }
+        }
+      }
+    },
+    "/changePassword": {
+      "put": {
+        "summary": "Change user password",
+        "operationId": "changePassword",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "User ID"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "New Password"
+                }
+              }
+            },
+            "description": "User ID and new password for changing the password"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password changed successfully"
+          }
+        }
+      }
+    }
+    ,
+    "/whoami": {
+      "get": {
+        "summary": "Get user information",
+        "operationId": "getUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User information retrieved successfully"
+          }
+        }
+      }
+    }
+  }
+}

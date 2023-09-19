@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../Context/AuthContext";
 import { notify } from "../../Global/toast-notify";
+import './HomeNoneVerified.scoped.css'
 export default function HomeNoneVerified() {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -53,10 +54,13 @@ export default function HomeNoneVerified() {
   }
 
   return (
-    <div>
-      you have to valided your email
-      <button onClick={resendEmail}> re send email verification</button>
-      <Link to="/login"> go back login</Link>
+    <div className="container">
+      <div className="body-sendEmail">
+        <h1 className="header header-matcha"> MATCHA</h1>
+        <p className="title-2"> You have to validate your email </p>
+      <button onClick={resendEmail} className="button-resend title-1"> resend email</button>
+      <Link to="/login" className="link body"> go back login</Link>
+      </div>
     </div>
   );
 }

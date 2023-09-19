@@ -1,15 +1,20 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const morgan = require("morgan");
+const swaggerJSDoc = require("swagger-jsdoc");
 const cookieParser = require("cookie-parser");
 const { deletedataExpiredFromToken } = require("./db/updateExpiredData");
 const userRouter = require("./routes/users/users");
-
+const swaggerDocument = require("./swagger.json");
 app.use(express.json());
+
 app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 
 app.use(cookieParser());
-
+app.use(morgan("dev"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/users", userRouter);
 app.use(function (req, res, next) {
   res.header("content-type", "application/json;charset=utf-8");

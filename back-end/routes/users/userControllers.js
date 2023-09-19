@@ -1,9 +1,7 @@
 const { sendingMail } = require("../../mailing/mailing");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
-const db = require("../../db/db");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const userModel = require("../../models/Usermodel");
 const tokenModal = require("../../models/Tokenmodel");
 const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
@@ -23,7 +21,6 @@ const signup = async (req, res) => {
       valided,
     };
     const user = await userModel.createUser(data);
-    // if (user) {
     const emailSend = await sendingEmailVerification(username);
     if (emailSend) {
       return res.status(201).send(user);
@@ -90,7 +87,7 @@ const login = async (req, res) => {
           const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
             expiresIn: 1 * 24 * 60 * 60 * 1000,
           });
-          return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ access_token: token });
+          return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(200).send({ access_token: token });
         } else {
           return res.status(401).send({ msg: "User not verified" });
         }
@@ -136,6 +133,16 @@ const sendEmailResetPassword = async (req, res) => {
     return res.status(500).json("email are not in the db");
   }
 };
+const changePassword = async (req, res) => {
+  try {
+    const { id, password } = req.body;
+    const psswdCrypt = await bcrypt.hash(password, 10);
+    await userModel.update(id, "password", psswdCrypt);
+    return res.status(200).send("update sucessfuly");
+  } catch (error) {
+    return res.status(500).send("id are not in the db");
+  }
+};
 const getUser = async (req, res) => {
   try {
     const { id, username } = req.authUser;
@@ -145,6 +152,10 @@ const getUser = async (req, res) => {
     return res.status(400).send("this user doesnt exist");
   }
 };
+const disconectUser = async (req, res) => {
+  res.clearCookie("jwt");
+  res.end();
+};
 
 //exporting the modules
 module.exports = {
@@ -153,5 +164,7 @@ module.exports = {
   verifyEmail,
   sendEmailVerification,
   sendEmailResetPassword,
+  changePassword,
   getUser,
+  disconectUser,
 };

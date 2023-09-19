@@ -130,6 +130,15 @@
   /* top: 50%; */
   /* transform: translateY(-50%);  */
 }
+.link{
+  text-decoration: none;
+  color: black;
+  transition: opacity 0.3s;
+  text-align: center;
+}
+.link:hover{
+  opacity: 0.6;
+}
 .img-right{
   width: 570px;
   position: absolute;
