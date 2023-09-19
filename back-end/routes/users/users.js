@@ -1,8 +1,8 @@
 // routes/users.js
 const express = require("express");
 const router = express.Router();
-const { UserController } = require("./userControllers");
-const { isAuth } = require("../../Middlewares/userAuth");
+const { UserController } = require("../../controller/users/userControllers");
+const { isAuth } = require("../../middlewares/userAuth");
 
 router.post("/", UserController.signup);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);

@@ -8,9 +8,9 @@ const tokenModal = require("../../models/Tokenmodel");
 const UserModel = require("../../models/Usermodel");
 
 class UserController {
-  static signup = async (req, res) => {
+  static signup = async (req, res, needValidation = false) => {
     try {
-      const valided = false;
+      const valided = needValidation;
       const id = uuidv4();
       const { username, firstName, lastName, email, password } = req.body;
       const data = {
@@ -149,8 +149,9 @@ class UserController {
     }
   };
 
-  static getUsers = async (_, res) => {
-    let users = await UserModel.getAll();
+  static getUsers = async (req, res) => {
+    const { id } = req.authUser;
+    let users = await UserModel.getAll(id);
     res.json(checkAndChange(users));
   }
 }
