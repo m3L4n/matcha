@@ -1,0 +1,16 @@
+.selectcontainer {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+}
+
+.option {
+  border-radius: 20px;
+  border: 1px solid var(--green);
+  background-color: var(--cream);
+  color: var(--green);
+  padding: .5em 1em;
+}

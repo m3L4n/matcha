@@ -1,0 +1,14 @@
+.filter-options .options {
+  border: 1px solid var(--green);
+  display: flex;
+  flex-flow: nowrap row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border-radius: 20px;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.filter-options .options p {
+  color: var(--green);
+}

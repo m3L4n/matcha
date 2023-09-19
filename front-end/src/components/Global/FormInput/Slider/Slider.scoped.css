@@ -1,0 +1,33 @@
+.slidercontainer {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+}
+
+.slider {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: var(--green);
+  border-radius: 20px;
+  height: 10px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--cream);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  background-color: var(--cream);
+  cursor: pointer;
+}
+
+label {
+  color: var(--green);
+}

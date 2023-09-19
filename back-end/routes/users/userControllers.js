@@ -133,16 +133,6 @@ const sendEmailResetPassword = async (req, res) => {
     return res.status(500).json("email are not in the db");
   }
 };
-const changePassword = async (req, res) => {
-  try {
-    const { id, password } = req.body;
-    const psswdCrypt = await bcrypt.hash(password, 10);
-    await userModel.update(id, "password", psswdCrypt);
-    return res.status(200).send("update sucessfuly");
-  } catch (error) {
-    return res.status(500).send("id are not in the db");
-  }
-};
 const getUser = async (req, res) => {
   try {
     const { id, username } = req.authUser;
@@ -151,10 +141,6 @@ const getUser = async (req, res) => {
   } catch (e) {
     return res.status(400).send("this user doesnt exist");
   }
-};
-const disconectUser = async (req, res) => {
-  res.clearCookie("jwt");
-  res.end();
 };
 
 //exporting the modules

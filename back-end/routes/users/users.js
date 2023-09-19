@@ -1,21 +1,20 @@
 // routes/users.js
 const express = require("express");
 const router = express.Router();
-const { v4: uuidv4 } = require("uuid");
-const userController = require("./userControllers");
-const { signup, verifyEmail, login, sendEmailVerification, sendEmailResetPassword, getUser, changePassword, disconectUser } = userController;
-const pool = require("../../db/db");
-const { isAuth } = require("../../Middlewares/userAuth");
+const { UserController } = require("../../controller/users/userControllers");
+const { isAuth } = require("../../middlewares/userAuth");
 
-router.post("/", signup);
-router.post("/login", login);
-router.post("/send-email-verification", sendEmailVerification);
-router.post("/send-password-reset", sendEmailResetPassword);
+router.post("/", UserController.signup);
+router.get("/verify-email/:id/:token", UserController.verifyEmail);
+router.post("/login", UserController.login);
+router.post("/send-email-verification", UserController.sendEmailVerification);
+router.post("/send-password-reset", UserController.sendEmailResetPassword);
+router.get("/whoami", isAuth, UserController.getUser);
+router.get("/matches", isAuth, UserController.getUsers);
 
-router.get("/verify-email/:id/:token", verifyEmail);
-router.get("/whoami", isAuth, getUser);
+router.put("/changePassword", UserController.changePassword);
+router.delete("/disconnect", isAuth, UserController.disconnectUser);
+router.get("/verify-email/:id/:token", UserController.verifyEmail);
 
-router.put("/changePassword", changePassword);
-router.delete("/disconect", isAuth, disconectUser);
 
 module.exports = router;

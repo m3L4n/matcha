@@ -1,22 +1,9 @@
-.title {
-  width: 80%;
-  margin: auto;
-}
-
-.header-title {
-  margin: 50px 0;
-  color: var(--green);
-  text-align: center;
-  user-select: none;
-}
-
 .searchForm {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 40px;
   margin-bottom: 50px;
-  border: 2px solid red;
 }
 
 form {
@@ -83,21 +70,4 @@ button[type="submit"]:hover {
 
 .filter:hover {
   color: var(--dark-green);
-}
-
-.matches {
-  display: flex;
-  flex-flow: row wrap;
-  width: 80%;
-  max-width: 856px;
-  justify-content: center;
-  align-items: self-start;
-  gap: 50px;
-  margin: auto;
-}
-
-@media (min-width: 2560px) {
-  .matches {
-    max-width: 70%;
-  }
 }
