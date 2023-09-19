@@ -4,7 +4,7 @@ import { FaDiscord } from "react-icons/fa6";
 import "./SignIn.scoped.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { notify } from "../../Global/toast-notify";
+import { notify } from "components/Global/toast-notify";
 import { useAuth } from "src/Context/AuthContext";
 export default function SignIn() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function SignIn() {
     };
     fetch("http://localhost:4000/users/login", options)
       .then(response => {
-        if ( response.status == 200){
+        if ( response.status == 201){
 
           notify("sucess", "login sucess")
           setTriggerReload(true);
@@ -42,12 +42,13 @@ export default function SignIn() {
         return response.json()
       })
       .then(data => {
+        console.log("data request :",data)
         if (data.msg == "Authentication failed") {
           notify(
             "warning",
             "please sign up , we cant match username and password"
           );
-        } else if (data.msg === "User not verified") {
+        } else if (data.msg === "user not verified") {
           notify(
             "warning",
             "please verify your email  we send you a mail to verify your email"

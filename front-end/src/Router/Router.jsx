@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter} from "react-router-dom";
 import NavbarWrapper from "components/NabvarWrapper/NavbarWrapper";
 import LandingPage from "components/LandingPage/LandingPage";
 import ErrorPage from "components/ErrorPage/ErrorPage";
@@ -7,8 +7,6 @@ import Authentification from "components/Authentification/Authentification";
 import HomeNoneVerified from "components/Authentification/HomeNoneVerified/HomeNoneVerified";
 import ResetPassword from "components/ResetPassword/ResetPassword";
 import { PrivateRoute } from "./ProtectedRoute";
-import { useContext } from "react";
-import { AuthContext } from "src/Context/AuthContext";
 import { NoneConnectedRoute } from "./NoneConnectedRoute";
 
 
@@ -63,9 +61,7 @@ export const router = createBrowserRouter([
         {
           path: "/reset",
           element:
-          <NoneConnectedRoute>
            <HomeNoneVerified />
-          </NoneConnectedRoute>
         },
         {
           path: "/reset-password",
