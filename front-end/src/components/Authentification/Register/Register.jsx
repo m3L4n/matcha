@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { FaDiscord } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { notify } from "../../Global/toast-notify";

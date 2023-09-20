@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import "./Navbar.scoped.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { disconect } from "../Authentification/disconnect/disconnect";
+import { disconnect } from "components/Authentification/disconnect/disconnect";
 import { AuthContext, useAuth } from "src/Context/AuthContext";
 
 export default function Navbar() {
@@ -10,16 +10,16 @@ export default function Navbar() {
   let pages = ["match", "profile", "message"];
   const [sidebar, setSidebar] = useState(false);
   const store = useContext(AuthContext);
+  
   if (Object.keys(store?.user)?.length == 0) {
     pages = ['login', 'register']
   }
 
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
-    disconect();
+    disconnect();
     setTriggerReload(true);
     navigate("/");
-
   }
 
   return (

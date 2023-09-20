@@ -1,6 +1,5 @@
 import { notify } from "../../Global/toast-notify";
-import { useNavigate } from 'react-router-dom';
-export async  function disconect(){
+export async  function disconnect(){
   const options = {
     method: "delete",
     headers: {
@@ -8,7 +7,7 @@ export async  function disconect(){
     },
     credentials: "include",
   };
-  fetch("http://localhost:4000/users/disconect", options)
+  fetch("http://localhost:4000/users/disconnect", options)
     .then(response => {
       if (response.status == 200) {
         notify(

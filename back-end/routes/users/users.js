@@ -16,5 +16,4 @@ router.put("/changePassword", UserController.changePassword);
 router.delete("/disconnect", isAuth, UserController.disconnectUser);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);
 
-
 module.exports = router;

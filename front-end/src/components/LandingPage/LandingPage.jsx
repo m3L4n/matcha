@@ -1,5 +1,4 @@
 import React from 'react'
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./LandingPage.scoped.css";
 export default function LandingPage() {
@@ -58,8 +57,8 @@ export default function LandingPage() {
       </div>
       <div className="body-landing-page">
       <header className="landingPage__header">
-        <button className="landingPage__header-button body" onClick={redirectionToRegister}> Sign in</button>
-        <button className="landingPage__header-button body" onClick={redirectionToSignIn}> Sign up </button>
+        <button className="landingPage__header-button body" onClick={redirectionToSignIn}> Sign in</button>
+        <button className="landingPage__header-button body" onClick={redirectionToRegister}> Sign up </button>
       </header>
       <div className="center-landing-page">
 

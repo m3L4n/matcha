@@ -4,13 +4,13 @@ const { sendingEmailVerification } = require("../../mailing/sendEmailVerificatio
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const tokenModal = require("../../models/Tokenmodel");
-const UserModel = require("../../models/Usermodel");
+const { TokenModel } = require("../../models/Tokenmodel");
+const { UserModel } = require("../../models/Usermodel");
 
 class UserController {
   static signup = async (req, res, needValidation = false) => {
     try {
-      const valided = needValidation;
+      const valided = false;
       const id = uuidv4();
       const { username, firstName, lastName, email, password } = req.body;
       const data = {
@@ -25,12 +25,15 @@ class UserController {
       const user = await UserModel.createUser(data);
       const emailSend = await sendingEmailVerification(username);
       if (emailSend) {
+        console.log("email send perfectly");
         return res.status(201).send(user);
       } else {
+        console.log("token not created");
         return res.status(400).send("token not created");
       }
     } catch (error) {
       if (error == "user doesnt exist") {
+        console.log("userdoesnt exist");
         return res.status(409).send("Details are not correct");
       }
       return res.status(500).send({ error: error });
@@ -42,7 +45,7 @@ class UserController {
       const token = req.params.token;
       const id = req.params.id;
 
-      const usertoken = await tokenModal.verifyToken({
+      const usertoken = await TokenModel.verifyToken({
         id,
         token,
       });
@@ -59,7 +62,7 @@ class UserController {
             msg: "We were unable to find a user for this verification. Please SignUp!",
           });
         } else if (user.valided) {
-          return res.status(200).send("UserModel has been already verified. Please Login");
+          return res.status(200).send("you are already verified. Please Login");
         } else {
           const updated = await UserModel.update(id, "valided", true);
           console.log(updated);
@@ -91,7 +94,7 @@ class UserController {
             });
             return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ access_token: token });
           } else {
-            return res.status(401).send({ msg: "UserModel not verified" });
+            return res.status(401).send({ msg: "user not verified" });
           }
         } else {
           return res.status(401).send({ msg: "Authentication failed" });
@@ -152,7 +155,7 @@ class UserController {
     const { id } = req.authUser;
     let users = await UserModel.getAll(id);
     res.json(checkAndChange(users));
-  }
+  };
 
   static changePassword = async (req, res) => {
     try {
