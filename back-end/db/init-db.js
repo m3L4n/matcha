@@ -10,10 +10,10 @@ const checkDatabaseConnection = async () => {
       await pool.query("SELECT NOW()");
 
       createTable();
-      console.log("Base de données prête");
+      console.log("Database ready!");
       return;
     } catch (err) {
-      console.error("Erreur lors de la connexion à la base de données:", err);
+      console.error("Error when connection to database:", err);
       retries--;
       await new Promise((res) => setTimeout(res, 2000));
     }
@@ -48,7 +48,7 @@ async function createTableUsers(client) {
   CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
   CREATE TABLE IF NOT EXISTS users (
     id UUID DEFAULT uuid_generate_v4(),
-    username VARCHAR(20) NOT NULL,
+    username VARCHAR(30) NOT NULL,
     email TEXT NOT NULL,
     firstName TEXT NOT NULL,
     gender gender_enum,
@@ -150,9 +150,9 @@ async function createTable() {
     await createTableprofilViewer(client);
     await createTableNotifications(client);
     await createTableToken(client);
-    console.log('Table "users" créée avec succès.');
+    console.log('Table "users" created with success.');
   } catch (error) {
-    console.error("Erreur lors de la création de la table :", error);
+    console.error("Error when creating table:", error);
   } finally {
     client.release();
   }
