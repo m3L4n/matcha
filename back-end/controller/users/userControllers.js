@@ -23,7 +23,6 @@ class UserController {
         valided,
       };
       const user = await UserModel.createUser(data);
-      // if (user) {
       const emailSend = await sendingEmailVerification(username);
       if (emailSend) {
         return res.status(201).send(user);
