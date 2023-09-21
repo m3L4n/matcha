@@ -21,6 +21,7 @@ export default function BrowsingPage() {
     profilePicture={"http://placekitten.com/253/300"}
     city={"Paris"}
   />)
+
   return (
     <>
       <header className='title'>

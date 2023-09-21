@@ -1,4 +1,3 @@
-// init-db.js
 const { faker } = require('@faker-js/faker');
 const { v4: uuidv4 } = require("uuid");
 const db = require('./db/db');
@@ -24,10 +23,11 @@ for (let i = 0; i < 100; i++) {
   const password = faker.string.alphanumeric();
   const description = faker.string.alphanumeric(200);
   const rate_fame = 1500 - Math.floor(Math.random() * 200)
-  const age = Math.floor(Math.random() * 50);
-  const profile_picture = faker.image.avatar();
+  const age = Math.floor(Math.random() * (50 - 18) + 18);
+  const profile_picture = faker.internet.avatar();
   const valided = true;
-  const position = faker.location.nearbyGPSCoordinate();
+  let position = faker.location.nearbyGPSCoordinate();
+  position = `(${position[0]}, ${position[1]})`;
   const params = [uuidv4(), username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age];
   generateUser(params)
     .then(() => console.log(`fake user ${i} inserted ✅`))
@@ -35,6 +35,9 @@ for (let i = 0; i < 100; i++) {
 }
 
 // generate a test account
+let position = faker.location.nearbyGPSCoordinate();
+position = `(${position[0]}, ${position[1]})`;
+
 const params = [
   uuidv4(),
   "matchadmin",
@@ -47,7 +50,7 @@ const params = [
   bcrypt.hashSync("naruto", 10),
   "Hello world!",
   1500,
-  faker.location.nearbyGPSCoordinate(),
+  position,
   faker.image.avatar(),
   true,
   24

@@ -1,4 +1,3 @@
-// init-db.js
 const pool = require("../db/db");
 require("dotenv").config();
 
@@ -57,9 +56,9 @@ async function createTableUsers(client) {
     lastName TEXT NOT NULL,
     password TEXT,
     description VARCHAR(255),
-    age INT,
+    age INT CHECK (age > 17),
     rate_fame INT DEFAULT 1500,
-    position TEXT,
+    position POINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile_picture BYTEA,
     "valided" BOOLEAN DEFAULT false,
