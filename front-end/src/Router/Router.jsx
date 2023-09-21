@@ -11,72 +11,72 @@ import { NoneConnectedRoute } from "./NoneConnectedRoute";
 
 
 export const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <NavbarWrapper/>,
-      errorElement: <ErrorPage />,
-      children: [
-        {
-          path: "/",
-          element:
+  {
+    path: "/",
+    element: <NavbarWrapper/>,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/",
+        element:
           <NoneConnectedRoute>
             <LandingPage />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/match",
-          element:
+      },
+      {
+        path: "/match",
+        element:
           <PrivateRoute>
-           <BrowsingPage />
+            <BrowsingPage />
           </PrivateRoute>
-        },
-        {
-          path: "/profile",
-          element: 
+      },
+      {
+        path: "/profile",
+        element: 
           <PrivateRoute>
-          <div>Profile</div>
+            <div>Profile</div>
           </PrivateRoute>
-        },
-        {
-          path: "/message",
-          element:
+      },
+      {
+        path: "/message",
+        element:
           <PrivateRoute>
-           <div>Message</div>
-           </PrivateRoute>
-        },
-        {
-          path: "/register",
-          element:
+            <div>Message</div>
+          </PrivateRoute>
+      },
+      {
+        path: "/register",
+        element:
           <NoneConnectedRoute>
-          <Authentification />
+            <Authentification />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/login",
-          element: 
+      },
+      {
+        path: "/login",
+        element: 
           <NoneConnectedRoute>
-          <Authentification />
+            <Authentification />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/reset",
-          element:
+      },
+      {
+        path: "/reset",
+        element:
            <HomeNoneVerified />
-        },
-        {
-          path: "/reset-password",
-          element: 
+      },
+      {
+        path: "/reset-password",
+        element: 
           <NoneConnectedRoute>
-          <ResetPassword />
+            <ResetPassword />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/reset-password/:id",
-          element: 
+      },
+      {
+        path: "/reset-password/:id",
+        element: 
           <NoneConnectedRoute>
-          <ResetPassword />
+            <ResetPassword />
           </NoneConnectedRoute>
-        }
-      ]
-    }
-  ]);
+      }
+    ]
+  }
+]);

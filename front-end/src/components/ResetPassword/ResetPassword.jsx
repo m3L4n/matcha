@@ -5,23 +5,23 @@ import { Link } from "react-router-dom";
 import "./ResetPassword.scoped.css"
 function ComponentsResendEmailPassword({email, handleChange, handleReset}){
 
-return (
-  <div className="container-resetEmail">
-  <h1 className="header header-matcha"> MATCHA</h1>
-    <p className="body">Enter the email address associated with your  account and we’ll send you a link to reset your password.</p>
-    <form className="form">
-    <input
-      type={"email"}
-      value={email}
-      placeholder="email"
-      onInput={handleChange}
-      className="input"
-    />
-    <input type={"submit"} onClick={handleReset} value="send email" className="input-submit body-highlight"/> 
-  </form>
-  <Link to="/login" className="link body"> go back login</Link>
-</div>
-)}
+  return (
+    <div className="container-resetEmail">
+      <h1 className="header header-matcha"> MATCHA</h1>
+      <p className="body">Enter the email address associated with your  account and we’ll send you a link to reset your password.</p>
+      <form className="form">
+        <input
+          type={"email"}
+          value={email}
+          placeholder="email"
+          onInput={handleChange}
+          className="input"
+        />
+        <input type={"submit"} onClick={handleReset} value="send email" className="input-submit body-highlight"/> 
+      </form>
+      <Link to="/login" className="link body"> go back login</Link>
+    </div>
+  )}
 
 function ComponentsresetPassword({password, confirmPassword, handleChange, handleResetPassWord}){
 
@@ -50,7 +50,7 @@ export default function ResetPassword() {
 
   useEffect(() => {
     if (Object.keys(res).length > 0){
-          setSendEmail(0);
+      setSendEmail(0);
     }
     else{
       setSendEmail(1); 
@@ -117,22 +117,22 @@ export default function ResetPassword() {
       })
     };
     fetch("http://localhost:4000/users/changePassword", options)
-    .then(response => {
-      if (response.status == 200) {
-        notify("sucess", "your password are sucessfuly changed");
-        setPassword({
-          password: "",
-          confirmPassword: ""
-        })
-      }
-      else if ( response.status == 500){
-        notify("error", "cant update password now, but you can contact us or retry later ")
-      }
-      return response.json();
-    })
-    .then(data => {
-    })
-    .catch(error => {console.log(error)});
+      .then(response => {
+        if (response.status == 200) {
+          notify("sucess", "your password are sucessfuly changed");
+          setPassword({
+            password: "",
+            confirmPassword: ""
+          })
+        }
+        else if ( response.status == 500){
+          notify("error", "cant update password now, but you can contact us or retry later ")
+        }
+        return response.json();
+      })
+      .then(data => {
+      })
+      .catch(error => {console.log(error)});
   }
 
   return (

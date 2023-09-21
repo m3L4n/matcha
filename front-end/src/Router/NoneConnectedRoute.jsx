@@ -12,9 +12,9 @@ export function NoneConnectedRoute({ children }) {
     }
   }, [loading, user])
 
-return (
-  <>
-  { !loading && children}
-  </>
-)
+  return (
+    <>
+      { !loading && children}
+    </>
+  )
 }

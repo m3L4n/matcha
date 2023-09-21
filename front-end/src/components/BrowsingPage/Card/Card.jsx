@@ -3,14 +3,15 @@ import './Card.scoped.css'
 import { BsFillSuitHeartFill } from 'react-icons/bs'
 import { useState } from "react";
 
-export default function Card({ user }) {
+export default function Card({ username, age, city, profilePicture }) {
   const [like, setLike] = useState(false);
 
   return (
-    <div className="card" style={{ backgroundImage: `url(${user.profilePicture})` }}>
+    <div className="card" style={{ backgroundImage: `url(${profilePicture})` }}>
       <div className="user-infos body-highlight">
-        <p> {user.firstName} {user.age} </p>
-        <p> {user.city} </p>
+        <p className="user-infos-username"> {username} </p>
+        <p className="user-infos-age">{age}</p>
+        <p> {city} </p>
       </div>
       <button onClick={() => setLike(!like)}
         onMouseMove={e => {
@@ -43,10 +44,8 @@ export default function Card({ user }) {
 }
 
 Card.propTypes = {
-  user: PropTypes.shape({
-    firstName: PropTypes.string.isRequired,
-    age: PropTypes.number.isRequired,
-    city: PropTypes.string.isRequired,
-    profilePicture: PropTypes.string.isRequired,
-  }).isRequired,
+  username: PropTypes.string.isRequired,
+  age: PropTypes.number.isRequired,
+  city: PropTypes.string.isRequired,
+  profilePicture: PropTypes.string.isRequired,
 };

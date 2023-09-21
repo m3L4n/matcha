@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [ triggerReload, setTriggerReload] = useState(true)
 
   useEffect(() => {
-      getUserConnected();
+    getUserConnected();
   }, [triggerReload])
 
   async function getUserConnected() {
