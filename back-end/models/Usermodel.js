@@ -48,36 +48,37 @@ class UserModel {
 
   static getAll = (currentUserId) => {
     const ELO_DIFFERENCE = 300;
-    const AGE_DIFFERENCE = 10;
+    const AGE_DIFFERENCE = 11;
     return new Promise((next) => {
-      db.query("SELECT sexual_preference rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
+      db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {
-          const [sexual_preference, rate_fame, position, age] = result.rows[0];
+          const { sexual_preference, rate_fame, position, age } = result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
-          // need to implement localisation matching
+          // TODO add position to matches criteria
           console.log(position);
           if (sexual_preference !== "both") {
             db.query(
-              "SELECT username, position, profile_picture, age FROM users \
-            WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5",
-              [sexual_preference, min_fame, max_fame, min_age, max_age]
+              "SELECT id, username, position, profile_picture, age FROM users \
+              WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
+              AND id != $6",
+              [sexual_preference, min_fame, max_fame, min_age, max_age, currentUserId]
             )
               .then((result) => next(result.rows))
-              .catch((err) => next(err));
+              .catch((err) => next(`error in select matches:${err}`));
           } else {
             db.query(
-              "SELECT username, position, profile_picture, age FROM users \
-            WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4",
+              "SELECT id, username, position, profile_picture, age FROM users \
+              WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND id IS NOT $4",
               [min_fame, max_fame, min_age, max_age]
             )
               .then((result) => next(result.rows))
-              .catch((err) => next(err));
+              .catch((err) => next(`error in both:${err}`));
           }
         })
-        .catch((err) => next(err));
+        .catch((err) => next(`error in base request ${err} | id ${currentUserId}`));
     });
   };
 }

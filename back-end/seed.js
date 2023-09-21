@@ -12,7 +12,7 @@ const generateUser = async (params) => {
   return db.query(query, params);
 }
 
-for (let i = 0; i < 42; i++) {
+for (let i = 0; i < 100; i++) {
   const random = Math.floor(Math.random() * 10);
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
@@ -24,7 +24,7 @@ for (let i = 0; i < 42; i++) {
   const password = faker.string.alphanumeric();
   const description = faker.string.alphanumeric(200);
   const rate_fame = 1500 - Math.floor(Math.random() * 200)
-  const age = Math.floor(Math.random() * 60);
+  const age = Math.floor(Math.random() * 50);
   const profile_picture = faker.image.avatar();
   const valided = true;
   const position = faker.location.nearbyGPSCoordinate();
