@@ -4,6 +4,81 @@ const db = require('./db/db');
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
+const gps = [
+  { x: 48.8566, y: 2.3522 },
+  { x: 48.8594, y: 2.2945 },
+  { x: 45.7485, y: 4.8467 },
+  { x: 43.6047, y: 1.4442 },
+  { x: 43.7102, y: 7.2620 },
+  { x: 48.1173, y: -1.6778 },
+  { x: 47.2184, y: -1.5536 },
+  { x: 49.4427, y: 1.0935 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6292, y: 3.0573 },
+  { x: 48.5896, y: 7.7452 },
+  { x: 43.2965, y: 5.3698 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6350, y: 3.0636 },
+  { x: 48.8588, y: 2.2945 },
+  { x: 47.2235, y: -1.5485 },
+  { x: 48.8566, y: 2.3522 },
+  { x: 45.7485, y: 4.8467 },
+  { x: 43.7102, y: 7.2620 },
+  { x: 48.1173, y: -1.6778 },
+  { x: 47.2184, y: -1.5536 },
+  { x: 49.4427, y: 1.0935 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6292, y: 3.0573 },
+  { x: 48.5896, y: 7.7452 },
+  { x: 43.2965, y: 5.3698 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6350, y: 3.0636 },
+  { x: 48.8588, y: 2.2945 },
+  { x: 47.2235, y: -1.5485 },
+  { x: 48.8566, y: 2.3522 },
+  { x: 45.7485, y: 4.8467 },
+  { x: 43.7102, y: 7.2620 },
+  { x: 48.1173, y: -1.6778 },
+  { x: 47.2184, y: -1.5536 },
+  { x: 49.4427, y: 1.0935 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6292, y: 3.0573 },
+  { x: 48.5896, y: 7.7452 },
+  { x: 43.2965, y: 5.3698 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6350, y: 3.0636 },
+  { x: 48.8588, y: 2.2945 },
+  { x: 47.2235, y: -1.5485 },
+  { x: 48.8566, y: 2.3522 },
+  { x: 45.7485, y: 4.8467 },
+  { x: 43.7102, y: 7.2620 },
+  { x: 48.1173, y: -1.6778 },
+  { x: 47.2184, y: -1.5536 },
+  { x: 49.4427, y: 1.0935 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6292, y: 3.0573 },
+  { x: 48.5896, y: 7.7452 },
+  { x: 43.2965, y: 5.3698 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6350, y: 3.0636 },
+  { x: 48.8588, y: 2.2945 },
+  { x: 47.2235, y: -1.5485 },
+  { x: 48.8566, y: 2.3522 },
+  { x: 45.7485, y: 4.8467 },
+  { x: 43.7102, y: 7.2620 },
+  { x: 48.1173, y: -1.6778 },
+  { x: 47.2184, y: -1.5536 },
+  { x: 49.4427, y: 1.0935 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6292, y: 3.0573 },
+  { x: 48.5896, y: 7.7452 },
+  { x: 43.2965, y: 5.3698 },
+  { x: 48.5734, y: 7.7521 },
+  { x: 50.6350, y: 3.0636 },
+  { x: 48.8588, y: 2.2945 },
+  { x: 47.2235, y: -1.5485 }
+]
+
 const generateUser = async (params) => {
   const query = "INSERT INTO \
   users(id, username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age) \
@@ -20,14 +95,14 @@ for (let i = 0; i < 100; i++) {
   const gender = random % 2 == 0 ? "male" : "female";
   const beverage = random % 2 == 0 ? "matcha" : "coffee";
   const sexual_preference = random % 2 == 0 ? "male" : "female";
-  const password = faker.string.alphanumeric();
+  const password = bcrypt.hashSync(faker.string.alphanumeric(), 10);
   const description = faker.string.alphanumeric(200);
   const rate_fame = 1500 - Math.floor(Math.random() * 200)
   const age = Math.floor(Math.random() * (50 - 18) + 18);
   const profile_picture = faker.internet.avatar();
   const valided = true;
-  let position = faker.location.nearbyGPSCoordinate();
-  position = `(${position[0]}, ${position[1]})`;
+  let gps_position = gps[Math.floor(Math.random() * gps.length)];
+  let position = `(${gps_position.x}, ${gps_position.y})`
   const params = [uuidv4(), username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age];
   generateUser(params)
     .then(() => console.log(`fake user ${i} inserted ✅`))
@@ -35,8 +110,8 @@ for (let i = 0; i < 100; i++) {
 }
 
 // generate a test account
-let position = faker.location.nearbyGPSCoordinate();
-position = `(${position[0]}, ${position[1]})`;
+let gps_position = gps[Math.floor(Math.random() * gps.length)];
+let position = `(${gps_position.x}, ${gps_position.y})`
 
 const params = [
   uuidv4(),
