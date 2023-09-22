@@ -11,6 +11,13 @@
   margin: 0 0 1rem 0.5rem;
 }
 
+.user-infos-username {
+  max-width: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .like-button {
   color: var(--green);
   background-color: var(--cream);

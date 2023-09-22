@@ -12,9 +12,9 @@ export function PrivateRoute({ children }) {
     }
   }, [loading, user])
 
-return (
-  <>
-  { !loading && children}
-  </>
-)
+  return (
+    <>
+      { !loading && children}
+    </>
+  )
 }

@@ -58,8 +58,8 @@ export default function HomeNoneVerified() {
       <div className="body-sendEmail">
         <h1 className="header header-matcha"> MATCHA</h1>
         <p className="title-2"> You have to validate your email </p>
-      <button onClick={resendEmail} className="button-resend title-1"> resend email</button>
-      <Link to="/login" className="link body"> go back login</Link>
+        <button onClick={resendEmail} className="button-resend title-1"> resend email</button>
+        <Link to="/login" className="link body"> go back login</Link>
       </div>
     </div>
   );

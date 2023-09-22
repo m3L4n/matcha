@@ -22,9 +22,7 @@ class UserController {
         password: await bcrypt.hash(password, 10),
         valided,
       };
-
-      const user = UserModel.createUser(data);
-      // if (user) {
+      const user = await UserModel.createUser(data);
       const emailSend = await sendingEmailVerification(username);
       if (emailSend) {
         console.log("email send perfectly");
