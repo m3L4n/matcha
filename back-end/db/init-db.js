@@ -41,6 +41,11 @@ async function createType(client) {
    'male', 'female', 'both'
  );
  END IF;
+ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tags_enum') THEN
+ CREATE TYPE tags_enum AS ENUM (
+   'CoffeeLover', 'TeaEnthusiast', 'BaristaSkills', 'CappuccinoArt', 'LatteAddict', 'HerbalTeas', 'EspressoShot', 'ChaiTeaFanatic' , 'HotChocolateDelight', 'CoffeeShopHopping' , 'TeapotCollection' , 'FrenchPressBrewing' , 'IcedCoffeeObsession' , 'TeaCeremony' , 'MugCollection' , 'CoffeeBeansRoasting', 'TeaLeafReading', 'ColdBrewConnoisseur', 'CoffeeMugArt', 'GreenTeaBenefits'
+ );
+ END IF;
  END$$;`);
 }
 async function createTableUsers(client) {
@@ -56,9 +61,13 @@ async function createTableUsers(client) {
     sexual_preference sexual_preference_enum,
     lastName TEXT NOT NULL,
     password TEXT,
+    tags  tags_enum[],
     description VARCHAR(255),
     rate_fame INT,
     position TEXT,
+    city TEXT,
+    age INT CHECK (age > 18),
+    "connected" BOOLEAN DEFAULT false, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile_picture BYTEA,
     "valided" BOOLEAN DEFAULT false,
@@ -79,7 +88,7 @@ async function createTableMatch(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS matchs (
     id UUID PRIMARY KEY,
-    "like"  boolean DEFAULT true,
+    "like"  boolean DEFAULT false,
     "block"  boolean DEFAULT false,
     id_user_requester UUID REFERENCES users ON DELETE CASCADE,
     id_user_receiver UUID REFERENCES users ON DELETE CASCADE

@@ -26,7 +26,7 @@ class UserModel {
 
   static findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
     try {
-      const query = `SELECT username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, valided FROM users WHERE ${paramToSearch} = $1`;
+      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, valided FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
       return user.rows[0];
     } catch (error) {
@@ -45,7 +45,26 @@ class UserModel {
       throw error;
     }
   };
-
+  static uploadImageInDb = async (buffer, userId) => {
+    const query = `UPDATE users SET profile_picture = $1 WHERE id = $2`;
+    const values = [buffer, userId];
+    try {
+      const result = await db.query(query, values);
+      return result.rows[0];
+    } catch (e) {
+      console.log("error with upload file", e);
+    }
+  };
+  static getImageProfil = async (id) => {
+    const query = `SELECT profile_picture FROM users WHERE id = $1`;
+    const values = [id];
+    try {
+      const imageProfil = await db.query(query, values);
+      return imageProfil.rows[0].profile_picture;
+    } catch (error) {
+      console.log("error, cant get imageProfile", error);
+    }
+  };
   static getAll = (currentUserId) => {
     return new Promise((next) => {
       db.query("SELECT sexual_preference rate_fame, position FROM users WHERE id = $1", [currentUserId])

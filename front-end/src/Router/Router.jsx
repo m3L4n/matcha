@@ -8,6 +8,7 @@ import HomeNoneVerified from "components/Authentification/HomeNoneVerified/HomeN
 import ResetPassword from "components/ResetPassword/ResetPassword";
 import { PrivateRoute } from "./ProtectedRoute";
 import { NoneConnectedRoute } from "./NoneConnectedRoute";
+import Profile from "components/Profile/Profile";
 
 
 export const router = createBrowserRouter([
@@ -31,10 +32,10 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         },
         {
-          path: "/profile",
+          path: "/profile/:id",
           element: 
           <PrivateRoute>
-          <div>Profile</div>
+         <Profile /> 
           </PrivateRoute>
         },
         {

@@ -1,0 +1,15 @@
+.container{
+  display: flex;
+  width: 100vw;
+  min-height: 100lvh;
+  height: 100%;
+  margin: auto;
+
+}
+
+.container-header{
+  margin: auto;
+}
+.container-body{
+  margin: auto;
+}

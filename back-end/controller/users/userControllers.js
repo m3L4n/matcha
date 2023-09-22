@@ -23,7 +23,7 @@ class UserController {
         valided,
       };
 
-      const user = UserModel.createUser(data);
+      const user = await UserModel.createUser(data);
       // if (user) {
       const emailSend = await sendingEmailVerification(username);
       if (emailSend) {
@@ -173,6 +173,30 @@ class UserController {
   static disconnectUser = async (_, res) => {
     res.clearCookie("jwt");
     res.end();
+  };
+  static uploadImage = async (req, res) => {
+    // const fileName = req.file.path;
+    const { buffer } = req.file;
+    console.log(req.file);
+    const { id } = req.authUser;
+    try {
+      await UserModel.uploadImageInDb(buffer, id);
+      res.status(201).json({ message: "image profile uploaded" });
+    } catch (error) {
+      res.status(500).json({ message: "cant upload image profile" });
+    }
+  };
+  static getImageProfile = async (req, res) => {
+    const { id } = req.authUser;
+    try {
+      const imageProfile = await UserModel.getImageProfil(id);
+      const buffer = Buffer.from(imageProfile);
+      const base64String = buffer.toString("base64");
+      const dataURL = `data:image/jpeg;base64,${base64String}`;
+      res.status(200).json(dataURL);
+    } catch (err) {
+      res.status(500).json({ error: "cant get the image Profile" });
+    }
   };
 }
 

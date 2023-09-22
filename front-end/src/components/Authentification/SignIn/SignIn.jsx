@@ -64,7 +64,6 @@ export default function SignIn() {
     <div className="container">
       <div className="container-auth">
         <header className="header header">
-          {" "}
           SIGN IN
           <p className="title-1"> And start dating !</p>
           <button className="button-discord title-1">
