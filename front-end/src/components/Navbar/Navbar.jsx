@@ -45,7 +45,7 @@ export default function Navbar() {
           </li>
         ))}
         <li>
-          {(sidebar && Object.keys(store?.user)?.length > 0) && <button onClick={handleDisconnect}> Disconnect </button>}
+          {(sidebar && Object.keys(store?.user)?.length > 0) && <button className="disconnect-button body" onClick={handleDisconnect}> Disconnect </button>}
         </li>
       </ul>
     </nav>
