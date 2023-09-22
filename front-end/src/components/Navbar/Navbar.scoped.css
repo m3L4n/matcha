@@ -4,7 +4,7 @@
   background-color: var(--green);
   padding: .5rem;
   z-index: 99;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   height: 100%;

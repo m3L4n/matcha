@@ -14,6 +14,7 @@ export default function BrowsingPage() {
       </div>
     )
   }
+
   const cards = results.data.result.map(user => <Card
     key={user.id}
     username={user.username}

@@ -50,7 +50,7 @@ class UserModel {
   static getAll = (currentUserId) => {
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
-    const MAX_DISTANCE = 10000;
+    const MAX_DISTANCE = 300;
     return new Promise((next) => {
       db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {

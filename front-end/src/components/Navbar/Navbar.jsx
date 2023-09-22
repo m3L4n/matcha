@@ -10,7 +10,7 @@ export default function Navbar() {
   let pages = ["match", "profile", "message"];
   const [sidebar, setSidebar] = useState(false);
   const store = useContext(AuthContext);
-  
+
   if (Object.keys(store?.user)?.length == 0) {
     pages = ['login', 'register']
   }
@@ -45,7 +45,7 @@ export default function Navbar() {
           </li>
         ))}
         <li>
-          {(sidebar && Object.keys(store?.user)?.length > 0) && <button onClick={handleDisconnect}>  disconect</button>}
+          {(sidebar && Object.keys(store?.user)?.length > 0) && <button onClick={handleDisconnect}> Disconnect </button>}
         </li>
       </ul>
     </nav>
