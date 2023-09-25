@@ -17,7 +17,7 @@ const checkDatabaseConnection = async () => {
       await new Promise((res) => setTimeout(res, 2000));
     }
   }
-  process.exit(1); // Sortie avec un code d'erreur en cas d'échec de la connexion
+  process.exit(1);
 };
 
 checkDatabaseConnection();

@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const { deletedataExpiredFromToken } = require("./db/updateExpiredData");
 const userRouter = require("./routes/users/users");
+const matchRouter = require("./routes/match");
 const swaggerDocument = require("./swagger.json");
 app.use(express.json());
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/users", userRouter);
+app.use("/like", matchRouter);
 app.use(function(_, res, next) {
   res.header("content-type", "application/json;charset=utf-8");
   res.header("access-control-allow-credentials", true);
