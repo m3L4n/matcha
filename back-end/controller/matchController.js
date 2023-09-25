@@ -1,5 +1,5 @@
-const { checkAndChange } = require("../../modules/response");
-const { MatchModel } = require("../../models/MatchModel");
+const { checkAndChange } = require("../modules/response");
+const { MatchModel } = require("../models/MatchModel");
 
 class MatchController {
   static create = async (req, res) => {
