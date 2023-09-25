@@ -81,8 +81,8 @@ async function createTableMatch(client) {
     id UUID PRIMARY KEY,
     "like"  boolean DEFAULT true,
     "block"  boolean DEFAULT false,
-    id_user_requester UUID REFERENCES users ON DELETE CASCADE,
-    id_user_receiver UUID REFERENCES users ON DELETE CASCADE
+    id_requester UUID REFERENCES users ON DELETE CASCADE,
+    id_receiver UUID REFERENCES users ON DELETE CASCADE
      );
      `);
 }
