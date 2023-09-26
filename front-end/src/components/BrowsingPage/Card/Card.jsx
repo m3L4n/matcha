@@ -15,7 +15,13 @@ export default function Card({ id, username, age, city, profilePicture }) {
       body: JSON.stringify({ receiverId: `${id}` }),
       credentials: "include"
     };
-    await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/create`, options);
+
+    if (!like)
+      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/create`, options);
+    else {
+      options.method = "PUT";
+      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/unlike`, options)
+    }
     setLike(!like)
   }
 
