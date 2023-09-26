@@ -5,9 +5,9 @@ import fetchMatches from './fetchMatches';
 import { useQuery } from '@tanstack/react-query';
 
 export default function BrowsingPage() {
-  const results = useQuery(['details'], fetchMatches);
+  const matches = useQuery(['details'], fetchMatches);
 
-  if (results.isLoading) {
+  if (matches.isLoading) {
     return (
       <div className="loadingMatches">
         <h2>Loadind matches...</h2>
@@ -15,8 +15,9 @@ export default function BrowsingPage() {
     )
   }
 
-  const cards = results.data.result.map(user => <Card
+  const cards = matches.data.result.map(user => <Card
     key={user.id}
+    id={user.id}
     username={user.username}
     age={user.age}
     profilePicture={"http://placekitten.com/253/300"}

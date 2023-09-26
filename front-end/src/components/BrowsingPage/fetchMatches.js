@@ -1,5 +1,5 @@
 const fetchMatches = async () => {
-  const url = "http://localhost:4000/users/matches";
+  const url = `${import.meta.env.VITE_BACKEND_API_URL}/users/matches`;
   const option = {
     method: "GET",
     headers: {
@@ -7,6 +7,7 @@ const fetchMatches = async () => {
     },
     credentials: "include"
   };
+
   const response = await fetch(url, option);
 
   if (!response) {

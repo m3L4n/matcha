@@ -3,8 +3,21 @@ import './Card.scoped.css'
 import { BsFillSuitHeartFill } from 'react-icons/bs'
 import { useState } from "react";
 
-export default function Card({ username, age, city, profilePicture }) {
+export default function Card({ id, username, age, city, profilePicture }) {
   const [like, setLike] = useState(false);
+
+  const toggleLike = async (id) => {
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ receiverId: `${id}` }),
+      credentials: "include"
+    };
+    await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/create`, options);
+    setLike(!like)
+  }
 
   return (
     <div className="card" style={{ backgroundImage: `url(${profilePicture})` }}>
@@ -13,7 +26,7 @@ export default function Card({ username, age, city, profilePicture }) {
         <p className="user-infos-age">{age}</p>
         <p> {city} </p>
       </div>
-      <button onClick={() => setLike(!like)}
+      <button onClick={() => toggleLike(id)}
         onMouseMove={e => {
           e.stopPropagation();
           let x = e.nativeEvent.offsetX;
