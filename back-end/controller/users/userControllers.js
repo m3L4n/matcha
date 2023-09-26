@@ -36,6 +36,7 @@ class UserController {
     } catch (error) {
       if (error == "user doesnt exist") {
         console.log("userdoesnt exist");
+
         return res.status(409).send("Details are not correct");
       }
       return res.status(500).send({ error: error });

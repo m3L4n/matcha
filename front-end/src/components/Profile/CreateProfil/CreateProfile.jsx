@@ -1,108 +1,308 @@
-import React from 'react'
-import { useState } from 'react'
-import { notify } from 'components/Global/toast-notify';
-import "../Profile.scoped.css"
-import { useEffect } from 'react';
-
+import React from "react";
+import { useState } from "react";
+import { notify } from "components/Global/toast-notify";
+import "../Profile.scoped.css";
+import { useEffect } from "react";
+import { useAuth } from "src/Context/AuthContext";
+import { CiEdit } from "react-icons/ci";
+import anonymous from "assets/_.jpeg";
+import { isValidEmail } from "src/components/Global/check-email";
 export default function CreateProfile() {
-  const [ infoProfile, setInfoProfil] = useState({});
-  const [ image, setImage ] = useState();
+  const { user } = useAuth();
+  const [infoProfile, setInfoProfil] = useState({
+    firstname: user.firstname,
+    lastname: user.lastname,
+    gender: "",
+    sexual_preference: "",
+    email: user.email,
+    beverage: "",
+    description: "",
+    tags: [],
+    age: 0,
+    pictures: [],
+    profile_picture: "",
+  });
+  const img = [anonymous, anonymous, anonymous, anonymous];
+
   const maxSize = 40000;
   const validExt = ["gif", "png", "jpg", "jpeg"];
-  
   useEffect(() => {
-    getImageProfil();
-  }, [])
+    console.log(infoProfile);
+  }, [infoProfile.profile_picture]);
+  // useEffect(() => {
+  //   // getImageProfil();
+  // }, [])
 
-  function getImageProfil(){
-    const options = {
-      method: "GET",
-      credentials: "include",
-    };
-    fetch("http://localhost:4000/users/profil-picture", options)
-    .then(response => {
-      if (response.status == 201) {
-        notify("sucess", "your acount is created, please verify your email");
+  // function getImageProfil(){
+  //   const options = {
+  //     method: "GET",
+  //     credentials: "include",
+  //   };
+  //   fetch("http://localhost:4000/users/profil-picture", options)
+  //   .then(response => {
+  //     if (response.status == 201) {
+  //       notify("sucess", "your acount is created, please verify your email");
+  //     }
+  //     return response.json();
+  //   })
+  //   .then(data => {
+  //     setImage(data);
+  //     if (data.msg == "token not created") {
+  //       notify(
+  //         "error",
+  //         "please retry later, a error appear and we are on this work"
+  //       );
+  //     } else if (data.msg == 'Details are not correct"') {
+  //       notify(
+  //         "error",
+  //         "email or username are already token , please retry with another "
+  //       );
+  //     }
+  //   })
+  //   .catch(error => console.log(error));
+
+  // }
+  function handleChange(event) {
+    const name = event.target.name;
+
+    if (name == "email") {
+      if (!isValidEmail(event.target.value)) {
+        notify("warning", "please enter right adresse mail");
+        return;
       }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      // const image = data.imageProfile.profile_picture;
-      // const buffer = Buffer.from(image.data);
-      // const base64String = buffer.toString('base64');
-      // const dataURL = `data:image/jpeg;base64,${base64String}`;
-      setImage(data);
-
-      if (data.msg == "token not created") {
-        notify(
-          "error",
-          "please retry later, a error appear and we are on this work"
-        );
-      } else if (data.msg == 'Details are not correct"') {
-        notify(
-          "error",
-          "email or username are already token , please retry with another "
-        );
-      }
-    })
-    .catch(error => console.log(error));
-
-  }
-  function handlePicture(event){
-    const file = event.target.files[0];
-    const extn = file.type.split('/')[1];
-    if ((validExt.findIndex((elem) => elem == extn) == -1)){
-      notify("warning", "extension is not good, you have to use ", validExt.join(",")); 
-      return ;
     }
-    if ( file.size > maxSize){
-      notify("warning", "image are too big, please retry with lighter image");
-      return ;
-    } 
-   onSubmitImg(file)
+    setInfoProfil({ ...infoProfile, [name]: event.target.value });
   }
-  function onSubmitImg(image) {
-    const formData = new FormData();
-    formData.append('image', image);
-    const options = {
-      method: "POST",
-      credentials: "include",
-      body:formData
-    };
-    fetch("http://localhost:4000/users/upload-image", options)
-    .then(response => {
-      if (response.status == 201) {
-        notify("sucess", "your acount is created, please verify your email");
+
+  const input = document.getElementById("age");
+
+  if (input) {
+    input.addEventListener("change", updateValue);
+  }
+
+  function updateValue(e) {
+    const value = e.target.value;
+    if (!isNaN(value)) {
+      if (parseFloat(value) > 18) {
+        this.classList.remove("invalide");
+        this.classList.add("valide");
+        setInfoProfil({ ...infoProfile, [e.target.name]: Number(e.target.value) });
+      } else {
+        notify("warning", "you dont have the age to enter on this site, please wait your 18 years old");
+        this.classList.remove("valide");
+        this.classList.add("invalide");
       }
-      return response.json();
-    })
-    .then(data => {
-      if (data.msg == "token not created") {
-        notify(
-          "error",
-          "please retry later, a error appear and we are on this work"
-        );
-      } else if (data.msg == 'Details are not correct"') {
-        notify(
-          "error",
-          "email or username are already token , please retry with another "
-        );
+    } else {
+      this.classList.remove("valide");
+      this.classList.add("invalide");
+    }
+  }
+
+  // function onSubmitImg(image) {
+  //   const formData = new FormData();
+  //   formData.append('image', image);
+  //   const options = {
+  //     method: "POST",
+  //     credentials: "include",
+  //     body:formData
+  //   };
+  //   fetch("http://localhost:4000/users/upload-image", options)
+  //   .then(response => {
+  //     if (response.status == 201) {
+  //       notify("sucess", "your acount is created, please verify your email");
+  //     }
+  //     return response.json();
+  //   })
+  //   .then(data => {
+  //     if (data.msg == "token not created") {
+  //       notify(
+  //         "error",
+  //         "please retry later, a error appear and we are on this work"
+  //       );
+  //     } else if (data.msg == 'Details are not correct"') {
+  //       notify(
+  //         "error",
+  //         "email or username are already token , please retry with another "
+  //       );
+  //     }
+  //   })
+  //   .catch(error => console.log(error));
+  // }
+  function showPreview(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      const extn = file.type.split("/")[1];
+      if (validExt.findIndex((elem) => elem == extn) == -1) {
+        notify("warning", "extension is not good, you have to use ", validExt.join(","));
+        return;
       }
-    })
-    .catch(error => console.log(error));
+      if (file.size > maxSize) {
+        notify("warning", "image are too big, please retry with lighter image");
+        return;
+      }
+      const src = URL.createObjectURL(file);
+      let preview = document.getElementById("profile-picture");
+      preview.src = src;
+      setInfoProfil({ ...infoProfile, ["profile_picture"]: file });
+    }
+  }
+
+  function handleMultipleFile(event) {
+    const clone = structuredClone(infoProfile.pictures);
+    if (clone.length == 5) {
+      notify("warning", "you cant have more than 4 image");
+      return;
+    }
+    const file = event.target.files[0];
+    const extn = file.type.split("/")[1];
+    if (validExt.findIndex((elem) => elem == extn) == -1) {
+      notify("warning", "extension is not good, you have to use ", validExt.join(","));
+      return;
+    }
+    if (file.size > maxSize) {
+      notify("warning", "image are too big, please retry with lighter image");
+      return;
+    }
+    const src = URL.createObjectURL(file);
+    let preview = document.getElementById("body-picture-list");
+    if (preview) {
+      let dynamicImage = document.createElement("img");
+      dynamicImage.src = src;
+      dynamicImage.style.width = "10rem";
+      dynamicImage.style.minHeight = " 10rem";
+      dynamicImage.style.height = "10rem";
+      preview.appendChild(dynamicImage);
+    }
+    clone.push(file);
+    setInfoProfil({ ...infoProfile, ["pictures"]: clone });
+  }
+
+  function saveProfile(event) {
+    if (
+      infoProfile.age == 0 ||
+      !infoProfile.beverage ||
+      !infoProfile.firstname ||
+      !infoProfile.lastname ||
+      !infoProfile.email ||
+      infoProfile.pictures.length != 4 ||
+      !infoProfile.pictures ||
+      !infoProfile.sexual_preference ||
+      // infoProfile.tags.length == 0 ||
+      infoProfile.description.length == 0
+    ) {
+      notify("error", "you cant save you profile you need to fill all the input");
+      return;
+    }
+    notify("sucess", " account modfy");
   }
   return (
-    <div className='container'>
-
-      <header className='container-header'>
-      <h1> MATCHA
-         </h1>
-      </header>
-      <div className='container-body'>
-      <img src={image} alt="Image" />
-        <input type='file' accept="image/*" onChange={handlePicture} />
+    <div className="container">
+      <div className="container-body">
+        <div className="body__info-user">
+          <h1 className="title-1 body__info-user__identity-h1">{`@${user.username}`}</h1>
+          <div className="body__info-user__description">
+            <div className="body__info-user-preview">
+              <img alt="profile-picture" id="profile-picture" src={user.profile_picture ? user.profile_picture : anonymous} className="info-user_profile-picture" />
+              <label htmlFor="file-ip-1" className="body__info-user-preview-label">
+                <CiEdit />
+              </label>
+              <input type="file" id="file-ip-1" accept="image/*" onChange={showPreview} />
+            </div>
+            <div className="body__info-user__identity">
+              <div className="info-user__form">
+                <p className="info-user__name">
+                  <span className="info-user__indentity__input">
+                    <label htmlFor="firstname">
+                      <h3 className="title-1"> Your name</h3>
+                    </label>
+                    <input type="text" id="firstname" name="firstname" className="info-user__indentity__input body" value={infoProfile.firstname} onChange={handleChange} />{" "}
+                  </span>
+                  <span className="info-user__indentity__input">
+                    <label htmlFor="lastname">
+                      <h3 className="title-1"> Your last name</h3>
+                    </label>
+                    <input
+                      type="text"
+                      name="lastname"
+                      id="lastname"
+                      className="info-user__indentity__input body"
+                      value={infoProfile.lastname}
+                      placeholder="whats your lastname ?"
+                      onChange={handleChange}
+                    />{" "}
+                  </span>
+                </p>
+                <p className="info-user__name">
+                  <span className="info-user__indentity__input">
+                    <label htmlFor="age">
+                      <h3 className="title-1"> Your age</h3>
+                    </label>
+                    <input name="age" id="age" className="info-user__indentity__input body valide" placeholder="how old are you ?" />
+                  </span>
+                  <span className="info-user__indentity__input">
+                    <label htmlFor="beverage">
+                      <h3 className="title-1"> your favorite beverage </h3>
+                    </label>
+                    <input
+                      name="beverage"
+                      id="beverage"
+                      type="text"
+                      placeholder="your favorite beverage"
+                      className="info-user__indentity__input body"
+                      value={infoProfile.beverage}
+                      onChange={handleChange}
+                    />
+                  </span>
+                </p>
+                <p className="info-user__name">
+                  <span className="info-user__indentity__input">
+                    <label htmlFor="sexual_preference">
+                      <h3 className="title-1"> what do you prefere</h3>
+                    </label>
+                    <input
+                      type="text"
+                      id="sexual_preference"
+                      name="sexual_preference"
+                      className="info-user__indentity__input body"
+                      placeholder="what do you prefer"
+                      value={infoProfile.sexual_preference}
+                      onChange={handleChange}
+                    />
+                  </span>
+                  {/* <input name='tags' type='text' value={infoProfile.tags.join(',infoProfile.')} onChange={handleChange} />  */}
+                  <span className="info-user__indentity__input">
+                    <label htmlFor="gender">
+                      <h3 className="title-1"> your gender</h3>
+                    </label>
+                    <input name="gender" id="gender" type="text" placeholder="your gender" className="info-user__indentity__input body" value={infoProfile.gender} onChange={handleChange} />
+                  </span>
+                </p>
+                <span className="info-user__indentity__input">
+                  <label htmlFor="email">
+                    <h3 className="title-1"> your email</h3>
+                  </label>
+                  <input type="email" id="email" name="email" placeholder="your email" className="info-user__indentity__input body" value={infoProfile.email} onChange={handleChange} />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="body__description">
+          <h3 className="title-1"> Description </h3>
+          <textarea name="description" value={infoProfile.description} onChange={handleChange} className="body__description-text" placeholder="tell us about you ? :)" />
+        </div>
+        <div className="body-picture">
+          <label htmlFor="image-description" className="title-1">
+            upload your photo
+          </label>
+          <input type="file" id="image-description" accept="image/*" multiple onChange={handleMultipleFile} />
+          <div id="body-picture-list" className="body-picture-list"></div>
+          {/* {img.map((elem, index) => {
+            return <img key={index} alt={`img-user${index}`} src={elem} />;
+          })} */}
+        </div>
+        <button onClick={saveProfile}> save</button>
       </div>
     </div>
-  )
+  );
 }
