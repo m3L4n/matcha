@@ -3,7 +3,7 @@ const { MatchModel } = require("../models/MatchModel");
 
 class MatchController {
   static create = async (req, res) => {
-    let requesterId = req.isAuth.id;
+    let requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
     let match = MatchModel.create(requesterId, receiverId);
     res.json(checkAndChange(match));

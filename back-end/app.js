@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/users", userRouter);
-app.use("/like", matchRouter);
+app.use("/match", matchRouter);
 app.use(function(_, res, next) {
   res.header("content-type", "application/json;charset=utf-8");
   res.header("access-control-allow-credentials", true);

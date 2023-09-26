@@ -77,14 +77,15 @@ async function createTablePictures(client) {
 }
 async function createTableMatch(client) {
   await client.query(`
-  CREATE TABLE IF NOT EXISTS matchs (
-    id UUID PRIMARY KEY,
+  CREATE TABLE IF NOT EXISTS match (
+    id UUID DEFAULT uuid_generate_v4(),
     "like"  boolean DEFAULT true,
     "block"  boolean DEFAULT false,
     id_requester UUID REFERENCES users ON DELETE CASCADE,
     id_receiver UUID REFERENCES users ON DELETE CASCADE
+    PRIMARY KEY (id)
      );
-     `);
+    `);
 }
 async function createTableNotifications(client) {
   await client.query(`
