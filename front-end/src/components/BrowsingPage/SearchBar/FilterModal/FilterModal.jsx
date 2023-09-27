@@ -4,7 +4,7 @@ import Slider from "../../../Global/FormInput/Slider/Slider";
 import Input from "../../../Global/FormInput/Input/Input";
 import Select from "../../../Global/FormInput/Select/Select";
 
-const FILTER_OPTIONS = ["Age", "Location", "Fame rating", "Common tags"];
+const FILTER_OPTIONS = ["Age gap", "Location", "Fame rating", "Common tags"];
 
 const FilterModal = () => {
   return (
@@ -24,9 +24,9 @@ const FilterModal = () => {
           {FILTER_OPTIONS.map((option) => {
             return (
               <SelectOptionWrapper key={option} option={option}>
-                {option === "Age" && <Slider min={18} max={100} defaultValue={21} />}
-                {option === "Fame rating" && <Slider min={0} max={420} defaultValue={100} />}
-                {option === "Location" && <Select options={["Paris", "Montpellier", "Bondy"]} />}
+                {option === "Age gap" && <Slider min={0} max={60} defaultValue={10} />}
+                {option === "Fame rating" && <Slider min={0} max={5200} defaultValue={1500} />}
+                {option === "Location" && <Slider min={5} max={600} defaultValue={30} />}
                 {option === "Common tags" && <Input placeholder={"#tea, #coffee, #nature ..."} />}
               </SelectOptionWrapper>
             );

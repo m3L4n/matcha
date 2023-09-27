@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './BrowsingPage.scoped.css';
 import Card from './Card/Card'
 import SearchBar from './SearchBar/SearchBar';
@@ -5,7 +6,14 @@ import fetchMatches from './fetchMatches';
 import { useQuery } from '@tanstack/react-query';
 
 export default function BrowsingPage() {
-  const matches = useQuery(['details'], fetchMatches);
+  const [requestParams, setRequestParams] = useState({
+    action: '',
+    age: '',
+    location: '',
+    fame: '',
+    tags: '',
+  })
+  const matches = useQuery(['details', requestParams], fetchMatches);
 
   if (matches.isLoading) {
     return (
