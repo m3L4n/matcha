@@ -10,7 +10,12 @@ export default function BrowsingPage() {
   if (matches.isLoading) {
     return (
       <div className="loadingMatches">
-        <h2>Loadind matches...</h2>
+        <h2>
+          Loadind matches
+          <span className="loading__dot"></span>
+          <span className="loading__dot"></span>
+          <span className="loading__dot"></span>
+        </h2>
       </div>
     )
   }
