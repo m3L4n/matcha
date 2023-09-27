@@ -33,7 +33,7 @@ export default function BrowsingPage() {
     id={user.id}
     username={user.username}
     age={user.age}
-    profilePicture={"http://placekitten.com/253/300"}
+    profilePicture={`http://placekitten.com/${Math.floor(Math.random() * (280 - 250 + 1) + 250)}/${Math.floor(Math.random() * (350 - 300 + 1) + 300)}`}
     city={"Paris"}
   />)
 
