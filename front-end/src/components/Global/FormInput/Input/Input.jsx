@@ -1,11 +1,17 @@
 import "./Input.scoped.css";
+import PropTypes from "prop-types";
 
-const Input = ({ placeholder }) => {
+const Input = ({ name, placeholder }) => {
   return (
     <div className="inputcontainer">
-      <input type="text" name="input" placeholder={placeholder} />
+      <input type="text" name={name} placeholder={placeholder} />
     </div>
   );
 }
 
-export default Input
+Input.propTypes = {
+  placeholder: PropTypes.string,
+  name: PropTypes.string.isRequired,
+};
+
+export default Input;

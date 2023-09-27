@@ -1,13 +1,14 @@
 import "./Slider.scoped.css"
+import PropTypes from "prop-types";
 import { useState } from "react";
 
-const Slider = ({ min, max, defaultValue }) => {
+const Slider = ({ min, max, defaultValue, name }) => {
   const [value, setValue] = useState(defaultValue);
   return (
     <div className="slidercontainer">
       <input
         type="range"
-        name="slider"
+        name={name}
         min={min}
         max={max}
         value={value}
@@ -17,5 +18,12 @@ const Slider = ({ min, max, defaultValue }) => {
     </div>
   );
 }
+
+Slider.propTypes = {
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  defaultValue: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
 export default Slider;
