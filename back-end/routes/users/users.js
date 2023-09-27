@@ -4,6 +4,7 @@ const router = express.Router();
 const { UserController } = require("../../controller/users/userControllers");
 const { isAuth } = require("../../middlewares/userAuth");
 const multer = require("multer");
+const uploadMiddleware = require("../../Middlewares/uploadMiddleware");
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
 //     cb(null, "uploads/");
@@ -13,7 +14,7 @@ const multer = require("multer");
 //     cb(null, uniqueSuffix + file.originalname);
 //   },
 // });
-const storage = multer.memoryStorage(); // Stockage en mémoire pour les fichiers
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 // const upload = multer({ storage: storage });
 
@@ -26,7 +27,9 @@ router.get("/whoami", isAuth, UserController.getUser);
 router.get("/matches", isAuth, UserController.getUsers);
 router.delete("/disconnect", isAuth, UserController.disconnectUser);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);
-router.post("/upload-image", isAuth, upload.single("image"), UserController.uploadImage);
+router.post("/uploadProfilePicture", isAuth, upload.single("profilePicture"), UserController.uploadImage);
 router.get("/profil-picture", isAuth, UserController.getImageProfile);
 router.get("/getAllInfoEnum", isAuth, UserController.getAllInfoEnum);
+router.put("/updateInfoProfile", isAuth, UserController.updateInfoProfile);
+router.post("/uploadPictureDescription", isAuth, upload.array("images"), UserController.uploadPictureDescription);
 module.exports = router;

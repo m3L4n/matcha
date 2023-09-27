@@ -5,10 +5,20 @@ import "../Profile.scoped.css";
 import { useEffect } from "react";
 import { useAuth } from "src/Context/AuthContext";
 import { CiEdit } from "react-icons/ci";
+import { useQuery } from "@tanstack/react-query";
+import fetchEnum from "../fetchEnum/";
 import anonymous from "assets/_.jpeg";
 import { isValidEmail } from "src/components/Global/check-email";
+import fetchUpdateInfo from "../fetchUpdateInfo";
+import { useMutation } from "@tanstack/react-query";
+import fetchUploadprofilPicture from "../fetchUploadProfilePicture";
+import fetchUploadPictureDescription from "./fetchUploadPictureDescription";
+
 export default function CreateProfile() {
   const { user } = useAuth();
+
+  const [profilPicture, setProfilePicture] = useState({});
+  const [pictureDescription, setPictureDescription] = useState([]);
   const [infoProfile, setInfoProfil] = useState({
     firstname: user.firstname,
     lastname: user.lastname,
@@ -19,49 +29,28 @@ export default function CreateProfile() {
     description: "",
     tags: [],
     age: 0,
-    pictures: [],
-    profile_picture: "",
   });
-  const img = [anonymous, anonymous, anonymous, anonymous];
 
-  const maxSize = 40000;
-  const validExt = ["gif", "png", "jpg", "jpeg"];
-  useEffect(() => {
-    console.log(infoProfile);
-  }, [infoProfile.profile_picture]);
-  // useEffect(() => {
-  //   // getImageProfil();
-  // }, [])
+  const allEnum = useQuery(["users"], fetchEnum);
+  const mutationUpdateInfo = useMutation(fetchUpdateInfo);
+  const mutationUploadPP = useMutation(fetchUploadprofilPicture);
+  const mutationUploadPD = useMutation(fetchUploadPictureDescription);
+  // const img = [anonymous, anonymous, anonymous, anonymous];
 
-  // function getImageProfil(){
-  //   const options = {
-  //     method: "GET",
-  //     credentials: "include",
-  //   };
-  //   fetch("http://localhost:4000/users/profil-picture", options)
-  //   .then(response => {
-  //     if (response.status == 201) {
-  //       notify("sucess", "your acount is created, please verify your email");
-  //     }
-  //     return response.json();
-  //   })
-  //   .then(data => {
-  //     setImage(data);
-  //     if (data.msg == "token not created") {
-  //       notify(
-  //         "error",
-  //         "please retry later, a error appear and we are on this work"
-  //       );
-  //     } else if (data.msg == 'Details are not correct"') {
-  //       notify(
-  //         "error",
-  //         "email or username are already token , please retry with another "
-  //       );
-  //     }
-  //   })
-  //   .catch(error => console.log(error));
+  const checkMymeType = (file) => {
+    const maxSize = 40000;
+    const validExt = ["gif", "png", "jpg", "jpeg"];
+    const extn = file.type.split("/")[1];
+    if (validExt.findIndex((elem) => elem == extn) == -1) {
+      notify("warning", "extension is not good, you have to use ", validExt.join(","));
+      return -1;
+    }
+    if (file.size > maxSize) {
+      notify("warning", "image are too big, please retry with lighter image");
+      return -1;
+    }
+  };
 
-  // }
   function handleChange(event) {
     const name = event.target.name;
 
@@ -75,13 +64,13 @@ export default function CreateProfile() {
   }
 
   const input = document.getElementById("age");
-
   if (input) {
     input.addEventListener("change", updateValue);
   }
 
   function updateValue(e) {
     const value = e.target.value;
+
     if (!isNaN(value)) {
       if (parseFloat(value) > 18) {
         this.classList.remove("invalide");
@@ -97,74 +86,31 @@ export default function CreateProfile() {
       this.classList.add("invalide");
     }
   }
-
-  // function onSubmitImg(image) {
-  //   const formData = new FormData();
-  //   formData.append('image', image);
-  //   const options = {
-  //     method: "POST",
-  //     credentials: "include",
-  //     body:formData
-  //   };
-  //   fetch("http://localhost:4000/users/upload-image", options)
-  //   .then(response => {
-  //     if (response.status == 201) {
-  //       notify("sucess", "your acount is created, please verify your email");
-  //     }
-  //     return response.json();
-  //   })
-  //   .then(data => {
-  //     if (data.msg == "token not created") {
-  //       notify(
-  //         "error",
-  //         "please retry later, a error appear and we are on this work"
-  //       );
-  //     } else if (data.msg == 'Details are not correct"') {
-  //       notify(
-  //         "error",
-  //         "email or username are already token , please retry with another "
-  //       );
-  //     }
-  //   })
-  //   .catch(error => console.log(error));
-  // }
-
   function showPreview(event) {
     if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const extn = file.type.split("/")[1];
-      if (validExt.findIndex((elem) => elem == extn) == -1) {
-        notify("warning", "extension is not good, you have to use ", validExt.join(","));
+      if (checkMymeType(event.target.files[0]) == -1) {
         return;
       }
-      if (file.size > maxSize) {
-        notify("warning", "image are too big, please retry with lighter image");
-        return;
-      }
-      const src = URL.createObjectURL(file);
+      const src = URL.createObjectURL(event.target.files[0]);
       let preview = document.getElementById("profile-picture");
-      preview.src = src;
-      setInfoProfil({ ...infoProfile, ["profile_picture"]: file });
+      if (preview) {
+        preview.src = src;
+        setProfilePicture(event.target.files[0]);
+      }
     }
   }
 
   function handleMultipleFile(event) {
-    const clone = structuredClone(infoProfile.pictures);
-    if (clone.length == 5) {
+    const clone = structuredClone(pictureDescription);
+
+    if (clone.length > 4) {
       notify("warning", "you cant have more than 4 image");
       return;
     }
-    const file = event.target.files[0];
-    const extn = file.type.split("/")[1];
-    if (validExt.findIndex((elem) => elem == extn) == -1) {
-      notify("warning", "extension is not good, you have to use ", validExt.join(","));
+    if (checkMymeType(event.target.files[0]) == -1) {
       return;
     }
-    if (file.size > maxSize) {
-      notify("warning", "image are too big, please retry with lighter image");
-      return;
-    }
-    const src = URL.createObjectURL(file);
+    const src = URL.createObjectURL(event.target.files[0]);
     let preview = document.getElementById("body-picture-list");
     if (preview) {
       let dynamicImage = document.createElement("img");
@@ -173,20 +119,23 @@ export default function CreateProfile() {
       dynamicImage.style.minHeight = " 13rem";
       dynamicImage.style.height = "13rem";
       preview.appendChild(dynamicImage);
+      clone.push(event.target.files[0]);
+      setPictureDescription(clone);
     }
-    clone.push(file);
-    setInfoProfil({ ...infoProfile, ["pictures"]: clone });
   }
 
   function saveProfile(event) {
+    if (profilPicture instanceof File) {
+      console.log(infoProfile, profilPicture, pictureDescription);
+    }
     if (
       infoProfile.age == 0 ||
       !infoProfile.beverage ||
       !infoProfile.firstname ||
       !infoProfile.lastname ||
       !infoProfile.email ||
-      infoProfile.pictures.length != 4 ||
-      !infoProfile.pictures ||
+      pictureDescription.length != 4 ||
+      !(profilPicture instanceof File) ||
       !infoProfile.sexual_preference ||
       // infoProfile.tags.length == 0 ||
       infoProfile.description.length == 0
@@ -194,6 +143,9 @@ export default function CreateProfile() {
       notify("error", "you cant save you profile you need to fill all the input");
       return;
     }
+    mutationUploadPP.mutate(profilPicture);
+    mutationUploadPD.mutate(pictureDescription);
+    mutationUpdateInfo.mutate(infoProfile);
     notify("sucess", " account modfy");
   }
   return (

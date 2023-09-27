@@ -4,10 +4,20 @@ footer {
   padding: 20px;
 }
 
+.social-icons {
+  display: flex;
+  flex-flow: nowrap row;
+  justify-content: flex-end;
+  gap: 1em;
+  color: var(--green);
+}
+
+.social-icons li {
+  list-style: none;
+}
+
 footer a {
   color: var(--green);
-  font-size: 1.5rem;
-  padding-right: 1rem;
   transition: all 0.5s ease;
 }
 

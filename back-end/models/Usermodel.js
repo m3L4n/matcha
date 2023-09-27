@@ -1,12 +1,13 @@
 const { PBKDF2 } = require("crypto-js");
 const db = require("../db/db");
+const { distanceBetweenTwoPoints } = require("../modules/distance");
 
 class UserModel {
   static createUser = async (userData) => {
     try {
       const { id, username, firstName, lastName, email, password, valided } = userData;
       const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
-      const values = [id, username, firstName, lastName, email, password, false];
+      const values = [id, username, firstName, lastName, email, password, valided];
       const newUser = await db.query(query, values);
       return newUser;
     } catch (error) {
@@ -26,7 +27,7 @@ class UserModel {
 
   static findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
     try {
-      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, valided FROM users WHERE ${paramToSearch} = $1`;
+      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
       return user.rows[0];
     } catch (error) {
@@ -45,8 +46,8 @@ class UserModel {
       throw error;
     }
   };
-  static uploadImageInDb = async (buffer, userId) => {
-    const query = `UPDATE users SET profile_picture = $1 WHERE id = $2`;
+  static uploadImageInDB = async (param, buffer, userId) => {
+    const query = `UPDATE users SET ${param} = $1 WHERE id = $2`;
     const values = [buffer, userId];
     try {
       const result = await db.query(query, values);
@@ -66,28 +67,46 @@ class UserModel {
     }
   };
   static getAll = (currentUserId) => {
+    const ELO_DIFFERENCE = 300;
+    const AGE_DIFFERENCE = 10;
+    const MAX_DISTANCE = 300;
     return new Promise((next) => {
-      db.query("SELECT sexual_preference rate_fame, position FROM users WHERE id = $1", [currentUserId])
+      db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {
-          const [sexual_preference, rate_fame, position] = result.rows[0];
-          let min_fame = rate_fame - 200;
-          let max_fame = rate_fame + 200;
-          console.log(position);
+          const { sexual_preference, rate_fame, position, age } = result.rows[0];
+          let min_fame = rate_fame - ELO_DIFFERENCE;
+          let max_fame = rate_fame + ELO_DIFFERENCE;
+          let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
+          let max_age = age + AGE_DIFFERENCE;
+
+          const getMatchesBySexualPreferences = () => {
+            return db.query(
+              "SELECT id, username, position, profile_picture, age FROM users \
+              WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
+              AND id != $6",
+              [sexual_preference, min_fame, max_fame, min_age, max_age, currentUserId]
+            );
+          };
+
+          const getMatchesOfAllSexes = () => {
+            return db.query(
+              "SELECT id, username, position, profile_picture, age FROM users \
+              WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND id IS NOT $4",
+              [min_fame, max_fame, min_age, max_age]
+            );
+          };
+
+          const getOnlyClosePeople = (users) => {
+            return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < MAX_DISTANCE));
+          };
+
           if (sexual_preference !== "both") {
-            db.query(
-              "SELECT username, position, profile_picture FROM users \
-            WHERE gender = $1 AND WHERE rate_fame BETWEEN $2 AND $3",
-              [sexual_preference, min_fame, max_fame]
-            )
-              .then((result) => next(result.rows))
+            getMatchesBySexualPreferences()
+              .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           } else {
-            db.query(
-              "SELECT username, position, profile_picture FROM users \
-            WHERE rate_fame BETWEEN $1 AND $2",
-              [min_fame, max_fame]
-            )
-              .then((result) => next(result.rows))
+            getMatchesOfAllSexes()
+              .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }
         })
@@ -95,20 +114,54 @@ class UserModel {
     });
   };
   static getAllEnum = async () => {
-    const enumGender = [];
-    const enumTags = [];
-    const enumSexualPreference = [];
-    const enumBeverage = [];
+    let enumGender = [];
+    let enumTags = [];
+    let enumSexualPreference = [];
+    let enumBeverage = [];
+    let enumLength = 0;
     try {
-      enumGender = db.query("SELECT enum_range(NULL::gender_enum");
-      enumTags = db.query("SELECT enum_range(NULL::tags_enum");
-      enumSexualPreference = db.query("SELECT enum_range(NULL::sexual_preference_enum");
-      enumBeverage = db.query("SELECT enum_range(NULL::beverage_enum");
-      return { enumGender: await enumGender, enumTags: await enumTags, enumBeverage: await enumBeverage, enumSexualPreference: await enumSexualPreference };
+      enumTags = await db.query("SELECT enum_range(NULL::tags_enum) as tags");
+      enumTags = enumTags.rows[0].tags;
+      enumLength = enumTags.length;
+      if (enumLength > 2) {
+        enumTags = enumTags.substr(1, enumLength - 2).split(",");
+      }
+      enumGender = await db.query("SELECT enum_range(NULL::gender_enum) as gender");
+      enumGender = enumGender.rows[0].gender;
+      enumLength = enumGender.length;
+      if (enumLength > 2) {
+        enumGender = enumGender.substr(1, enumLength - 2).split(",");
+      }
+      enumSexualPreference = await db.query("SELECT enum_range(NULL::sexual_preference_enum) as spref");
+      enumSexualPreference = enumSexualPreference.rows[0].spref;
+      enumLength = enumSexualPreference.length;
+      if (enumLength > 2) {
+        enumSexualPreference = enumSexualPreference.substr(1, enumLength - 2).split(",");
+      }
+      enumBeverage = await db.query("SELECT enum_range(NULL::beverage_enum) as beverage");
+      enumBeverage = enumBeverage.rows[0].beverage;
+      enumLength = enumBeverage.length;
+      if (enumLength > 2) {
+        enumBeverage = enumBeverage.substr(1, enumLength - 2).split(",");
+      }
+      return { enumGender, enumTags, enumBeverage, enumSexualPreference };
     } catch (error) {
+      console.log(error);
       throw error;
     }
   };
+  static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, id }) => {
+    try {
+      const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9 WHERE id = $10`;
+      const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, id];
+      const res = await db.query(query, values);
+      return res.rows[0];
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   // static updateInfoProfile= async (req, res) => {
   //   // pvr update les infomartions du profile
   //   // tout sauf username,

@@ -1,4 +1,4 @@
-import { createBrowserRouter} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import NavbarWrapper from "components/NabvarWrapper/NavbarWrapper";
 import LandingPage from "components/LandingPage/LandingPage";
 import ErrorPage from "components/ErrorPage/ErrorPage";
@@ -10,74 +10,80 @@ import { PrivateRoute } from "./ProtectedRoute";
 import { NoneConnectedRoute } from "./NoneConnectedRoute";
 import Profile from "components/Profile/Profile";
 
-
 export const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <NavbarWrapper/>,
-      errorElement: <ErrorPage />,
-      children: [
-        {
-          path: "/",
-          element:
+  {
+    path: "/",
+    element: <NavbarWrapper />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/",
+        element: (
           <NoneConnectedRoute>
             <LandingPage />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/match",
-          element:
+        ),
+      },
+      {
+        path: "/match",
+        element: (
           <PrivateRoute>
-           <BrowsingPage />
+            <BrowsingPage />
           </PrivateRoute>
-        },
-        {
-          path: "/profile/:id",
-          element: 
+        ),
+      },
+      {
+        path: "/profile/:id",
+        element: (
           <PrivateRoute>
-         <Profile /> 
+            <Profile />
           </PrivateRoute>
-        },
-        {
-          path: "/message",
-          element:
+        ),
+      },
+      {
+        path: "/message",
+        element: (
           <PrivateRoute>
-           <div>Message</div>
-           </PrivateRoute>
-        },
-        {
-          path: "/register",
-          element:
+            <div>Message</div>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/register",
+        element: (
           <NoneConnectedRoute>
-          <Authentification />
+            <Authentification />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/login",
-          element: 
+        ),
+      },
+      {
+        path: "/login",
+        element: (
           <NoneConnectedRoute>
-          <Authentification />
+            <Authentification />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/reset",
-          element:
-           <HomeNoneVerified />
-        },
-        {
-          path: "/reset-password",
-          element: 
+        ),
+      },
+      {
+        path: "/reset",
+        element: <HomeNoneVerified />,
+      },
+      {
+        path: "/reset-password",
+        element: (
           <NoneConnectedRoute>
-          <ResetPassword />
+            <ResetPassword />
           </NoneConnectedRoute>
-        },
-        {
-          path: "/reset-password/:id",
-          element: 
+        ),
+      },
+      {
+        path: "/reset-password/:id",
+        element: (
           <NoneConnectedRoute>
-          <ResetPassword />
+            <ResetPassword />
           </NoneConnectedRoute>
-        }
-      ]
-    }
-  ]);
+        ),
+      },
+    ],
+  },
+]);

@@ -4,7 +4,7 @@
   background-color: var(--green);
   padding: .5rem;
   z-index: 99;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   height: 100%;
@@ -122,4 +122,24 @@
   .navbar a.active {
     border-bottom: 2px solid var(--green);
   }
+
+  .disconnect-button {
+    background-color: var(--cream);
+  }
+}
+
+.disconnect-button {
+  border: 1px solid var(--dark-green);
+  border-radius: 20px;
+  background-color: var(--green);
+  color: var(--dark-green);
+  padding: .4em .8em;
+  font-size: 0.8rem;
+  transition: 0.4s;
+}
+
+.disconnect-button:hover {
+  color: #fff;
+  background-color: var(--green);
+  border-color: #fff;
 }

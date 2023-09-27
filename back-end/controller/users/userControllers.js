@@ -22,9 +22,7 @@ class UserController {
         password: await bcrypt.hash(password, 10),
         valided,
       };
-
       const user = await UserModel.createUser(data);
-      // if (user) {
       const emailSend = await sendingEmailVerification(username);
       if (emailSend) {
         console.log("email send perfectly");
@@ -178,10 +176,9 @@ class UserController {
   static uploadImage = async (req, res) => {
     // const fileName = req.file.path;
     const { buffer } = req.file;
-    console.log(req.file);
     const { id } = req.authUser;
     try {
-      await UserModel.uploadImageInDb(buffer, id);
+      await UserModel.uploadImageInDB("profile_picture", buffer, id);
       res.status(201).json({ message: "image profile uploaded" });
     } catch (error) {
       res.status(500).json({ message: "cant upload image profile" });
@@ -202,10 +199,28 @@ class UserController {
   static getAllInfoEnum = async (req, res) => {
     try {
       const allEnum = await UserModel.getAllEnum();
-      return res.status(200).json(dataURL);
+      return res.status(200).json(allEnum);
     } catch (error) {
       return res.status(500).json({ error: "cant get all enum" });
     }
+  };
+  static uploadPictureDescription = async (req, res) => {
+    const files = req.files;
+    const { id } = req.authUser;
+    const fileDataArray = files.map((file) => file.buffer);
+    try {
+      const res = await UserModel.uploadImageInDB("pictures", fileDataArray, id);
+      res.json(checkAndChange(res));
+    } catch (error) {
+      res.json(checkAndChange(error));
+    }
+  };
+  static updateInfoProfile = async (req, res) => {
+    const userInfo = req.body;
+    const { id } = req.authUser;
+    userInfo.id = id;
+    const result = await UserModel.updateAllInformation(userInfo);
+    res.json(checkAndChange(result));
   };
 }
 

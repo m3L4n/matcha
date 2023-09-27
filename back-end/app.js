@@ -3,7 +3,6 @@ const app = express();
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const morgan = require("morgan");
-const swaggerJSDoc = require("swagger-jsdoc");
 const cookieParser = require("cookie-parser");
 const { deletedataExpiredFromToken } = require("./db/updateExpiredData");
 const userRouter = require("./routes/users/users");
