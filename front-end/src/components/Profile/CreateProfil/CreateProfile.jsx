@@ -128,6 +128,7 @@ export default function CreateProfile() {
   //   })
   //   .catch(error => console.log(error));
   // }
+
   function showPreview(event) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -168,9 +169,9 @@ export default function CreateProfile() {
     if (preview) {
       let dynamicImage = document.createElement("img");
       dynamicImage.src = src;
-      dynamicImage.style.width = "10rem";
-      dynamicImage.style.minHeight = " 10rem";
-      dynamicImage.style.height = "10rem";
+      dynamicImage.style.width = "13rem";
+      dynamicImage.style.minHeight = " 13rem";
+      dynamicImage.style.height = "13rem";
       preview.appendChild(dynamicImage);
     }
     clone.push(file);

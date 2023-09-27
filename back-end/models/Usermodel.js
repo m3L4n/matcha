@@ -94,6 +94,25 @@ class UserModel {
         .catch((err) => next(err));
     });
   };
+  static getAllEnum = async () => {
+    const enumGender = [];
+    const enumTags = [];
+    const enumSexualPreference = [];
+    const enumBeverage = [];
+    try {
+      enumGender = db.query("SELECT enum_range(NULL::gender_enum");
+      enumTags = db.query("SELECT enum_range(NULL::tags_enum");
+      enumSexualPreference = db.query("SELECT enum_range(NULL::sexual_preference_enum");
+      enumBeverage = db.query("SELECT enum_range(NULL::beverage_enum");
+      return { enumGender: await enumGender, enumTags: await enumTags, enumBeverage: await enumBeverage, enumSexualPreference: await enumSexualPreference };
+    } catch (error) {
+      throw error;
+    }
+  };
+  // static updateInfoProfile= async (req, res) => {
+  //   // pvr update les infomartions du profile
+  //   // tout sauf username,
+  // }
 }
 
 module.exports = {

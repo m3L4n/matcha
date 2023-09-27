@@ -194,9 +194,17 @@ class UserController {
       const buffer = Buffer.from(imageProfile);
       const base64String = buffer.toString("base64");
       const dataURL = `data:image/jpeg;base64,${base64String}`;
-      res.status(200).json(dataURL);
+      return res.status(200).json(dataURL);
     } catch (err) {
       res.status(500).json({ error: "cant get the image Profile" });
+    }
+  };
+  static getAllInfoEnum = async (req, res) => {
+    try {
+      const allEnum = await UserModel.getAllEnum();
+      return res.status(200).json(dataURL);
+    } catch (error) {
+      return res.status(500).json({ error: "cant get all enum" });
     }
   };
 }

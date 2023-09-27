@@ -48,7 +48,8 @@
 
   /* border-bottom: 1px solid black; */
   text-align: left;
-  color: var(--green);
+  /* color: var(--green); */
+  color: black;
 }
 .body__info-user__description {
   display: flex;
@@ -117,24 +118,23 @@
   display: flex;
 }
 .body__info-user-preview {
-  /* width: 10rem; */
-  /* height: 10rem; */
-  position: relative;
   width: fit-content;
+  height: fit-content;
+  position: relative;
   display: flex;
   flex-flow: row;
   justify-content: left;
 }
 .info-user_profile-picture {
-  width: 13rem;
-  height: 13rem;
+  width: 10rem;
+  height: 10rem;
   border-radius: 50%;
 }
 .body__info-user-preview-label {
   width: 2.5rem;
   position: absolute;
-  top: 10rem;
-  left: 10rem;
+  top: 7.5rem;
+  left: 7.5rem;
   display: flex;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   justify-content: center;

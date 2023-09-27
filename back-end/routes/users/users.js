@@ -28,4 +28,5 @@ router.delete("/disconnect", isAuth, UserController.disconnectUser);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);
 router.post("/upload-image", isAuth, upload.single("image"), UserController.uploadImage);
 router.get("/profil-picture", isAuth, UserController.getImageProfile);
+router.get("/getAllInfoEnum", isAuth, UserController.getAllInfoEnum);
 module.exports = router;
