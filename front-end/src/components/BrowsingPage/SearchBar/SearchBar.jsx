@@ -13,11 +13,11 @@ export default function SearchBar() {
   return (
     <nav className="searchForm">
       <form action="">
-        <input className='searchbar' placeholder='Search' />
-        <button type="submit"><BsSearch size={16}/></button>
+        <input name='searchbar' className='searchbar' placeholder='Search' />
+        <button type="submit"><BsSearch size={16} /></button>
       </form>
-      <div className='filter' onClick={toggleMenu}> { filter ? <CgClose /> : <BsFilter />} </div>  
-      { filter && <FilterModal /> } 
+      <div className='filter' onClick={toggleMenu}> {filter ? <CgClose /> : <BsFilter />} </div>
+      {filter && <FilterModal />}
     </nav>
   );
 }

@@ -1,11 +1,11 @@
 import "./Slider.scoped.css"
 import { useState } from "react";
 
-const Slider=({min, max, defaultValue}) => {
+const Slider = ({ min, max, defaultValue }) => {
   const [value, setValue] = useState(defaultValue);
   return (
     <div className="slidercontainer">
-      <input 
+      <input
         type="range"
         name="slider"
         min={min}
@@ -13,7 +13,7 @@ const Slider=({min, max, defaultValue}) => {
         value={value}
         className="slider"
         onChange={e => setValue(e.target.value)}
-      /> <label className="body" htmlFor="slider">{value}</label>
+      /> <label className="body">{value}</label>
     </div>
   );
 }
