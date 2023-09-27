@@ -17,7 +17,7 @@ const checkDatabaseConnection = async () => {
       await new Promise((res) => setTimeout(res, 2000));
     }
   }
-  process.exit(1); // Sortie avec un code d'erreur en cas d'échec de la connexion
+  process.exit(1);
 };
 
 checkDatabaseConnection();
@@ -77,14 +77,15 @@ async function createTablePictures(client) {
 }
 async function createTableMatch(client) {
   await client.query(`
-  CREATE TABLE IF NOT EXISTS matchs (
-    id UUID PRIMARY KEY,
+  CREATE TABLE IF NOT EXISTS match (
+    id UUID DEFAULT uuid_generate_v4(),
     "like"  boolean DEFAULT true,
     "block"  boolean DEFAULT false,
-    id_user_requester UUID REFERENCES users ON DELETE CASCADE,
-    id_user_receiver UUID REFERENCES users ON DELETE CASCADE
+    id_requester UUID REFERENCES users ON DELETE CASCADE,
+    id_receiver UUID REFERENCES users ON DELETE CASCADE,
+    PRIMARY KEY (id)
      );
-     `);
+    `);
 }
 async function createTableNotifications(client) {
   await client.query(`

@@ -97,7 +97,7 @@ for (let i = 0; i < 100; i++) {
   const sexual_preference = random % 2 == 0 ? "male" : "female";
   const password = bcrypt.hashSync(faker.string.alphanumeric(), 10);
   const description = faker.string.alphanumeric(200);
-  const rate_fame = 1500 - Math.floor(Math.random() * 200)
+  const rate_fame = 1500;
   const age = Math.floor(Math.random() * (50 - 18) + 18);
   const profile_picture = faker.internet.avatar();
   const valided = true;

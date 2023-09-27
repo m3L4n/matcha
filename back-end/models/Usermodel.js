@@ -47,6 +47,10 @@ class UserModel {
     }
   };
 
+  /**
+    * Get all potential match for current user
+    * @param {string} currentUserId
+  **/
   static getAll = (currentUserId) => {
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
