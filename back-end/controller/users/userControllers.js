@@ -153,7 +153,8 @@ class UserController {
 
   static getUsers = async (req, res) => {
     const { id } = req.authUser;
-    let users = await UserModel.getAll(id);
+    const { action, age, location, fame, tags } = req.query;
+    let users = await UserModel.getAll(id, { action, age, location, fame, tags });
     res.json(checkAndChange(users));
   };
 
