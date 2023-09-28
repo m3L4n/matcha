@@ -7,17 +7,17 @@ import { toast } from "react-toastify";
  */
 export function notify(type, text) {
   switch (type) {
-  case "sucess": {
-    toast.success(text);
-    break;
-  }
-  case "error": {
-    toast.error(text);
-    break;
-  }
-  case "warning": {
-    toast.warning(text);
-    break;
-  }
+    case "success": {
+      toast.success(text);
+      break;
+    }
+    case "error": {
+      toast.error(text);
+      break;
+    }
+    case "warning": {
+      toast.warning(text);
+      break;
+    }
   }
 }

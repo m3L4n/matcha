@@ -8,9 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
     age: 10,
-    action: 'sort',
-    location: 30,
-    fame: 1500,
+    action: '',
+    location: 300,
+    fame: 300,
     tags: '',
   })
 

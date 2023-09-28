@@ -1,5 +1,5 @@
 import React from "react";
-import { useState} from "react";
+import { useState } from "react";
 import { FaDiscord } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { notify } from "../../Global/toast-notify";
@@ -41,7 +41,7 @@ export default function Register() {
     fetch("http://localhost:4000/users", options)
       .then(response => {
         if (response.status == 201) {
-          notify("sucess", "your acount is created, please verify your email");
+          notify("success", "your acount is created, please verify your email");
         }
         return response.json();
       })

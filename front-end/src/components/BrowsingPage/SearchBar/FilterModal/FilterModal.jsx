@@ -17,10 +17,10 @@ const FilterModal = ({ setRequestParams }) => {
           e.preventDefault();
           const formData = new FormData(e.target);
           const obj = {
-            action: action ?? "sort",
-            age: formData.get("ageGap") ?? 10,
+            action: action ?? "",
+            age: formData.get("ageGap") ?? "",
             location: formData.get("location") ?? 30,
-            fame: formData.get("fame") ?? 1500,
+            fame: formData.get("fame") ?? 300,
             tags: formData.get("tags") ?? "",
           };
           setRequestParams(obj);
