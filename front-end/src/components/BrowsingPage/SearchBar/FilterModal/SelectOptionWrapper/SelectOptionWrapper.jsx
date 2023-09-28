@@ -8,9 +8,9 @@ const SelectOptionWrapper = ({ option, children }) => {
   return (
     <div className="menu-button">
       <div className="options" onClick={() => (setMenu(!menu))}>
-        <p>{option}</p><p> { menu ? <AiOutlineDown /> : <AiOutlineRight /> } </p>
+        <p>{option}</p><p> {menu ? <AiOutlineDown /> : <AiOutlineRight />} </p>
       </div>
-      { menu && children }
+      {menu && children}
     </div>
   );
 }

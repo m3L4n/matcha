@@ -7,13 +7,15 @@ import { useQuery } from '@tanstack/react-query';
 
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
-    action: '',
-    age: '',
-    location: '',
-    fame: '',
+    age: 10,
+    action: 'sort',
+    location: 30,
+    fame: 1500,
     tags: '',
   })
-  const matches = useQuery(['details', requestParams], fetchMatches);
+
+  const result = useQuery(['details', requestParams], fetchMatches);
+  const matches = result?.data?.result ?? [];
 
   if (matches.isLoading) {
     return (
@@ -28,7 +30,7 @@ export default function BrowsingPage() {
     )
   }
 
-  const cards = matches.data.result.map(user => <Card
+  const cards = matches.map(user => <Card
     key={user.id}
     id={user.id}
     username={user.username}
@@ -42,7 +44,7 @@ export default function BrowsingPage() {
       <header className='title'>
         <h1 className='header-title header'>Matcha</h1>
       </header>
-      <SearchBar />
+      <SearchBar setRequestParams={setRequestParams} />
       <section className='matches'>
         {cards}
       </section>

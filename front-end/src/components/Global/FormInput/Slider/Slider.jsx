@@ -8,6 +8,7 @@ const Slider = ({ min, max, defaultValue, name }) => {
     <div className="slidercontainer">
       <input
         type="range"
+        id={name}
         name={name}
         min={min}
         max={max}

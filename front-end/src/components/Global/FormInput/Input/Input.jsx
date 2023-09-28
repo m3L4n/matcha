@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Input = ({ name, placeholder }) => {
   return (
     <div className="inputcontainer">
-      <input type="text" name={name} placeholder={placeholder} />
+      <input type="text" id={name} name={name} placeholder={placeholder} />
     </div>
   );
 }
