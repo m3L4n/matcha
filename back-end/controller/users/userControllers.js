@@ -222,6 +222,12 @@ class UserController {
     const result = await UserModel.updateAllInformation(userInfo);
     res.json(checkAndChange(result));
   };
+  static getAllInfoUser = async (req, res) => {
+    const { id } = req.params;
+    const idRequester = req.params.id;
+    const infomartionsUser = await UserModel.getAllInformationUser(id, idRequester);
+    res.json(checkAndChange(infomartionsUser));
+  };
 }
 
 module.exports = {

@@ -8,21 +8,23 @@ import UserProfile from "./UserProfile/UserProfile";
 
 export default function Profile() {
   const paramId = useParams().id;
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [createProfile, setCreateProfile] = useState(false);
 
   useEffect(() => {
     creationProfil(user);
-  }, [])
-  function creationProfil(user){
-    const {gender, beverage, sexual_preference, tags, description, rate_fame } = user;
-    if (!gender| !beverage| !sexual_preference| !tags| !description| !rate_fame){
+  }, []);
+  function creationProfil(user) {
+    const { gender, beverage, sexual_preference, tags, description, rate_fame } = user;
+    if (!gender | !beverage | !sexual_preference | !description | !rate_fame) {
       setCreateProfile(true);
     }
   }
 
-  return (<>
-    {createProfile && <CreateProfile/>}
-    {!createProfile && <UserProfile />}
-    </>)
+  return (
+    <>
+      {createProfile && <CreateProfile />}
+      {!createProfile && <UserProfile />}
+    </>
+  );
 }

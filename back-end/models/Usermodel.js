@@ -162,6 +162,22 @@ class UserModel {
     }
   };
 
+  static getAllInformationUser = async (id, idRequester) => {
+    let query = "";
+    if (id === idRequester) {
+      query =
+        "SELECT username, email, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
+    } else {
+      query = "SELECT username, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
+    }
+    try {
+      const res = await db.query(query, [id]);
+      return res.rows[0];
+    } catch (error) {
+      console.log(`error in recuperation of data from user ${id}`, error);
+      throw error;
+    }
+  };
   // static updateInfoProfile= async (req, res) => {
   //   // pvr update les infomartions du profile
   //   // tout sauf username,
