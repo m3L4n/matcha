@@ -7,11 +7,15 @@ import { useQuery } from '@tanstack/react-query';
 
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
-    age: 10,
     action: '',
+    age: 10,
+    ageSort: '',
     location: 300,
+    locationSort: '',
     fame: 300,
+    fameSort: '',
     tags: '',
+    tagsSort: '',
   })
 
   const result = useQuery(['details', requestParams], fetchMatches);

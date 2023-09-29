@@ -15,7 +15,7 @@ const Slider = ({ min, max, defaultValue, name }) => {
         value={value}
         className="slider"
         onChange={e => setValue(e.target.value)}
-      /> <label className="body">{value}</label>
+      /> <label className="body" htmlFor={name}>{value}</label>
     </div>
   );
 }
