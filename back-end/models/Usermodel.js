@@ -52,8 +52,8 @@ class UserModel {
     * @param {string} currentUserId
     * @param {Object} selectionParams
   **/
-  static getAll = (currentUserId, selectionParams) => {
-    // action, age, location, fame, tags 
+  static getAll = (currentUserId, selectionParams, sortParams) => {
+    // TODO implement TAGS for matching/filter/sort
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
     const MAX_DISTANCE = selectionParams.action == "filter" ? selectionParams.location || 300 : 300;
@@ -96,13 +96,41 @@ class UserModel {
             return users.filter(user => Math.floor(distanceBetweenTwoPoints(position, user.position) < MAX_DISTANCE));
           }
 
+          const sortMatches = (users, age) => {
+            let usersSorted = users;
+            if (sortParams.ageSort) {
+              if (sortParams.ageSort == "ascending") {
+                usersSorted = users.sort((a, b) => (a.age - age) - (b.age - age));
+                console.log(usersSorted);
+              } else {
+                usersSorted = users.sort((a, b) => (b.age - age) - (a.age - age));
+              }
+            }
+            if (selectionParams.fame) {
+              if (sortParams.ageSort == "ascending")
+                usersSorted = users.sort((a, b) => (a.rate_fame - rate_fame) - (b.rate_fame - rate_fame));
+              else
+                usersSorted = users.sort((a, b) => (b.rate_fame - rate_fame) - (a.rate_fame - rate_fame));
+            }
+            if (selectionParams.location) {
+              if (sortParams.locationSort == "ascending") {
+                usersSorted = users.sort((a, b) =>
+                  (distanceBetweenTwoPoints(position, a.position) - distanceBetweenTwoPoints(position, b.position)));
+              } else {
+                usersSorted = users.sort((a, b) =>
+                  (distanceBetweenTwoPoints(position, b.position) - distanceBetweenTwoPoints(position, a.position)));
+              }
+            }
+            return usersSorted;
+          }
+
           if (sexual_preference !== "both") {
             getMatchesBySexualPreferences()
-              .then(result => next(getOnlyClosePeople(result.rows)))
+              .then(result => next(sortMatches(getOnlyClosePeople(result.rows), age)))
               .catch((err) => next(err));
           } else {
             getMatchesOfAllSexes()
-              .then(result => next(getOnlyClosePeople(result.rows)))
+              .then(result => next(sortMatches(getOnlyClosePeople(result.rows), age)))
               .catch((err) => next(err));
           }
         })
