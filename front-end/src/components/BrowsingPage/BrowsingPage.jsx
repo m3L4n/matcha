@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './BrowsingPage.scoped.css';
 import Card from './Card/Card'
 import SearchBar from './SearchBar/SearchBar';
@@ -5,22 +6,40 @@ import fetchMatches from './fetchMatches';
 import { useQuery } from '@tanstack/react-query';
 
 export default function BrowsingPage() {
-  const matches = useQuery(['details'], fetchMatches);
+  const [requestParams, setRequestParams] = useState({
+    action: '',
+    age: 10,
+    ageSort: '',
+    location: 300,
+    locationSort: '',
+    fame: 300,
+    fameSort: '',
+    tags: '',
+    tagsSort: '',
+  })
+
+  const result = useQuery(['details', requestParams], fetchMatches);
+  const matches = result?.data?.result ?? [];
 
   if (matches.isLoading) {
     return (
       <div className="loadingMatches">
-        <h2>Loadind matches...</h2>
+        <h2>
+          Loadind matches
+          <span className="loading__dot"></span>
+          <span className="loading__dot"></span>
+          <span className="loading__dot"></span>
+        </h2>
       </div>
     )
   }
 
-  const cards = matches.data.result.map(user => <Card
+  const cards = matches.map(user => <Card
     key={user.id}
     id={user.id}
     username={user.username}
     age={user.age}
-    profilePicture={"http://placekitten.com/253/300"}
+    profilePicture={`http://placekitten.com/${Math.floor(Math.random() * (280 - 250 + 1) + 250)}/${Math.floor(Math.random() * (350 - 300 + 1) + 300)}`}
     city={"Paris"}
   />)
 
@@ -29,7 +48,7 @@ export default function BrowsingPage() {
       <header className='title'>
         <h1 className='header-title header'>Matcha</h1>
       </header>
-      <SearchBar />
+      <SearchBar setRequestParams={setRequestParams} />
       <section className='matches'>
         {cards}
       </section>

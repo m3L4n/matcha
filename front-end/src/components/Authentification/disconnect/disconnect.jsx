@@ -1,5 +1,5 @@
 import { notify } from "../../Global/toast-notify";
-export async  function disconnect(){
+export async function disconnect() {
   const options = {
     method: "delete",
     headers: {
@@ -11,8 +11,8 @@ export async  function disconnect(){
     .then(response => {
       if (response.status == 200) {
         notify(
-          "sucess",
-          "disconected"
+          "success",
+          "disconnected"
         );
         return {}
       }

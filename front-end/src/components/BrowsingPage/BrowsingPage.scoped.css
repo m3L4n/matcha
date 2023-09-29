@@ -101,3 +101,36 @@ button[type="submit"]:hover {
     max-width: 70%;
   }
 }
+
+.loadingMatches {
+  color: var(--green);
+  width: 90%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading__dot {
+  animation: dot ease-in-out 1s infinite;
+  background-color: grey;
+  display: inline-block;
+  height: 10px;
+  margin: 0 5px;
+  width: 10px;
+  border-radius: 50%;
+}
+
+.loading__dot:nth-of-type(2) {
+  animation-delay: 0.2s;
+}
+
+.loading__dot:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes dot {
+  0% { background-color: var(--cream); transform: scale(1); }
+  50% { background-color: var(--green); transform: scale(1.3); }
+  100% { background-color: var(--cream); transform: scale(1); }
+}

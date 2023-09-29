@@ -8,7 +8,7 @@ import { notify } from "components/Global/toast-notify";
 import { useAuth } from "src/Context/AuthContext";
 export default function SignIn() {
   const navigate = useNavigate();
-  const {setTriggerReload} = useAuth();
+  const { setTriggerReload } = useAuth();
   const [user, setUser] = useState({
     username: "",
     password: ""
@@ -33,16 +33,16 @@ export default function SignIn() {
     };
     fetch("http://localhost:4000/users/login", options)
       .then(response => {
-        if ( response.status == 201){
+        if (response.status == 201) {
 
-          notify("sucess", "login sucess")
+          notify("success", "login success")
           setTriggerReload(true);
           navigate('/match')
         }
         return response.json()
       })
       .then(data => {
-        console.log("data request :",data)
+        console.log("data request :", data)
         if (data.msg == "Authentication failed") {
           notify(
             "warning",
