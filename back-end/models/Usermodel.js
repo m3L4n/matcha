@@ -1,6 +1,7 @@
 const { PBKDF2 } = require("crypto-js");
 const db = require("../db/db");
 const { distanceBetweenTwoPoints } = require('../modules/distance');
+const { filterValidation, sortValidation } = require('../modules/formValidation');
 
 class UserModel {
   static createUser = async (userData) => {
@@ -50,25 +51,33 @@ class UserModel {
   /**
     * Get all potential match for current user
     * @param {string} currentUserId
-    * @param {Object} selectionParams
+    * @param {Object} filterParams
   **/
-  static getAll = (currentUserId, selectionParams, sortParams) => {
+  static getAll = (currentUserId, filterParams, sortParams) => {
     // TODO implement TAGS for matching/filter/sort
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
-    const MAX_DISTANCE = selectionParams.action == "filter" ? selectionParams.location || 300 : 300;
+    const MAX_DISTANCE = filterParams.action == "filter" ? selectionParams.location || 300 : 300;
     return new Promise((next) => {
       db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {
+          const filterError = filterValidation(filterParams);
+          const sortError = sortValidation(sortParams);
+          if (filterError !== "ok") {
+            next(filterError);
+          }
+          if (sortError !== "ok") {
+            next(sortError);
+          }
           const { sexual_preference, rate_fame, position, age } = result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
-          const selectionAge = Number(selectionParams.age) ?? 10;
-          const selectionFame = Number(selectionParams.fame) ?? 300;
+          const selectionAge = Number(filterParams.age) ?? 10;
+          const selectionFame = Number(filterParams.fame) ?? 300;
 
-          if (selectionParams.action == "filter") {
+          if (filterParams.action == "filter") {
             min_fame = rate_fame - selectionFame;
             max_fame = rate_fame + selectionFame;
             min_age = age - selectionAge < 18 ? 18 : age - selectionAge;
@@ -78,8 +87,8 @@ class UserModel {
           const getMatchesBySexualPreferences = () => {
             return db.query(
               "SELECT id, username, position, profile_picture, age FROM users \
-              WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
-              AND id != $6",
+                WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
+                AND id != $6",
               [sexual_preference, min_fame, max_fame, min_age, Number(max_age), currentUserId]
             )
           }
@@ -87,7 +96,7 @@ class UserModel {
           const getMatchesOfAllSexes = () => {
             return db.query(
               "SELECT id, username, position, profile_picture, age FROM users \
-              WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND id IS NOT $4",
+                WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND id IS NOT $4",
               [min_fame, max_fame, min_age, Number(max_age)]
             )
           }
@@ -106,13 +115,13 @@ class UserModel {
                 usersSorted = users.sort((a, b) => (b.age - age) - (a.age - age));
               }
             }
-            if (selectionParams.fame) {
+            if (filterParams.fame) {
               if (sortParams.ageSort == "ascending")
                 usersSorted = users.sort((a, b) => (a.rate_fame - rate_fame) - (b.rate_fame - rate_fame));
               else
                 usersSorted = users.sort((a, b) => (b.rate_fame - rate_fame) - (a.rate_fame - rate_fame));
             }
-            if (selectionParams.location) {
+            if (filterParams.location) {
               if (sortParams.locationSort == "ascending") {
                 usersSorted = users.sort((a, b) =>
                   (distanceBetweenTwoPoints(position, a.position) - distanceBetweenTwoPoints(position, b.position)));

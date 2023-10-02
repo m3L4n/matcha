@@ -1,27 +1,32 @@
-function filterValidation(action, age, location, fame, tags) {
-  if (action && (len(action) !== 0 && action !== "filter")) {
-    throw new Error('Filter action is invalid');
+const { error } = require("./response");
+
+function filterValidation(user) {
+  if (user.action && (len(user.action) !== 0 && user.action !== "filter")) {
+    return error('Filter action is invalid');
   }
 
-  if (age && (age < 0 || age > 60)) {
-    throw new Error('Invalid age gap filter');
+  if (user.age && (user.age < 0 || user.age > 60)) {
+    return error('Invalid age gap filter');
   }
 
-  if (location && (location < 0 || location > 600)) {
-    throw new Error('Invalid location gap filter');
+  if (user.location && (user.location < 0 || user.location > 600)) {
+    return error('Invalid location gap filter');
   }
 
-  if (fame && (fame < 0 || fame > 5200)) {
-    throw new Error('Invalid fame gap filter');
+  if (user.fame && (user.fame < 0 || user.fame > 5200)) {
+    return error('Invalid fame gap filter');
   }
+  return "ok";
 }
 
 function sortValidation(sortParams) {
   for (const [key, value] of Object.entries(sortParams)) {
     if (value != "" && value != "ascending" && value != "descending") {
-      throw new Error(`Invalid ${key} sort params`);
+      console.log("oh NO");
+      return error(`Invalid ${key} sort params`);
     }
   }
+  return "ok";
 }
 
 module.exports = {
