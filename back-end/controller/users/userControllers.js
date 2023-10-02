@@ -1,11 +1,12 @@
 const { sendingMail } = require("../../mailing/mailing");
-const { checkAndChange } = require("../../modules/response.js");
+const { checkAndChange, error } = require("../../modules/response.js");
 const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const { TokenModel } = require("../../models/Tokenmodel");
 const { UserModel } = require("../../models/Usermodel");
+const { filterValidation, sortValidation } = require("../../modules/formValidation");
 
 class UserController {
   static signup = async (req, res, needValidation = false) => {
@@ -155,12 +156,18 @@ class UserController {
     const { id } = req.authUser;
     const { action, age, location, fame, tags } = req.query;
     const { ageSort, locationSort, fameSort, tagsSort } = req.query;
+    try {
+      filterValidation(action, age, location, fame, tags);
+      sortValidation({ ageSort, locationSort, fameSort, tagsSort });
+    } catch (error) {
+      return res.status(400).json(checkAndChange(error));
+    }
     let users = await UserModel.getAll(
       id,
       { action, age, location, fame, tags },
       { ageSort, locationSort, fameSort, tagsSort }
     );
-    res.json(checkAndChange(users));
+    return res.json(checkAndChange(users));
   };
 
   static changePassword = async (req, res) => {
