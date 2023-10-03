@@ -4,6 +4,7 @@ import Card from './Card/Card'
 import SearchBar from './SearchBar/SearchBar';
 import fetchMatches from './fetchMatches';
 import { useQuery } from '@tanstack/react-query';
+import { notify } from '../Global/toast-notify';
 
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
@@ -19,9 +20,8 @@ export default function BrowsingPage() {
   })
 
   const result = useQuery(['details', requestParams], fetchMatches);
-  const matches = result?.data?.result ?? [];
 
-  if (matches.isLoading) {
+  if (result.isLoading) {
     return (
       <div className="loadingMatches">
         <h2>
@@ -34,6 +34,16 @@ export default function BrowsingPage() {
     )
   }
 
+  if (result.error) {
+    notify("error", "Error when fetching matches");
+    return (
+      <div className="matchesError">
+        <h2>Cannot find any matches for you ... 💔</h2>
+      </div>
+    )
+  }
+
+  const matches = result?.data?.result ?? [];
   const cards = matches.map(user => <Card
     key={user.id}
     id={user.id}
