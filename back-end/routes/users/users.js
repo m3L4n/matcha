@@ -4,7 +4,7 @@ const router = express.Router();
 const { UserController } = require("../../controller/users/userControllers");
 const { isAuth } = require("../../middlewares/userAuth");
 const multer = require("multer");
-const uploadMiddleware = require("../../Middlewares/uploadMiddleware");
+const uploadMiddleware = require("../../middlewares/uploadMiddleware");
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
 //     cb(null, "uploads/");

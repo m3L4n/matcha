@@ -68,8 +68,8 @@ async function createTableUsers(client) {
     city TEXT,
     "connected" BOOLEAN DEFAULT false, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    profile_picture BYTEA,
-    pictures BYTEA[],
+    profile_picture TEXT,
+    pictures TEXT[],
     "valided" BOOLEAN DEFAULT false,
     PRIMARY KEY (id)  
   );

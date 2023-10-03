@@ -156,11 +156,7 @@ class UserController {
     const { id } = req.authUser;
     const { action, age, location, fame, tags } = req.query;
     const { ageSort, locationSort, fameSort, tagsSort } = req.query;
-    let users = await UserModel.getAll(
-      id,
-      { action, age, location, fame, tags },
-      { ageSort, locationSort, fameSort, tagsSort }
-    );
+    let users = await UserModel.getAll(id, { action, age, location, fame, tags }, { ageSort, locationSort, fameSort, tagsSort });
     res.json(checkAndChange(users));
   };
 
@@ -181,10 +177,13 @@ class UserController {
   };
   static uploadImage = async (req, res) => {
     // const fileName = req.file.path;
-    const { buffer } = req.file;
+    const fileBuffer = req.file.buffer;
     const { id } = req.authUser;
     try {
-      await UserModel.uploadImageInDB("profile_picture", buffer, id);
+      const buffer = Buffer.from(fileBuffer);
+      const base64String = buffer.toString("base64");
+      const dataURL = `data:image/jpeg;base64,${base64String}`;
+      await UserModel.uploadImageInDB("profile_picture", dataURL, id);
       res.status(201).json({ message: "image profile uploaded" });
     } catch (error) {
       res.status(500).json({ message: "cant upload image profile" });
@@ -213,9 +212,15 @@ class UserController {
   static uploadPictureDescription = async (req, res) => {
     const files = req.files;
     const { id } = req.authUser;
-    const fileDataArray = files.map((file) => file.buffer);
+    const pictureArray = [];
+    files.map((file) => {
+      const buffer = Buffer.from(file.buffer);
+      const base64String = buffer.toString("base64");
+      const dataURL = `data:image/jpeg;base64,${base64String}`;
+      pictureArray.push(dataURL);
+    });
     try {
-      const res = await UserModel.uploadImageInDB("pictures", fileDataArray, id);
+      const res = await UserModel.uploadImageInDB("pictures", pictureArray, id);
       res.json(checkAndChange(res));
     } catch (error) {
       res.json(checkAndChange(error));

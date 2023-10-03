@@ -31,7 +31,7 @@ export default function CreateProfile() {
     age: 0,
   });
 
-  const allEnum = useQuery(["users"], fetchEnum);
+  // const allEnum = useQuery(["users"], fetchEnum);
   const mutationUpdateInfo = useMutation(fetchUpdateInfo);
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
   const mutationUploadPD = useMutation(fetchUploadPictureDescription);

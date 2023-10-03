@@ -1,6 +1,7 @@
 const { PBKDF2 } = require("crypto-js");
 const db = require("../db/db");
 const { distanceBetweenTwoPoints } = require("../modules/distance");
+const { error } = require("../modules/response");
 
 class UserModel {
   static createUser = async (userData) => {
@@ -19,6 +20,9 @@ class UserModel {
     try {
       const query = `SELECT *  FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
+      if (user.rowCount == 0) {
+        throw new Error("users doesnt exist");
+      }
       return user.rows[0];
     } catch (error) {
       throw error;
@@ -29,6 +33,9 @@ class UserModel {
     try {
       const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
+      if (user.rowCount == 0) {
+        throw new Error("users doesnt exist");
+      }
       return user.rows[0];
     } catch (error) {
       throw error;
@@ -51,21 +58,24 @@ class UserModel {
     const values = [buffer, userId];
     try {
       const result = await db.query(query, values);
+      if (result.rowCount == 0) {
+        throw new Error("users doesnt exist");
+      }
       return result.rows[0];
     } catch (e) {
       console.log("error with upload file", e);
     }
   };
-  static getImageProfil = async (id) => {
-    const query = `SELECT profile_picture FROM users WHERE id = $1`;
-    const values = [id];
-    try {
-      const imageProfil = await db.query(query, values);
-      return imageProfil.rows[0].profile_picture;
-    } catch (error) {
-      console.log("error, cant get imageProfile", error);
-    }
-  };
+  // static getImageProfil = async (id) => {
+  //   const query = `SELECT profile_picture FROM users WHERE id = $1`;
+  //   const values = [id];
+  //   try {
+  //     const imageProfil = await db.query(query, values);
+  //     return imageProfil.rows[0].profile_picture;
+  //   } catch (error) {
+  //     console.log("error, cant get imageProfile", error);
+  //   }
+  // };
   /**
    * Get all potential match for current user
    * @param {string} currentUserId
@@ -190,37 +200,40 @@ class UserModel {
     }
   };
   static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, id }) => {
-    try {
-      const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9 WHERE id = $10`;
-      const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, id];
-      const res = await db.query(query, values);
-      return res.rows[0];
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9 WHERE id = $10`;
+    const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, id];
+    return new Promise((next) => {
+      db.query(query, values)
+        .then((data) => {
+          if (data.rowCount == 0) {
+            next(new Error("no data here"));
+          }
+          next(data.rows[0]);
+        })
+        .catch((err) => next(err));
+    });
   };
 
   static getAllInformationUser = async (id, idRequester) => {
     let query = "";
     if (id === idRequester) {
       query =
-        "SELECT username, email, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
+        "SELECT id, username, email, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
     } else {
-      query = "SELECT username, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
+      query =
+        "SELECT id, username, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
     }
-    try {
-      const res = await db.query(query, [id]);
-      return res.rows[0];
-    } catch (error) {
-      console.log(`error in recuperation of data from user ${id}`, error);
-      throw error;
-    }
+    return new Promise((next) => {
+      db.query(query, [id])
+        .then((data) => {
+          if (data.rowCount == 0) {
+            next(new Error("no data here"));
+          }
+          next(data.rows[0]);
+        })
+        .catch((err) => next(err));
+    });
   };
-  // static updateInfoProfile= async (req, res) => {
-  //   // pvr update les infomartions du profile
-  //   // tout sauf username,
-  // }
 }
 
 module.exports = {
