@@ -25,7 +25,7 @@ export default function BrowsingPage() {
     return (
       <div className="loadingMatches">
         <h2>
-          Loadind matches
+          Loading matches
           <span className="loading__dot"></span>
           <span className="loading__dot"></span>
           <span className="loading__dot"></span>
