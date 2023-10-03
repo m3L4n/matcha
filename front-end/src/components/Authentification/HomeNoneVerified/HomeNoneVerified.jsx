@@ -41,7 +41,7 @@ export default function HomeNoneVerified() {
         console.log(response);
         if (response.status == 200) {
           notify(
-            "sucess",
+            "success",
             "check your email, your link will be send in the second"
           );
         }
