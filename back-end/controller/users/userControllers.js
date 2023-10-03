@@ -160,7 +160,7 @@ class UserController {
       { action, age, location, fame, tags },
       { ageSort, locationSort, fameSort, tagsSort }
     );
-    res.json(checkAndChange(users));
+    return res.json(checkAndChange(users));
   };
 
   static changePassword = async (req, res) => {
