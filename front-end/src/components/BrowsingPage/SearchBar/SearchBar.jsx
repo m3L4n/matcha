@@ -7,15 +7,25 @@ import PropTypes from "prop-types";
 
 export default function SearchBar({ setRequestParams }) {
   const [filter, setFilter] = useState(false);
+  // const [searchCriteria, setSearchCriteria] = useState([]);
 
   function toggleMenu() {
     setFilter(!filter);
   }
+
   return (
     <nav className="searchForm">
-      <form action="">
-        <input name='searchbar' className='searchbar' placeholder='Search' />
-        <button type="submit"><BsSearch size={16} /></button>
+      <form>
+        <div className="searchbar-container">
+          <input name='searchbar' className='searchbar' placeholder='Search' />
+          <button type="submit"><BsSearch size={16} /></button>
+        </div>
+        <select className='searchSelect' name="searchBy" id="searchBy">
+          <option value="">Search by:</option>
+          <option value="ageGap">age gap</option>
+          <option value="fameRating">fame rating</option>
+          <option value="location">location</option>
+        </select>
       </form>
       <div className='filter' onClick={toggleMenu}> {filter ? <CgClose /> : <BsFilter />} </div>
       {filter && <FilterModal setRequestParams={setRequestParams} />}
