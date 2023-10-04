@@ -7,16 +7,16 @@ import { useQuery } from '@tanstack/react-query';
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
     action: '',
-    age: 10,
-    location: 300,
-    fame: 300,
+    age: '',
+    location: '',
+    fame: '',
     tags: '',
   })
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['matches', requestParams],
-    queryFn: async () => {
-      const { action, age, location, fame, tags } = requestParams;
+    queryFn: async ({ queryKey }) => {
+      const { action, age, location, fame, tags } = queryKey[1];
       const url = `${import.meta.env.VITE_BACKEND_API_URL}/users/matches?action=${action}&age=${age}&location=${location}&fame=${fame}&tags=${tags}`;
       const options = {
         method: "GET",

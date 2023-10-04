@@ -5,9 +5,9 @@ import "./SearchBar.scoped.css";
 import FilterModal from './FilterModal/FilterModal';
 import PropTypes from "prop-types";
 
-export default function SearchBar({ setRequestParams }) {
+export default function SearchBar({ requestParams, setRequestParams }) {
   const [filter, setFilter] = useState(false);
-  // const [searchCriteria, setSearchCriteria] = useState([]);
+  const [searchCriteria, setSearchCriteria] = useState("");
 
   function toggleMenu() {
     setFilter(!filter);
@@ -15,9 +15,23 @@ export default function SearchBar({ setRequestParams }) {
 
   return (
     <nav className="searchForm">
-      <form>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const criteria = formData.get("searchBy");
+        const searchParams = {
+          action: "search",
+          age: criteria === "ageGap" ? searchCriteria : requestParams,
+          location: criteria === "location" ? searchCriteria : requestParams,
+          fame: criteria === "fameRating" ? searchCriteria : requestParams,
+          tags: criteria === "tags" ? searchCriteria : requestParams,
+        }
+        setRequestParams(searchParams);
+      }}>
         <div className="searchbar-container">
-          <input name='searchbar' className='searchbar' placeholder='Search' />
+          <input name='searchbar' className='searchbar' placeholder='Search' value={searchCriteria} onChange={(e) => {
+            setSearchCriteria(e.target.value);
+          }} />
           <button type="submit"><BsSearch size={16} /></button>
         </div>
         <select className='searchSelect' name="searchBy" id="searchBy">
@@ -25,6 +39,7 @@ export default function SearchBar({ setRequestParams }) {
           <option value="ageGap">age gap</option>
           <option value="fameRating">fame rating</option>
           <option value="location">location</option>
+          <option value="tags">tags</option>
         </select>
       </form>
       <div className='filter' onClick={toggleMenu}> {filter ? <CgClose /> : <BsFilter />} </div>
