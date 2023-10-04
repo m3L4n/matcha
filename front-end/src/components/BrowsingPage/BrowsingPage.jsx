@@ -18,7 +18,11 @@ export default function BrowsingPage() {
     tagsSort: '',
   })
 
-  const { isLoading, error, data } = useQuery(['details', requestParams], fetchMatches);
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['matches', requestParams],
+    queryFn: fetchMatches,
+    retry: false,
+  });
 
   if (isLoading) {
     return (
