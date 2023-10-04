@@ -102,7 +102,7 @@ button[type="submit"]:hover {
   }
 }
 
-.loadingMatches {
+.loadingMatches, matchesError {
   color: var(--green);
   width: 90%;
   height: 100vh;
