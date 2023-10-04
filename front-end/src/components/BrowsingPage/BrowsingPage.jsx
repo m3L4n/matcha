@@ -4,7 +4,6 @@ import Card from './Card/Card'
 import SearchBar from './SearchBar/SearchBar';
 import fetchMatches from './fetchMatches';
 import { useQuery } from '@tanstack/react-query';
-import { notify } from '../Global/toast-notify';
 
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
@@ -19,9 +18,9 @@ export default function BrowsingPage() {
     tagsSort: '',
   })
 
-  const result = useQuery(['details', requestParams], fetchMatches);
+  const { isLoading, error, data } = useQuery(['details', requestParams], fetchMatches);
 
-  if (result.isLoading) {
+  if (isLoading) {
     return (
       <div className="loadingMatches">
         <h2>
@@ -34,24 +33,13 @@ export default function BrowsingPage() {
     )
   }
 
-  if (result.error) {
-    notify("error", "Error when fetching matches");
+  if (error) {
     return (
       <div className="matchesError">
         <h2>Cannot find any matches for you ... 💔</h2>
       </div>
     )
   }
-
-  const matches = result?.data?.result ?? [];
-  const cards = matches.map(user => <Card
-    key={user.id}
-    id={user.id}
-    username={user.username}
-    age={user.age}
-    profilePicture={`http://placekitten.com/${Math.floor(Math.random() * (280 - 250 + 1) + 250)}/${Math.floor(Math.random() * (350 - 300 + 1) + 300)}`}
-    city={"Paris"}
-  />)
 
   return (
     <>
@@ -60,7 +48,17 @@ export default function BrowsingPage() {
       </header>
       <SearchBar setRequestParams={setRequestParams} />
       <section className='matches'>
-        {cards}
+        {data.result.map((user) => {
+          return (
+            <Card
+              key={user.id}
+              id={user.id}
+              username={user.username}
+              age={user.age}
+              profilePicture={`http://placekitten.com/${Math.floor(Math.random() * (280 - 250 + 1) + 250)}/${Math.floor(Math.random() * (350 - 300 + 1) + 300)}`}
+              city={"Paris"}
+            />)
+        })}
       </section>
     </>
   );
