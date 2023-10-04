@@ -2,25 +2,38 @@ import { useState } from 'react';
 import './BrowsingPage.scoped.css';
 import Card from './Card/Card'
 import SearchBar from './SearchBar/SearchBar';
-import fetchMatches from './fetchMatches';
 import { useQuery } from '@tanstack/react-query';
 
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
     action: '',
     age: 10,
-    ageSort: '',
     location: 300,
-    locationSort: '',
     fame: 300,
-    fameSort: '',
     tags: '',
-    tagsSort: '',
   })
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['matches', requestParams],
-    queryFn: fetchMatches,
+    queryFn: async () => {
+      const { action, age, location, fame, tags } = requestParams;
+      const url = `${import.meta.env.VITE_BACKEND_API_URL}/users/matches?action=${action}&age=${age}&location=${location}&fame=${fame}&tags=${tags}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        },
+        credentials: "include"
+      };
+
+      const response = await fetch(url, options)
+
+      if (!response) {
+        throw new Error(`Can't get match: ${action}, ${age}, ${location}, ${fame}, ${tags}`);
+      }
+
+      return response.json();
+    },
     retry: false,
   });
 
