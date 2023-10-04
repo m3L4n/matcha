@@ -53,21 +53,17 @@ class UserModel {
     * @param {string} currentUserId
     * @param {Object} filterParams
   **/
-  static getAll = (currentUserId, filterParams, sortParams) => {
+  static getAll = (currentUserId, filterParams) => {
     // TODO implement TAGS for matching/filter/sort
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
-    const MAX_DISTANCE = filterParams.action == "filter" ? selectionParams.location || 300 : 300;
+    const MAX_DISTANCE = filterParams.action == "filter" ? filterParams.location || 300 : 300;
     return new Promise((next) => {
       db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {
           const filterError = filterValidation(filterParams);
-          const sortError = sortValidation(sortParams);
           if (filterError !== "ok") {
             next(filterError);
-          }
-          if (sortError !== "ok") {
-            next(sortError);
           }
           const { sexual_preference, rate_fame, position, age } = result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
@@ -105,41 +101,13 @@ class UserModel {
             return users.filter(user => Math.floor(distanceBetweenTwoPoints(position, user.position) < MAX_DISTANCE));
           }
 
-          const sortMatches = (users, age) => {
-            let usersSorted = users;
-            if (sortParams.ageSort) {
-              if (sortParams.ageSort == "ascending") {
-                usersSorted = users.sort((a, b) => (a.age - age) - (b.age - age));
-                console.log(usersSorted);
-              } else {
-                usersSorted = users.sort((a, b) => (b.age - age) - (a.age - age));
-              }
-            }
-            if (filterParams.fame) {
-              if (sortParams.ageSort == "ascending")
-                usersSorted = users.sort((a, b) => (a.rate_fame - rate_fame) - (b.rate_fame - rate_fame));
-              else
-                usersSorted = users.sort((a, b) => (b.rate_fame - rate_fame) - (a.rate_fame - rate_fame));
-            }
-            if (filterParams.location) {
-              if (sortParams.locationSort == "ascending") {
-                usersSorted = users.sort((a, b) =>
-                  (distanceBetweenTwoPoints(position, a.position) - distanceBetweenTwoPoints(position, b.position)));
-              } else {
-                usersSorted = users.sort((a, b) =>
-                  (distanceBetweenTwoPoints(position, b.position) - distanceBetweenTwoPoints(position, a.position)));
-              }
-            }
-            return usersSorted;
-          }
-
           if (sexual_preference !== "both") {
             getMatchesBySexualPreferences()
-              .then(result => next(sortMatches(getOnlyClosePeople(result.rows), age)))
+              .then(result => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           } else {
             getMatchesOfAllSexes()
-              .then(result => next(sortMatches(getOnlyClosePeople(result.rows), age)))
+              .then(result => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }
         })
