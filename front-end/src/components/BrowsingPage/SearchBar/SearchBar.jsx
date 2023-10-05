@@ -21,10 +21,10 @@ export default function SearchBar({ requestParams, setRequestParams }) {
         const criteria = formData.get("searchBy");
         const searchParams = {
           action: "search",
-          age: criteria === "ageGap" ? searchCriteria : requestParams,
-          location: criteria === "location" ? searchCriteria : requestParams,
-          fame: criteria === "fameRating" ? searchCriteria : requestParams,
-          tags: criteria === "tags" ? searchCriteria : requestParams,
+          age: criteria === "ageGap" ? searchCriteria : requestParams.age,
+          location: criteria === "location" ? searchCriteria : requestParams.location,
+          fame: criteria === "fameRating" ? searchCriteria : requestParams.fame,
+          tags: criteria === "tags" ? searchCriteria : requestParams.tags,
         }
         setRequestParams(searchParams);
       }}>
@@ -50,4 +50,11 @@ export default function SearchBar({ requestParams, setRequestParams }) {
 
 SearchBar.propTypes = {
   setRequestParams: PropTypes.func.isRequired,
+  requestParams: PropTypes.shape({
+    action: PropTypes.string,
+    age: PropTypes.string,
+    location: PropTypes.string,
+    game: PropTypes.string,
+    tags: PropTypes.string,
+  }).isRequired,
 };

@@ -63,7 +63,7 @@ export default function BrowsingPage() {
       <header className='title'>
         <h1 className='header-title header'>Matcha</h1>
       </header>
-      <SearchBar setRequestParams={setRequestParams} />
+      <SearchBar requestParams={requestParams} setRequestParams={setRequestParams} />
       <section className='matches'>
         {data.result.map((user) => {
           return (
