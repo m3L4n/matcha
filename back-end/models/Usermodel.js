@@ -1,7 +1,6 @@
-const { PBKDF2 } = require("crypto-js");
 const db = require("../db/db");
 const { distanceBetweenTwoPoints } = require('../modules/distance');
-const { filterValidation, sortValidation } = require('../modules/formValidation');
+const { searchValidation } = require('../modules/formValidation');
 
 class UserModel {
   static createUser = async (userData) => {
@@ -53,31 +52,23 @@ class UserModel {
     * @param {string} currentUserId
     * @param {Object} filterParams
   **/
-  static getAll = (currentUserId, filterParams) => {
-    // TODO implement TAGS for matching/filter/sort
+  static getAll = (currentUserId, searchParams) => {
+    // TODO implement TAGS for matching / search
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
-    const MAX_DISTANCE = filterParams.action == "filter" ? filterParams.location || 300 : 300;
+    const MAX_DISTANCE = 300;
     return new Promise((next) => {
       db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {
-          const filterError = filterValidation(filterParams);
-          if (filterError !== "ok") {
-            next(filterError);
-          }
           const { sexual_preference, rate_fame, position, age } = result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
-          const selectionAge = Number(filterParams.age) ?? 10;
-          const selectionFame = Number(filterParams.fame) ?? 300;
 
-          if (filterParams.action == "filter") {
-            min_fame = rate_fame - selectionFame;
-            max_fame = rate_fame + selectionFame;
-            min_age = age - selectionAge < 18 ? 18 : age - selectionAge;
-            max_age = age + selectionAge;
+          const validatedSearchCriteria = searchValidation(searchParams);
+          if (validatedSearchCriteria !== "ok") {
+            return next(validatedSearchCriteria);
           }
 
           const getMatchesBySexualPreferences = () => {
