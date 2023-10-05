@@ -1,7 +1,7 @@
 const { error } = require("./response");
 
 function isNotEmptyButNaN(param) {
-  if (param !== "" && param === Nan) {
+  if (param !== "" && (isNaN(param) || !isFinite(param))) {
     return true;
   }
   return false;

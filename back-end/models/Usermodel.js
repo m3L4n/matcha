@@ -56,7 +56,6 @@ class UserModel {
     // TODO implement TAGS for matching / search
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
-    const MAX_DISTANCE = 300;
     return new Promise((next) => {
       db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {
@@ -65,10 +64,28 @@ class UserModel {
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
+          let max_distance = 300;
 
           const validatedSearchCriteria = searchValidation(searchParams);
           if (validatedSearchCriteria !== "ok") {
             return next(validatedSearchCriteria);
+          }
+
+          if (searchParams.action === "search") {
+            if (searchParams.age !== "") {
+              min_age = age - parseInt(searchParams.age);
+              if (min_age < 18) {
+                min_age = 18;
+              }
+              max_age = age + parseInt(searchParams.age);
+            }
+            if (searchParams.location !== "") {
+              max_distance = parseInt(searchParams.location);
+            }
+            if (searchParams.fame !== "") {
+              min_fame = rate_fame - parseInt(searchParams.fame);
+              max_fame = rate_fame + parseInt(searchParams.fame);
+            }
           }
 
           const getMatchesBySexualPreferences = () => {
@@ -89,7 +106,7 @@ class UserModel {
           }
 
           const getOnlyClosePeople = (users) => {
-            return users.filter(user => Math.floor(distanceBetweenTwoPoints(position, user.position) < MAX_DISTANCE));
+            return users.filter(user => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
           }
 
           if (sexual_preference !== "both") {
