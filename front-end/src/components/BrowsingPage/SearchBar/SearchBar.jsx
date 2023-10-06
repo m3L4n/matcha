@@ -5,7 +5,7 @@ import "./SearchBar.scoped.css";
 import FilterModal from './FilterModal/FilterModal';
 import PropTypes from "prop-types";
 
-export default function SearchBar({ requestParams, setRequestParams }) {
+export default function SearchBar({ requestParams, setRequestParams, setFilterParams }) {
   const [filter, setFilter] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState("");
 
@@ -43,13 +43,14 @@ export default function SearchBar({ requestParams, setRequestParams }) {
         </select>
       </form>
       <div className='filter' onClick={toggleMenu}> {filter ? <CgClose /> : <BsFilter />} </div>
-      {filter && <FilterModal setRequestParams={setRequestParams} />}
+      {filter && <FilterModal setFilterParams={setFilterParams} />}
     </nav>
   );
 }
 
 SearchBar.propTypes = {
   setRequestParams: PropTypes.func.isRequired,
+  setFilterParams: PropTypes.func.isRequired,
   requestParams: PropTypes.shape({
     action: PropTypes.string,
     age: PropTypes.string,

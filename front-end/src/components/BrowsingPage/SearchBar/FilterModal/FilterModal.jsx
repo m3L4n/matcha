@@ -2,30 +2,24 @@ import "./FilterModal.scoped.css";
 import SelectOptionWrapper from "./SelectOptionWrapper/SelectOptionWrapper";
 import Slider from "../../../Global/FormInput/Slider/Slider";
 import Input from "../../../Global/FormInput/Input/Input";
+import Select from "src/components/Global/FormInput/Select/Select";
 import PropTypes from "prop-types";
 
 const FILTER_OPTIONS = ["Age gap", "Location", "Fame rating", "Common tags"];
 
-const FilterModal = ({ setRequestParams }) => {
+const FilterModal = ({ setFilterParams }) => {
 
   return (
     <div className="filter-menu">
       <form className="form-control"
         onSubmit={(e) => {
           e.preventDefault();
-          const formData = new FormData(e.target);
+          // const formData = new FormData(e.target);
           const obj = {
-            action: "filter",
-            age: formData.get("ageGap") ?? "",
-            ageSort: formData.get("ageSort") ?? "",
-            location: formData.get("location") ?? 30,
-            locationSort: formData.get("locationSort") ?? "",
-            fame: formData.get("fame") ?? 300,
-            fameSort: formData.get("fameSort") ?? "",
-            tags: formData.get("tags") ?? "",
-            tagsSort: formData.get("tagsSort") ?? "",
+            sortBy: "age",
+            sortOption: "ascended",
           };
-          setRequestParams(obj);
+          setFilterParams(obj);
         }}
       >
         <div className="filter-options">
@@ -39,6 +33,7 @@ const FilterModal = ({ setRequestParams }) => {
               </SelectOptionWrapper>
             );
           })}
+          <Select options={FILTER_OPTIONS} name="sort" label="Sort by" />
         </div>
         <input className="filter-submit" type="submit" value="Filter" />
       </form>
@@ -47,7 +42,7 @@ const FilterModal = ({ setRequestParams }) => {
 }
 
 FilterModal.propTypes = {
-  setRequestParams: PropTypes.func.isRequired,
+  setFilterParams: PropTypes.func.isRequired,
 };
 
 export default FilterModal;

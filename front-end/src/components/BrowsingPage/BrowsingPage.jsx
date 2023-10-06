@@ -13,6 +13,11 @@ export default function BrowsingPage() {
     tags: '',
   })
 
+  const [filterParams, setFilterParams] = useState({
+    sortBy: '',
+    sortOption: '',
+  });
+
   const { isLoading, error, data } = useQuery({
     queryKey: ['matches', requestParams],
     queryFn: async ({ queryKey }) => {
@@ -63,7 +68,7 @@ export default function BrowsingPage() {
       <header className='title'>
         <h1 className='header-title header'>Matcha</h1>
       </header>
-      <SearchBar requestParams={requestParams} setRequestParams={setRequestParams} />
+      <SearchBar requestParams={requestParams} setRequestParams={setRequestParams} setFilterParams={setFilterParams} />
       <section className='matches'>
         {data.result.map((user) => {
           return (
