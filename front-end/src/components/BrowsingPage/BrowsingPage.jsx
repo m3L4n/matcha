@@ -72,7 +72,7 @@ export default function BrowsingPage() {
 
   const { status, error, data } = useQuery({
     queryKey: ["matches", requestParams],
-    queryFn: getMatch,
+    queryFn: getMatches,
     retry: false
   });
 
