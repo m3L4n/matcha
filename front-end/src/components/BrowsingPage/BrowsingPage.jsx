@@ -3,6 +3,14 @@ import "./BrowsingPage.scoped.css";
 import Card from "./Card/Card";
 import SearchBar from "./SearchBar/SearchBar";
 import { useQuery } from "@tanstack/react-query";
+import { notify } from "../Global/toast-notify";
+
+function isNotEmptyButNaN(param) {
+  if (param !== "" && (isNaN(param) || !isFinite(param))) {
+    return true;
+  }
+  return false;
+}
 
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
@@ -14,6 +22,12 @@ export default function BrowsingPage() {
   });
 
   const [filterParams, setFilterParams] = useState({
+    ageGapMin: "",
+    ageGapMax: "",
+    locationMin: "",
+    locationMax: "",
+    fameMin: "",
+    fameMax: "",
     sortBy: "",
     sortOption: "ascending"
   });
@@ -21,7 +35,6 @@ export default function BrowsingPage() {
   const [matches, setMatches] = useState([]);
 
   const sortMatches = toSort => {
-    console.log(`filterParams: ${setFilterParams.sortBy}`);
     if (filterParams.sortBy === "age") {
       toSort.sort((a, b) => a.age - b.age);
     } else if (filterParams.sortBy === "location") {
@@ -30,6 +43,30 @@ export default function BrowsingPage() {
       toSort.sort((a, b) => a.rate_fame - b.rate_fame);
     }
     return toSort;
+  };
+
+  const filterMatches = toFilter => {
+    if (
+      isNotEmptyButNaN(filterParams.ageGapMin) ||
+      isNotEmptyButNaN(filterParams.ageGapMax)
+    ) {
+      notify("Error: invalid age gap filter parameters");
+    } else if (
+      isNotEmptyButNaN(filterParams.fameMin) ||
+      isNotEmptyButNaN(filterParams.fameMax)
+    ) {
+      notify("Error: invalid fame gap filter parameters");
+    } else if (
+      isNotEmptyButNaN(filterParams.locationMin) ||
+      isNotEmptyButNaN(filterParams.locationMax)
+    ) {
+      notify("Error: invalid location gap filter parameters");
+    } else {
+      if (filterParams.ageGapMin != "" && filterParams.ageGapMax != "") {
+        console.log("filterByAge");
+      }
+    }
+    return toFilter;
   };
 
   const { status, error, data } = useQuery({
@@ -62,7 +99,8 @@ export default function BrowsingPage() {
 
   useEffect(() => {
     if (status === "success") {
-      setMatches(sortMatches(data?.result ?? []));
+      const filterAndSort = users => sortMatches(filterMatches(users));
+      setMatches(filterAndSort(data?.result ?? []));
     }
   }, [status, data]);
 
