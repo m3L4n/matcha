@@ -1,28 +1,44 @@
-import { useState } from 'react';
-import './BrowsingPage.scoped.css';
-import Card from './Card/Card'
-import SearchBar from './SearchBar/SearchBar';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from "react";
+import "./BrowsingPage.scoped.css";
+import Card from "./Card/Card";
+import SearchBar from "./SearchBar/SearchBar";
+import { useQuery } from "@tanstack/react-query";
 
 export default function BrowsingPage() {
   const [requestParams, setRequestParams] = useState({
-    action: '',
-    age: '',
-    location: '',
-    fame: '',
-    tags: '',
-  })
-
-  const [filterParams, setFilterParams] = useState({
-    sortBy: '',
-    sortOption: '',
+    action: "",
+    age: "",
+    location: "",
+    fame: "",
+    tags: ""
   });
 
-  const { isLoading, error, data } = useQuery({
-    queryKey: ['matches', requestParams],
+  const [filterParams, setFilterParams] = useState({
+    sortBy: "",
+    sortOption: "ascending"
+  });
+
+  const [matches, setMatches] = useState([]);
+
+  const sortMatches = toSort => {
+    console.log(`filterParams: ${setFilterParams.sortBy}`);
+    if (filterParams.sortBy === "age") {
+      toSort.sort((a, b) => a.age - b.age);
+    } else if (filterParams.sortBy === "location") {
+      toSort.sort((a, b) => a.location - b.location);
+    } else if (filterParams.sortBy === "fame") {
+      toSort.sort((a, b) => a.rate_fame - b.rate_fame);
+    }
+    return toSort;
+  };
+
+  const { status, error, data } = useQuery({
+    queryKey: ["matches", requestParams],
     queryFn: async ({ queryKey }) => {
       const { action, age, location, fame, tags } = queryKey[1];
-      const url = `${import.meta.env.VITE_BACKEND_API_URL}/users/matches?action=${action}&age=${age}&location=${location}&fame=${fame}&tags=${tags}`;
+      const url = `${
+        import.meta.env.VITE_BACKEND_API_URL
+      }/users/matches?action=${action}&age=${age}&location=${location}&fame=${fame}&tags=${tags}`;
       const options = {
         method: "GET",
         headers: {
@@ -31,57 +47,68 @@ export default function BrowsingPage() {
         credentials: "include"
       };
 
-      const response = await fetch(url, options)
+      const response = await fetch(url, options);
 
       if (!response) {
-        throw new Error(`Can't get match: ${action}, ${age}, ${location}, ${fame}, ${tags}`);
+        throw new Error(
+          `Can't get match: ${action}, ${age}, ${location}, ${fame}, ${tags}`
+        );
       }
 
       return response.json();
     },
-    retry: false,
+    retry: false
   });
 
-  if (isLoading) {
-    return (
-      <div className="loadingMatches">
-        <h2>
-          Loading matches
-          <span className="loading__dot"></span>
-          <span className="loading__dot"></span>
-          <span className="loading__dot"></span>
-        </h2>
-      </div>
-    )
-  }
+  useEffect(() => {
+    if (status === "success") {
+      setMatches(sortMatches(data?.result ?? []));
+    }
+  }, [status, data]);
 
   if (error) {
     return (
       <div className="matchesError">
         <h2>Cannot find any matches for you ... 💔</h2>
       </div>
-    )
+    );
   }
 
-  return (
+  return status === "success" ? (
     <>
-      <header className='title'>
-        <h1 className='header-title header'>Matcha</h1>
+      <header className="title">
+        <h1 className="header-title header">Matcha</h1>
       </header>
-      <SearchBar requestParams={requestParams} setRequestParams={setRequestParams} setFilterParams={setFilterParams} />
-      <section className='matches'>
-        {data.result.map((user) => {
+      <SearchBar
+        requestParams={requestParams}
+        setRequestParams={setRequestParams}
+        setFilterParams={setFilterParams}
+      />
+      <section className="matches">
+        {sortMatches(matches).map(user => {
           return (
             <Card
               key={user.id}
               id={user.id}
               username={user.username}
               age={user.age}
-              profilePicture={`http://placekitten.com/${Math.floor(Math.random() * (280 - 250 + 1) + 250)}/${Math.floor(Math.random() * (350 - 300 + 1) + 300)}`}
+              profilePicture={`http://placekitten.com/${Math.floor(
+                Math.random() * (280 - 250 + 1) + 250
+              )}/${Math.floor(Math.random() * (350 - 300 + 1) + 300)}`}
               city={"Paris"}
-            />)
+            />
+          );
         })}
       </section>
     </>
+  ) : (
+    <div className="loadingMatches">
+      <h2>
+        Loading matches
+        <span className="loading__dot"></span>
+        <span className="loading__dot"></span>
+        <span className="loading__dot"></span>
+      </h2>
+    </div>
   );
 }
