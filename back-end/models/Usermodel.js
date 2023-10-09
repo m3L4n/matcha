@@ -1,13 +1,23 @@
 const db = require("../db/db");
-const { distanceBetweenTwoPoints } = require('../modules/distance');
-const { searchValidation } = require('../modules/formValidation');
+const { distanceBetweenTwoPoints } = require("../modules/distance");
+const { searchValidation } = require("../modules/formValidation");
 
 class UserModel {
   static createUser = async (userData) => {
     try {
-      const { id, username, firstName, lastName, email, password, valided } = userData;
-      const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
-      const values = [id, username, firstName, lastName, email, password, valided];
+      const { id, username, firstName, lastName, email, password, valided } =
+        userData;
+      const query =
+        "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
+      const values = [
+        id,
+        username,
+        firstName,
+        lastName,
+        email,
+        password,
+        valided,
+      ];
       const newUser = await db.query(query, values);
       return newUser;
     } catch (error) {
@@ -48,18 +58,22 @@ class UserModel {
   };
 
   /**
-    * Get all potential match for current user
-    * @param {string} currentUserId
-    * @param {Object} filterParams
-  **/
+   * Get all potential match for current user
+   * @param {string} currentUserId
+   * @param {Object} searchParams
+   **/
   static getAll = (currentUserId, searchParams) => {
     // TODO implement TAGS for matching / search
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
     return new Promise((next) => {
-      db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
+      db.query(
+        "SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1",
+        [currentUserId]
+      )
         .then((result) => {
-          const { sexual_preference, rate_fame, position, age } = result.rows[0];
+          const { sexual_preference, rate_fame, position, age } =
+            result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
@@ -78,13 +92,21 @@ class UserModel {
                 min_age = 18;
               }
               max_age = age + parseInt(searchParams.age);
+            } else {
+              min_age = 18;
+              max_age = 2042;
             }
             if (searchParams.location !== "") {
               max_distance = parseInt(searchParams.location);
+            } else {
+              max_distance = 20010;
             }
             if (searchParams.fame !== "") {
               min_fame = rate_fame - parseInt(searchParams.fame);
               max_fame = rate_fame + parseInt(searchParams.fame);
+            } else {
+              min_fame = 0;
+              max_fame = 42000;
             }
           }
 
@@ -93,29 +115,43 @@ class UserModel {
               "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
                 WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
                 AND id != $6",
-              [sexual_preference, min_fame, max_fame, min_age, Number(max_age), currentUserId]
-            )
-          }
+              [
+                sexual_preference,
+                min_fame,
+                max_fame,
+                min_age,
+                max_age,
+                currentUserId,
+              ]
+            );
+          };
 
           const getMatchesOfAllSexes = () => {
             return db.query(
               "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
-                WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND id IS NOT $4",
-              [min_fame, max_fame, min_age, Number(max_age)]
-            )
-          }
+                WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
+              [min_fame, max_fame, min_age, Number(max_age), currentUserId]
+            );
+          };
 
           const getOnlyClosePeople = (users) => {
-            return users.filter(user => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
-          }
+            return users.filter((user) =>
+              Math.floor(
+                distanceBetweenTwoPoints(position, user.position) < max_distance
+              )
+            );
+          };
 
-          if (sexual_preference !== "both") {
+          if (
+            sexual_preference !== "both" ||
+            searchParams.action === "search"
+          ) {
             getMatchesBySexualPreferences()
-              .then(result => next(getOnlyClosePeople(result.rows)))
+              .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           } else {
             getMatchesOfAllSexes()
-              .then(result => next(getOnlyClosePeople(result.rows)))
+              .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }
         })
