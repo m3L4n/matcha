@@ -8,7 +8,7 @@ const Slider = ({ min, max, defaultValue, name, mesureUnit = "" }) => {
     <div className="slidercontainer">
       <div className="slider-form">
         <label className="body" htmlFor={name}>
-          min: {`${value} ${mesureUnit}`}
+          {`${value} ${mesureUnit}`}
         </label>
         <input
           type="range"

@@ -33,6 +33,28 @@ export default function BrowsingPage() {
 
   const [matches, setMatches] = useState([]);
 
+  function distanceBetweenTwoPoints(positionA, positionB) {
+    // Haversine algorithm
+    const EARTH_RADIUS = 6.3788;
+
+    const latA = positionA.x / (180 / Math.PI);
+    const latB = positionB.x / (180 / Math.PI);
+
+    const longA = positionA.y / (180 / Math.PI);
+    const longB = positionB.y / (180 / Math.PI);
+
+    let distLong = longB - longA;
+    let distLat = latB - latA;
+
+    let a =
+      Math.pow(Math.sin(distLat / 2), 2) +
+      Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(distLong / 2), 2);
+
+    let c = 2 * Math.asin(Math.sqrt(a));
+
+    return c * EARTH_RADIUS * 1000;
+  }
+
   const sortMatches = toSort => {
     if (filterParams.sortBy === "age") {
       toSort.sort((a, b) => a.age - b.age);
@@ -45,24 +67,38 @@ export default function BrowsingPage() {
   };
 
   const filterMatches = toFilter => {
-    if (
-      isNotEmptyButNaN(filterParams.ageGapMin) ||
-      isNotEmptyButNaN(filterParams.ageGapMax)
-    ) {
+    if (isNotEmptyButNaN(filterParams.ageGap)) {
       notify("Error: invalid age gap filter parameters");
-    } else if (
-      isNotEmptyButNaN(filterParams.fameMin) ||
-      isNotEmptyButNaN(filterParams.fameMax)
-    ) {
+    } else if (isNotEmptyButNaN(filterParams.fameGap)) {
       notify("Error: invalid fame gap filter parameters");
-    } else if (
-      isNotEmptyButNaN(filterParams.locationMin) ||
-      isNotEmptyButNaN(filterParams.locationMax)
-    ) {
+    } else if (isNotEmptyButNaN(filterParams.locationGap)) {
       notify("Error: invalid location gap filter parameters");
     } else {
-      if (filterParams.ageGapMin != "" && filterParams.ageGapMax != "") {
-        console.log("LOL");
+      if (filterParams.ageGap !== "") {
+        const ageGap = Number(filterParams.ageGap);
+        const currentUserAge = Number(currentUser.age);
+        let minAge = currentUserAge - ageGap;
+        minAge = minAge < 18 ? 18 : minAge;
+        const maxAge = currentUserAge + ageGap;
+        toFilter = toFilter.filter(
+          user => Number(user.age) >= minAge && Number(user.age) <= maxAge
+        );
+      }
+      if (filterParams.fameGap !== "") {
+        const minFame = currentUser.rate_fame - filterMatches.fameGap;
+        const maxFame = currentUser.rate_fame + filterMatches.fameGap;
+        toFilter = toFilter.filter(
+          user => user.rate_fame >= minFame && user.rate_fame <= maxFame
+        );
+      }
+      if (filterParams.locationGap !== "") {
+        const locationGap = Number(filterParams.locationGap);
+        const currentUserPosition = Number(currentUser.position);
+        toFilter = toFilter.filter(
+          user =>
+            distanceBetweenTwoPoints(currentUserPosition, user.position) <
+            locationGap
+        );
       }
     }
     return toFilter;
