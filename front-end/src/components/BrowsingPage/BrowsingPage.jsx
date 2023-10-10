@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar/SearchBar";
 import getMatches from "./fetchMatches";
 import { useQuery } from "@tanstack/react-query";
 import { notify } from "../Global/toast-notify";
-import getCurrentUser from "./fetchCurrentUser";
+import { useAuth } from "src/Context/AuthContext";
 
 function isNotEmptyButNaN(param) {
   if (param !== "" && (isNaN(param) || !isFinite(param))) {
@@ -104,14 +104,7 @@ export default function BrowsingPage() {
     return toFilter;
   };
 
-  const { data: whoami } = useQuery({
-    queryKey: ["whoami"],
-    queryFn: getCurrentUser
-  });
-
-  const currentUser = whoami || {
-    valided: false
-  };
+  const { user: currentUser } = useAuth();
 
   const { status, error, data: users } = useQuery({
     queryKey: ["matches", requestParams],
