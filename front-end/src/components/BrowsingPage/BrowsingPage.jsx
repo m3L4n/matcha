@@ -5,6 +5,7 @@ import SearchBar from "./SearchBar/SearchBar";
 import getMatches from "./fetchMatches";
 import { useQuery } from "@tanstack/react-query";
 import { notify } from "../Global/toast-notify";
+import getCurrentUser from "./fetchCurrentUser";
 
 function isNotEmptyButNaN(param) {
   if (param !== "" && (isNaN(param) || !isFinite(param))) {
@@ -23,12 +24,9 @@ export default function BrowsingPage() {
   });
 
   const [filterParams, setFilterParams] = useState({
-    ageGapMin: "",
-    ageGapMax: "",
-    locationMin: "",
-    locationMax: "",
-    fameMin: "",
-    fameMax: "",
+    ageGap: "",
+    locationGap: "",
+    fameGap: "",
     sortBy: "",
     sortOption: "ascending"
   });
@@ -64,24 +62,33 @@ export default function BrowsingPage() {
       notify("Error: invalid location gap filter parameters");
     } else {
       if (filterParams.ageGapMin != "" && filterParams.ageGapMax != "") {
-        console.log("filterByAge");
+        console.log("LOL");
       }
     }
     return toFilter;
   };
 
-  const { status, error, data } = useQuery({
+  const { data: whoami } = useQuery({
+    queryKey: ["whoami"],
+    queryFn: getCurrentUser
+  });
+
+  const currentUser = whoami || {
+    valided: false
+  };
+
+  const { status, error, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
-    retry: false
+    enabled: currentUser.valided
   });
 
   useEffect(() => {
     if (status === "success") {
       const filterAndSort = users => sortMatches(filterMatches(users));
-      setMatches(filterAndSort(data?.result ?? []));
+      setMatches(filterAndSort(users?.result ?? []));
     }
-  }, [status, data]);
+  }, [status, users]);
 
   if (error) {
     return (
@@ -102,7 +109,7 @@ export default function BrowsingPage() {
         setFilterParams={setFilterParams}
       />
       <section className="matches">
-        {sortMatches(matches).map(user => {
+        {sortMatches(filterMatches(matches)).map(user => {
           return (
             <Card
               key={user.id}

@@ -17,12 +17,9 @@ const FilterModal = ({ setFilterParams }) => {
           const formData = new FormData(e.target);
           const sortBy = formData.get("sort");
           const filterParams = {
-            ageGapMin: formData.get("ageGap-min") ?? "",
-            ageGapMax: formData.get("ageGap-max") ?? "",
-            locationMin: formData.get("location-min") ?? "",
-            locationMax: formData.get("location-max") ?? "",
-            fameMin: formData.get("fame-min") ?? "",
-            fameMax: formData.get("fameMax") ?? "",
+            ageGap: formData.get("ageGap") ?? "",
+            locationGap: formData.get("location") ?? "",
+            fameGap: formData.get("fame") ?? "",
             sortBy: sortBy,
             sortOption: "ascending"
           };
@@ -37,27 +34,27 @@ const FilterModal = ({ setFilterParams }) => {
                   <Slider
                     min={0}
                     max={60}
-                    defaultMinValue={0}
-                    defaultMaxValue={10}
+                    defaultValue={10}
                     name="ageGap"
+                    mesureUnit="years"
                   />
                 )}
                 {option === "Fame rating" && (
                   <Slider
                     min={0}
                     max={5200}
-                    defaultMinValue={0}
-                    defaultMaxValue={5200}
+                    defaultValue={1500}
                     name="fame"
+                    mesureUnit="fame rate"
                   />
                 )}
                 {option === "Location" && (
                   <Slider
                     min={5}
                     max={600}
-                    defaultMinValue={30}
-                    defaultMaxValue={300}
+                    defaultValue={300}
                     name="location"
+                    mesureUnit="km"
                   />
                 )}
                 {option === "Tags" && (

@@ -2,39 +2,23 @@ import "./Slider.scoped.css";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-const Slider = ({ min, max, defaultMinValue, defaultMaxValue, name }) => {
-  const [minValue, setMinValue] = useState(defaultMinValue);
-  const [maxValue, setMaxValue] = useState(defaultMaxValue);
+const Slider = ({ min, max, defaultValue, name, mesureUnit = "" }) => {
+  const [value, setValue] = useState(defaultValue);
   return (
     <div className="slidercontainer">
       <div className="slider-form">
-        <label className="body" htmlFor={`${name}-min`}>
-          min: {minValue}
+        <label className="body" htmlFor={name}>
+          min: {`${value} ${mesureUnit}`}
         </label>
         <input
           type="range"
-          id={`${name}-min`}
-          name={`${name}-min`}
+          id={name}
+          name={name}
           min={min}
           max={max}
-          value={minValue}
+          value={value}
           className="slider"
-          onChange={e => setMinValue(e.target.value)}
-        />{" "}
-      </div>
-      <div className="slider-form">
-        <label className="body" htmlFor={`${name}-max`}>
-          max: {maxValue}
-        </label>
-        <input
-          type="range"
-          id={`${name}-max`}
-          name={`${name}-max`}
-          min={min}
-          max={max}
-          value={maxValue}
-          className="slider"
-          onChange={e => setMaxValue(e.target.value)}
+          onChange={e => setValue(e.target.value)}
         />{" "}
       </div>
     </div>
@@ -44,9 +28,9 @@ const Slider = ({ min, max, defaultMinValue, defaultMaxValue, name }) => {
 Slider.propTypes = {
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
-  defaultMinValue: PropTypes.number.isRequired,
-  defaultMaxValue: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired
+  defaultValue: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  mesureUnit: PropTypes.string
 };
 
 export default Slider;
