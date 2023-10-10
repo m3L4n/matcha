@@ -2,19 +2,36 @@ const { PBKDF2 } = require("crypto-js");
 const db = require("../db/db");
 const { distanceBetweenTwoPoints } = require("../modules/distance");
 const { filterValidation, sortValidation } = require("../modules/formValidation");
+const { error } = require("../modules/response");
 
 class UserModel {
   static createUser = async (userData) => {
-    try {
-      const { id, username, firstName, lastName, email, password, valided } = userData;
-      const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
-      const values = [id, username, firstName, lastName, email, password, valided];
-      const newUser = await db.query(query, values);
-      return newUser;
-    } catch (error) {
-      throw error;
-    }
+    const { id, username, firstName, lastName, email, password, valided } = userData;
+    const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (username, email) DO NOTHING;";
+    const values = [id, username, firstName, lastName, email, password, valided];
+    return new Promise((next) => {
+      db.query(query, values)
+        .then((data) => {
+          if (data.rowCount == 0) {
+            const error = new Error("email or username Already Exists!");
+            error.status = 23505;
+            next(error);
+          }
+          next(data);
+        })
+        .catch((err) => {
+          const error = new Error("Something wents wrong!");
+          error.status = 500;
+          next(error);
+        });
+    });
   };
+  // try {
+  //   const newUser = await db.query(query, values);
+  //   return newUser;
+  // } catch (err) {
+  //   }
+  // }
 
   static findbyId = async (paramToSearch, valueToCompare) => {
     try {
@@ -54,28 +71,19 @@ class UserModel {
     }
   };
   static uploadImageInDB = async (param, buffer, userId) => {
-    const query = `UPDATE users SET ${param} = $1 WHERE id = $2`;
-    const values = [buffer, userId];
-    try {
-      const result = await db.query(query, values);
-      if (result.rowCount == 0) {
-        throw new Error("users doesnt exist");
-      }
-      return result.rows[0];
-    } catch (e) {
-      console.log("error with upload file", e);
-    }
+    return new Promise((next) => {
+      const query = `UPDATE users SET ${param} = $1 WHERE id = $2`;
+      const values = [buffer, userId];
+      db.query(query, values)
+        .then((data) => {
+          if (data.rowCount == 0) {
+            throw new Error("users doesnt exist");
+          }
+          next(data.rows[0]);
+        })
+        .catch((error) => (err) => next(err));
+    });
   };
-  // static getImageProfil = async (id) => {
-  //   const query = `SELECT profile_picture FROM users WHERE id = $1`;
-  //   const values = [id];
-  //   try {
-  //     const imageProfil = await db.query(query, values);
-  //     return imageProfil.rows[0].profile_picture;
-  //   } catch (error) {
-  //     console.log("error, cant get imageProfile", error);
-  //   }
-  // };
   /**
    * Get all potential match for current user
    * @param {string} currentUserId
@@ -207,9 +215,10 @@ class UserModel {
       throw error;
     }
   };
-  static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, id }) => {
-    const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9 WHERE id = $10`;
-    const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, id];
+  static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, position, city, id }) => {
+    console.log(tags);
+    const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9, position = POINT($10,$11), city = $12 WHERE id = $13`;
+    const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, position.x, position.y, city, id];
     return new Promise((next) => {
       db.query(query, values)
         .then((data) => {
@@ -226,10 +235,12 @@ class UserModel {
     let query = "";
     if (id === idRequester) {
       query =
-        "SELECT id, username, email, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
+        "SELECT id, username, email, firstName, gender, beverage, sexual_preference, lastName, tags, description, age, rate_fame, city, position, connected, profile_picture, pictures FROM users WHERE id = $1";
+      // query =
+      // "SELECT id, username, email, firstName, gender, beverage,sexual_preference, lastName, (SELECT array_agg(unnest(tags)) FROM users WHERE id = $1) AS tags, description,  age, rate_fame, city, position, connected, profile_picture , pictures FROM users WHERE id = $1";
     } else {
       query =
-        "SELECT id, username, firstName, gender, beverage,sexual_preference, lastName,tags, description,  age, rate_fame, city, connected, profile_picture , pictures FROM users WHERE id = $1";
+        "SELECT id, username, firstName, gender, beverage,sexual_preference, lastName, tags, description,  age, rate_fame, city, position, connected, profile_picture , pictures FROM users WHERE id = $1";
     }
     return new Promise((next) => {
       db.query(query, [id])

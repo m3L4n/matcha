@@ -5,14 +5,13 @@ import "../Profile.scoped.css";
 import { useEffect } from "react";
 import { useAuth } from "src/Context/AuthContext";
 import { CiEdit } from "react-icons/ci";
-import { useQuery } from "@tanstack/react-query";
-import fetchEnum from "../fetchEnum/";
 import anonymous from "assets/_.jpeg";
 import { isValidEmail } from "src/components/Global/check-email";
-import fetchUpdateInfo from "../fetchUpdateInfo";
+
+import fetchUpdateInfo from "../fetch/fetchUpdateInfo";
 import { useMutation } from "@tanstack/react-query";
-import fetchUploadprofilPicture from "../fetchUploadProfilePicture";
-import fetchUploadPictureDescription from "./fetchUploadPictureDescription";
+import fetchUploadprofilPicture from "../fetch/fetchUploadProfilePicture";
+import fetchUploadPictureDescription from "../fetch/fetchUploadPictureDescription";
 
 export default function CreateProfile() {
   const { user } = useAuth();
@@ -32,9 +31,9 @@ export default function CreateProfile() {
   });
 
   // const allEnum = useQuery(["users"], fetchEnum);
-  const mutationUpdateInfo = useMutation(fetchUpdateInfo);
-  const mutationUploadPP = useMutation(fetchUploadprofilPicture);
-  const mutationUploadPD = useMutation(fetchUploadPictureDescription);
+  // const mutationUpdateInfo = useMutation(fetchUpdateInfo);
+  // const mutationUploadPP = useMutation(fetchUploadprofilPicture);
+  // const mutationUploadPD = useMutation(fetchUploadPictureDescription);
   // const img = [anonymous, anonymous, anonymous, anonymous];
 
   const checkMymeType = (file) => {
@@ -49,6 +48,7 @@ export default function CreateProfile() {
       notify("warning", "image are too big, please retry with lighter image");
       return -1;
     }
+    return 1;
   };
 
   function handleChange(event) {
@@ -143,9 +143,9 @@ export default function CreateProfile() {
       notify("error", "you cant save you profile you need to fill all the input");
       return;
     }
-    mutationUploadPP.mutate(profilPicture);
-    mutationUploadPD.mutate(pictureDescription);
-    mutationUpdateInfo.mutate(infoProfile);
+    // mutationUploadPP.mutate(profilPicture);
+    // mutationUploadPD.mutate(pictureDescription);
+    // mutationUpdateInfo.mutate(infoProfile);
     notify("sucess", " account modfy");
   }
   return (

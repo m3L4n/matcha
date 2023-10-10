@@ -14,7 +14,7 @@ module.exports.sendingEmailVerification = async (username) => {
       const token = crypto.randomBytes(16).toString("hex");
       const tokenCreated = await TokenModel.createToken({ user_id: user.id, token: token });
       if (tokenCreated) {
-        sendingMail({
+        await sendingMail({
           from: "no-reply@matcha-42.com",
           to: `${user.email}`,
           subject: "Account Verification Link",
@@ -25,8 +25,12 @@ module.exports.sendingEmailVerification = async (username) => {
         return tokenCreated;
       }
     }
-    throw "user doesnt exist";
+    const error = new Error("user doesnt exist cant send email");
+    error.status = 401;
+    throw error;
   } catch (e) {
-    throw e;
+    const error = new Error("user doesnt exist cant send email");
+    error.status = 404;
+    throw error;
   }
 };

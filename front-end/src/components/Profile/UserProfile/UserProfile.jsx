@@ -1,75 +1,81 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import fetchUser from "../fetchUser";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import fetchLocalisation from "../CreateProfil/fetchLocalisation";
-import fetchLocalisationiWithoutKnow from "../fetchLocalisationWithoutKnow";
+import fetchLocalisation from "components/Profile//fetch/fetchLocalisation";
+import { notify } from "components/Global/toast-notify";
+import fetchUpdateInfo from "components/Profile/fetch/fetchUpdateInfo";
+import fetchUploadprofilPicture from "../fetch/fetchUploadProfilePicture";
+import fetchUploadPictureDescription from "../fetch/fetchUploadPictureDescription";
+import { isValidEmail } from "src/components/Global/check-email";
+import fetchLocalisationiWithoutKnow from "components/Profile/fetch/fetchLocalisationWithoutKnow";
+import anonymous from "assets/_.jpeg";
 import LayoutUserProfile from "../layoutUserProfil/LayoutUserProfile";
-export default function UserProfile({ allEnumData }) {
-  const { id } = useParams();
-  const { data: userInformationData, isLoading: userLoading } = useQuery(["id", id], fetchUser);
-  const userInformation = userLoading
-    ? {
-        username: "",
-        firstname: "",
-        lastname: "",
-        gender: "",
-        rate_fame: 0,
-        sexual_preference: "",
-        email: "",
-        beverage: "",
-        city: "",
-        pictures: [],
-        profile_picture: "",
-        tags: [],
-        age: 0,
-        description: "",
-        position: "",
-      }
-    : userInformationData.result;
-
-  const [infoProfile, setInfoProfil] = useState({
-    firstname: userInformation.firstname,
-    lastname: userInformation.lastname,
-    username: userInformation.username,
-    gender: userInformation.gender,
-    sexual_preference: userInformation.sexual_preference,
-    email: userInformation.email,
-    beverage: userInformation.beverage,
-    pictures: userInformation.pictures,
-    profile_picture: userInformation.profile_picture,
-    description: userInformation.description,
-    tags: userInformation.tags,
-    age: userInformation.age,
-    rate_fame: userInformation.rate_fame,
-    position: userInformation.position,
-    city: userInformation.city,
-  });
-
-  useEffect(() => {
-    if (!userLoading) {
-      setInfoProfil({
-        firstname: userInformation.firstname,
-        username: userInformation.username,
-        lastname: userInformation.lastname,
-        gender: userInformation.gender,
-        sexual_preference: userInformation.sexual_preference,
-        email: userInformation.email,
-        beverage: userInformation.beverage,
-        pictures: userInformation.pictures,
-        profile_picture: userInformation.profile_picture,
-        description: userInformation.description,
-        tags: userInformation.tags,
-        age: userInformation.age,
-        rate_fame: userInformation.rate_fame,
-        city: userInformation.city,
-        position: userInformation.position,
-      });
-    }
-  }, [userLoading]);
+export default function UserProfile({ allTags, userInformation, ourProfile }) {
+  const mutationUpdateInfo = useMutation(fetchUpdateInfo);
+  const mutationUploadPP = useMutation(fetchUploadprofilPicture);
+  const mutationUploadPD = useMutation(fetchUploadPictureDescription);
 
   const mutationLocalisation = useMutation(fetchLocalisation);
   const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow);
+
+  const coords = mutationLocalisation.isLoading ? {} : mutationLocalisation.data;
+  const coordKnowNone = mutationLocalisationNoneKnow.isLoading ? {} : mutationLocalisationNoneKnow.data;
+
+  const [pictureDescription, setPicturesDescription] = useState([]);
+  const [profilPicture, setProfilPicture] = useState("");
+  const [infoProfile, setInfoProfil] = useState({});
+
+  useEffect(() => {
+    if (Object.keys(userInformation).length > 0) {
+      fillInfoProfile(userInformation);
+    }
+  }, [userInformation]);
+
+  const fillInfoProfile = (infoUser) => {
+    if (Object.keys(infoUser).length > 0) {
+      let infoProfileTmp = structuredClone(infoUser);
+      for (const info in infoProfileTmp) {
+        let parameter = infoProfileTmp[info];
+        if (infoProfileTmp[info]?.length == 0 || !infoProfileTmp[info]) {
+          switch (info) {
+            case "gender":
+              parameter = "other";
+              break;
+            case "beverage":
+              parameter = "matcha";
+              break;
+            case "tags":
+              parameter = [];
+              break;
+            case "description":
+              parameter = "";
+              break;
+            case "age":
+              parameter = 18;
+              break;
+            case "profile_picture":
+              setProfilPicture(anonymous);
+              break;
+            case "pictures":
+              setPicturesDescription([]);
+              break;
+            case "sexual_preference":
+              parameter = "both";
+              break;
+            default:
+              break;
+          }
+        } else if (info == "profile_picture") {
+          setProfilPicture(infoProfileTmp[info]);
+        } else if (info == "pictures") {
+          setPicturesDescription(infoProfileTmp[info]);
+        }
+        if (info != "profile_picture" && info != "pictures") {
+          infoProfileTmp[info] = parameter;
+        }
+      }
+      setInfoProfil(infoProfileTmp);
+    }
+  };
   const getLocation = async () => {
     const geoSuccess = async (position) => {
       await mutationLocalisation.mutate(position.coords);
@@ -77,20 +83,110 @@ export default function UserProfile({ allEnumData }) {
     const geoError = async () => {
       await mutationLocalisationNoneKnow.mutate("localisation");
     };
-
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
   };
+
   function handleChange(event) {
-    console.log(event.target.name, event.target.value);
+    event.preventDefault();
+    let value = event.target.value;
+    let name = event.target.name;
+    if (value == undefined) {
+      value = event.currentTarget.value;
+    }
+    if (name == undefined) {
+      name = event.currentTarget.name;
+    }
+    if (name == "profil_picture") {
+      setProfilPicture(event.target.files[0]);
+      return;
+    } else if (name == "tags") {
+      let tmpTags = JSON.parse(JSON.stringify(infoProfile.tags));
+      const index = tmpTags.findIndex((elem) => elem == value);
+      if (index == -1) {
+        tmpTags.push(value);
+      } else {
+        tmpTags.splice(index, 1);
+      }
+      setInfoProfil({ ...infoProfile, [name]: tmpTags });
+      return;
+    }
+
+    setInfoProfil({ ...infoProfile, [name]: value });
   }
-  const coords = mutationLocalisation.isLoading ? {} : mutationLocalisation.data;
-  const coordKnowNone = mutationLocalisationNoneKnow.isLoading ? {} : mutationLocalisationNoneKnow.data;
+
+  useEffect(() => {
+    if (!mutationLocalisation.isLoading) {
+      if (coords) {
+        if (Object.keys(coords).length > 0) {
+          setInfoProfil({ ...infoProfile, ["city"]: coords.city, ["position"]: { x: coords.latitude, y: coords.longitude } });
+        }
+      }
+    }
+  }, [coords]);
+
+  useEffect(() => {
+    if (!mutationLocalisationNoneKnow.isLoading) {
+      if (coordKnowNone) {
+        if (Object.keys(coordKnowNone).length > 0) {
+          setInfoProfil({ ...infoProfile, ["city"]: coordKnowNone.city, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
+        }
+      }
+    }
+  }, [coordKnowNone]);
+
+  const updatePictures = (arrayPicture) => {
+    setPicturesDescription(arrayPicture);
+  };
+  function saveProfile(event) {
+    if (pictureDescription.length > 4 || pictureDescription.length < 4) {
+      notify("error", "you dont the right number of picture description, the number is 4");
+      return;
+    } else if (profilPicture.length <= 0 || profilPicture == anonymous) {
+      notify("error", "you must have profile picture");
+      return;
+    }
+    if (!isValidEmail(infoProfile.email)) {
+      notify("error", "you must have valid email");
+      return;
+    }
+    if (
+      infoProfile.age < 18 ||
+      !infoProfile.beverage ||
+      !infoProfile.firstname ||
+      !infoProfile.lastname ||
+      !infoProfile.email ||
+      !infoProfile.sexual_preference ||
+      infoProfile.tags.length < 5 ||
+      infoProfile.description.length == 0 ||
+      !infoProfile.city ||
+      !infoProfile.position ||
+      infoProfile.rate_fame < 0
+    ) {
+      notify("error", "you cant save you profile you need to fill all the input");
+      return;
+    }
+    if (profilPicture instanceof File) {
+      mutationUploadPP.mutate(profilPicture);
+    }
+
+    mutationUploadPD.mutate(pictureDescription);
+    mutationUpdateInfo.mutate(infoProfile);
+    notify("success", " account modfy");
+  }
+
   return (
     <div>
-      {userLoading ? <p>loading</p> : <LayoutUserProfile {...infoProfile} ourProfile={true} allEnumData={allEnumData} handleChange={handleChange} />}
-      UserProfile
-      <button onClick={getLocation}> change localisation</button>
-      {coords ? coords?.city : coordKnowNone?.city}
+      <LayoutUserProfile
+        {...infoProfile}
+        pictures={pictureDescription}
+        profile_picture={profilPicture}
+        ourProfile={ourProfile}
+        allTags={allTags}
+        handleChange={handleChange}
+        getLocation={getLocation}
+        updatePictures={updatePictures}
+        saveProfile={saveProfile}
+      />
     </div>
   );
 }

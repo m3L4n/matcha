@@ -11,7 +11,7 @@ async function fetchUploadPictureDescription(pictures) {
     }
     const res = await fetch(url, options)
     if (!res.ok) {
-        throw new Error(`cant have all enum`)
+        throw new Error(`cant upload picture description`)
     }
     return res.json()
 }

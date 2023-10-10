@@ -9,7 +9,7 @@ async function fetchUploadprofilPicture(picture) {
     }
     const res = await fetch(url, options)
     if (!res.ok) {
-        throw new Error(`cant have all enum`)
+        throw new Error(`cant upload picture profile`)
     }
     return res.json()
 }

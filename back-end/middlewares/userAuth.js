@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { UserModel } = require("../models/Usermodel");
 const extractBearerToken = (headerValue) => {
   if (typeof headerValue !== "string") {
     return false;
@@ -15,12 +16,17 @@ const isAuth = (req, res, next) => {
     return res.status(401).json({ message: "Error. Need a token" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
     if (err) {
       res.status(401).json({ message: "Error. Bad token" });
     } else {
-      req.authUser = { id: decodedToken.id, username: decodedToken.username };
-      return next();
+      try {
+        await UserModel.findbyIwithouthPassword("id", decodedToken.id);
+        req.authUser = { id: decodedToken.id, username: decodedToken.username };
+        return next();
+      } catch (error) {
+        res.status(401).json({ message: "Error. Bad token" });
+      }
     }
   });
 };

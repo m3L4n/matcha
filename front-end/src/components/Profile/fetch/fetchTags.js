@@ -1,5 +1,5 @@
-async function fetchEnum() {
-    const url = 'http://localhost:4000/users/getAllInfoEnum'
+async function fetchTags() {
+    const url = 'http://localhost:4000/tags'
     const options = {
         method: 'GET',
         headers: {
@@ -14,4 +14,4 @@ async function fetchEnum() {
     return res.json()
 }
 
-export default fetchEnum
+export default fetchTags

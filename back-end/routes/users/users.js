@@ -4,7 +4,6 @@ const router = express.Router();
 const { UserController } = require("../../controller/users/userControllers");
 const { isAuth } = require("../../middlewares/userAuth");
 const multer = require("multer");
-const uploadMiddleware = require("../../middlewares/uploadMiddleware");
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
 //     cb(null, "uploads/");
@@ -27,10 +26,10 @@ router.get("/whoami", isAuth, UserController.getUser);
 router.get("/matches", isAuth, UserController.getUsers);
 router.delete("/disconnect", isAuth, UserController.disconnectUser);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);
-router.post("/uploadProfilePicture", isAuth, upload.single("profilePicture"), UserController.uploadImage);
+router.post("/uploadProfilePicture", isAuth, upload.single("profilePicture"), UserController.updateProfilPicture);
 router.get("/profil-picture", isAuth, UserController.getImageProfile);
 router.get("/getAllInfoEnum", isAuth, UserController.getAllInfoEnum);
 router.put("/updateInfoProfile", isAuth, UserController.updateInfoProfile);
-router.post("/uploadPictureDescription", isAuth, upload.array("images"), UserController.uploadPictureDescription);
+router.post("/uploadPictureDescription", isAuth, upload.array("images"), UserController.updatePictureDescription);
 router.get("/:id", isAuth, UserController.getAllInfoUser);
 module.exports = router;

@@ -10,7 +10,7 @@ async function fetchUpdateInfo(infoProfile) {
     }
     const res = await fetch(url, options)
     if (!res.ok) {
-        throw new Error(`cant have all enum`)
+        throw new Error(`cant change information`)
     }
     return res.json()
 }
