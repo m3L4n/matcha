@@ -9,6 +9,7 @@ import { isValidEmail } from "src/components/Global/check-email";
 import fetchLocalisationiWithoutKnow from "components/Profile/fetch/fetchLocalisationWithoutKnow";
 import anonymous from "assets/_.jpeg";
 import LayoutUserProfile from "../layoutUserProfil/LayoutUserProfile";
+import { json } from "react-router-dom";
 export default function UserProfile({ allTags, userInformation, ourProfile }) {
   const mutationUpdateInfo = useMutation(fetchUpdateInfo);
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
@@ -25,8 +26,10 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
   const [infoProfile, setInfoProfil] = useState({});
 
   useEffect(() => {
-    if (Object.keys(userInformation).length > 0) {
-      fillInfoProfile(userInformation);
+    if (userInformation) {
+      if (Object.keys(userInformation).length > 0) {
+        fillInfoProfile(userInformation);
+      }
     }
   }, [userInformation]);
 
@@ -165,12 +168,16 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
       notify("error", "you cant save you profile you need to fill all the input");
       return;
     }
+
     if (profilPicture instanceof File) {
       mutationUploadPP.mutate(profilPicture);
     }
+    let infoProfileWithoutPicture = { ...infoProfile };
+    delete infoProfileWithoutPicture["profile_pictures"];
+    delete infoProfileWithoutPicture["pictures"];
 
     mutationUploadPD.mutate(pictureDescription);
-    mutationUpdateInfo.mutate(infoProfile);
+    mutationUpdateInfo.mutate(infoProfileWithoutPicture);
     notify("success", " account modfy");
   }
 

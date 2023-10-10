@@ -30,22 +30,22 @@ body {
 }
 .title-1 {
   font-family: "Bebas Neue", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 500;
 }
 .title-2 {
   font-family: "Montserrat", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 400;
 }
 .body {
   font-family: "Montserrat", sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
 }
 .body-highlight {
   font-family: "Montserrat", sans-serif;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
@@ -79,12 +79,12 @@ button {
   }
   .body {
     font-family: "Montserrat", sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 400;
   }
   .body-highlight {
     font-family: "Montserrat", sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 700;
   }
 
