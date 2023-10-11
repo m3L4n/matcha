@@ -7,6 +7,12 @@
   gap: 1em;
 }
 
+.slider-form {
+  display: flex;
+  flex-flow: nowrap column;
+  gap: 1em;
+}
+
 .slider {
   -webkit-appearance: none;
   -moz-appearance: none;
