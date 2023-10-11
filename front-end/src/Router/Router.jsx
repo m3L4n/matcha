@@ -1,4 +1,4 @@
-import { createBrowserRouter} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import NavbarWrapper from "components/NabvarWrapper/NavbarWrapper";
 import LandingPage from "components/LandingPage/LandingPage";
 import ErrorPage from "components/ErrorPage/ErrorPage";
@@ -8,74 +8,81 @@ import HomeNoneVerified from "components/Authentification/HomeNoneVerified/HomeN
 import ResetPassword from "components/ResetPassword/ResetPassword";
 import { PrivateRoute } from "./ProtectedRoute";
 import { NoneConnectedRoute } from "./NoneConnectedRoute";
-
+import ConversationPicker from "src/components/Message/ConversationPicker";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <NavbarWrapper/>,
+    element: <NavbarWrapper />,
     errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
-        element:
+        element: (
           <NoneConnectedRoute>
             <LandingPage />
           </NoneConnectedRoute>
+        )
       },
       {
         path: "/match",
-        element:
+        element: (
           <PrivateRoute>
             <BrowsingPage />
           </PrivateRoute>
+        )
       },
       {
         path: "/profile",
-        element: 
+        element: (
           <PrivateRoute>
             <div>Profile</div>
           </PrivateRoute>
+        )
       },
       {
         path: "/message",
-        element:
+        element: (
           <PrivateRoute>
-            <div>Message</div>
+            <ConversationPicker />
           </PrivateRoute>
+        )
       },
       {
         path: "/register",
-        element:
+        element: (
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
+        )
       },
       {
         path: "/login",
-        element: 
+        element: (
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
+        )
       },
       {
         path: "/reset",
-        element:
-           <HomeNoneVerified />
+        element: <HomeNoneVerified />
       },
       {
         path: "/reset-password",
-        element: 
+        element: (
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
+        )
       },
       {
         path: "/reset-password/:id",
-        element: 
+        element: (
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
+        )
       }
     ]
   }

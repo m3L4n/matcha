@@ -1,0 +1,29 @@
+h1 {
+  margin: 1em 0;
+  text-align: center;
+  color: var(--green);
+  text-transform: uppercase;
+}
+
+.conversations {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .conversations {
+    margin-left: 4%;
+  }
+}
+
+@media (min-width: 1260px) {
+  h1 {
+    display: none;
+  }
+
+  .conversations {
+    width: 20%;
+    margin-left: 3%;
+    border-right: 2px solid var(--green);
+    height: 100vh
+  }
+}

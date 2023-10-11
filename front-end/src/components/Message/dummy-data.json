@@ -2,11 +2,23 @@
   {
     "id": "dsakhfi2u3hh",
     "firstName": "Jean-Michel",
-    "lastMessage": "Hi wanna grab a cup of coffee sometimes ?"
+    "lastMessage": "Hi wanna grab a cup of coffee sometimes ?",
+    "messages": [
+      "Hey Wanna grab a cup of tea ?",
+      "With pleasure! Meet me at Republique Starbuck",
+      "Perfect! Tomorrow 16?",
+      "Of course, see you tomorrow 😍"
+    ]
   },
   {
     "id": "adiufghiuewhfiaushf",
     "firstName": "Manon",
-    "lastMessage": "Hi wanna grab a cup of tea sometimes ?"
+    "lastMessage": "Hi wanna grab a cup of tea sometimes ?",
+    "messages": [
+      "Hey Wanna grab a cup of coffee ?",
+      "With pleasure! Meet me at Bastille Starbuck",
+      "Perfect! next monday at 10?",
+      "Of course, see you monday 😍"
+    ]
   }
 ]
