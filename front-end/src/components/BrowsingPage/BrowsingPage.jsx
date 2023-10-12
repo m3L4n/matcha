@@ -20,7 +20,7 @@ export default function BrowsingPage() {
     age: "",
     location: "",
     fame: "",
-    tags: ""
+    tags: "",
   });
 
   const [filterParams, setFilterParams] = useState({
@@ -28,7 +28,7 @@ export default function BrowsingPage() {
     locationGap: "",
     fameGap: "",
     sortBy: "",
-    sortOption: "ascending"
+    sortOption: "ascending",
   });
 
   const [matches, setMatches] = useState([]);
@@ -46,16 +46,14 @@ export default function BrowsingPage() {
     let distLong = longB - longA;
     let distLat = latB - latA;
 
-    let a =
-      Math.pow(Math.sin(distLat / 2), 2) +
-      Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(distLong / 2), 2);
+    let a = Math.pow(Math.sin(distLat / 2), 2) + Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(distLong / 2), 2);
 
     let c = 2 * Math.asin(Math.sqrt(a));
 
     return c * EARTH_RADIUS * 1000;
   }
 
-  const sortMatches = toSort => {
+  const sortMatches = (toSort) => {
     if (filterParams.sortBy === "age") {
       toSort.sort((a, b) => a.age - b.age);
     } else if (filterParams.sortBy === "location") {
@@ -66,7 +64,7 @@ export default function BrowsingPage() {
     return toSort;
   };
 
-  const filterMatches = toFilter => {
+  const filterMatches = (toFilter) => {
     if (isNotEmptyButNaN(filterParams.ageGap)) {
       notify("Error: invalid age gap filter parameters");
     } else if (isNotEmptyButNaN(filterParams.fameGap)) {
@@ -80,25 +78,17 @@ export default function BrowsingPage() {
         let minAge = currentUserAge - ageGap;
         minAge = minAge < 18 ? 18 : minAge;
         const maxAge = currentUserAge + ageGap;
-        toFilter = toFilter.filter(
-          user => Number(user.age) >= minAge && Number(user.age) <= maxAge
-        );
+        toFilter = toFilter.filter((user) => Number(user.age) >= minAge && Number(user.age) <= maxAge);
       }
       if (filterParams.fameGap !== "") {
         const minFame = currentUser.rate_fame - filterMatches.fameGap;
         const maxFame = currentUser.rate_fame + filterMatches.fameGap;
-        toFilter = toFilter.filter(
-          user => user.rate_fame >= minFame && user.rate_fame <= maxFame
-        );
+        toFilter = toFilter.filter((user) => user.rate_fame >= minFame && user.rate_fame <= maxFame);
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
         const currentUserPosition = Number(currentUser.position);
-        toFilter = toFilter.filter(
-          user =>
-            distanceBetweenTwoPoints(currentUserPosition, user.position) <
-            locationGap
-        );
+        toFilter = toFilter.filter((user) => distanceBetweenTwoPoints(currentUserPosition, user.position) < locationGap);
       }
     }
     return toFilter;
@@ -109,12 +99,12 @@ export default function BrowsingPage() {
   const { status, error, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
-    enabled: currentUser.valided
+    enabled: currentUser.valided,
   });
 
   useEffect(() => {
     if (status === "success") {
-      const filterAndSort = users => sortMatches(filterMatches(users));
+      const filterAndSort = (users) => sortMatches(filterMatches(users));
       setMatches(filterAndSort(users?.result ?? []));
     }
   }, [status, users]);
@@ -132,25 +122,10 @@ export default function BrowsingPage() {
       <header className="title">
         <h1 className="header-title header">Matcha</h1>
       </header>
-      <SearchBar
-        requestParams={requestParams}
-        setRequestParams={setRequestParams}
-        setFilterParams={setFilterParams}
-      />
+      <SearchBar requestParams={requestParams} setRequestParams={setRequestParams} setFilterParams={setFilterParams} />
       <section className="matches">
-        {sortMatches(filterMatches(matches)).map(user => {
-          return (
-            <Card
-              key={user.id}
-              id={user.id}
-              username={user.username}
-              age={user.age}
-              profilePicture={`http://placekitten.com/${Math.floor(
-                Math.random() * (280 - 250 + 1) + 250
-              )}/${Math.floor(Math.random() * (350 - 300 + 1) + 300)}`}
-              city={"Paris"}
-            />
-          );
+        {sortMatches(filterMatches(matches)).map((user) => {
+          return <Card key={user.id} id={user.id} username={user.username} age={user.age} profilePicture={user.profile_picture} city={user.city} />;
         })}
       </section>
     </>
