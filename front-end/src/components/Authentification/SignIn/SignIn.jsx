@@ -11,7 +11,7 @@ export default function SignIn() {
   const { setTriggerReload } = useAuth();
   const [user, setUser] = useState({
     username: "",
-    password: ""
+    password: "",
   });
 
   function handleChange(event) {
@@ -26,45 +26,37 @@ export default function SignIn() {
     const options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
     };
     fetch("http://localhost:4000/users/login", options)
-      .then(response => {
+      .then((response) => {
         if (response.status == 201) {
-
-          notify("success", "login success")
+          notify("success", "login success");
           setTriggerReload(true);
-          navigate('/match')
+          navigate("/match");
         }
-        return response.json()
+        return response.json();
       })
-      .then(data => {
-        console.log("data request :", data)
+      .then((data) => {
+        console.log("data request :", data);
         if (data.msg == "Authentication failed") {
-          notify(
-            "warning",
-            "please sign up , we cant match username and password"
-          );
+          notify("warning", "please sign up , we cant match username and password");
         } else if (data.msg === "user not verified") {
-          notify(
-            "warning",
-            "please verify your email  we send you a mail to verify your email"
-          );
+          notify("warning", "please verify your email  we send you a mail to verify your email");
           navigate("/reset", { state: { datae: user.username } });
           return;
         }
       })
-      .catch(error => notify("error", error));
+      .catch((error) => notify("error", error));
   }
 
   return (
     <div className="container">
       <div className="container-auth">
         <header className="header header">
-          {" "}
           SIGN IN
           <p className="title-1"> And start dating !</p>
           <button className="button-discord title-1">
@@ -75,21 +67,9 @@ export default function SignIn() {
         <hr className="hr" />
         <div className="container-form">
           <label className="label body"> Username</label>
-          <input
-            className="input"
-            name="username"
-            type="text"
-            value={user.username}
-            onChange={handleChange}
-          />
+          <input className="input" name="username" type="text" value={user.username} onChange={handleChange} />
           <label className="label body"> password</label>
-          <input
-            className="input"
-            name="password"
-            type="password"
-            value={user.password}
-            onChange={handleChange}
-          />
+          <input className="input" name="password" type="password" value={user.password} onChange={handleChange} />
         </div>
         <button className="button-submit title-1" onClick={signIn}>
           {" "}

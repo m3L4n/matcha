@@ -6,6 +6,7 @@ const { TokenModel } = require("../models/Tokenmodel");
 module.exports.sendingEmailVerification = async (username) => {
   try {
     const user = await UserModel.findbyId("username", username);
+    console.log("user in findid", user);
     if (user) {
       const userToken = await TokenModel.findToken(user.id);
       if (userToken != undefined) {
@@ -22,11 +23,17 @@ module.exports.sendingEmailVerification = async (username) => {
           clicking this link :
           http://localhost:4000/users/verify-email/${user.id}/${token} `,
         });
+        console.log("token", tokenCreated);
         return tokenCreated;
       }
     }
-    throw "user doesnt exist";
+
+    const error = new Error("user doesnt exist cant send email");
+    error.status = 401;
+    throw error;
   } catch (e) {
-    throw e;
+    const error = new Error("user doesnt exist cant send email");
+    error.status = 404;
+    throw error;
   }
 };

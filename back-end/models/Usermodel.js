@@ -5,19 +5,9 @@ const { searchValidation } = require("../modules/formValidation");
 class UserModel {
   static createUser = async (userData) => {
     try {
-      const { id, username, firstName, lastName, email, password, valided } =
-        userData;
-      const query =
-        "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
-      const values = [
-        id,
-        username,
-        firstName,
-        lastName,
-        email,
-        password,
-        valided,
-      ];
+      const { id, username, firstName, lastName, email, password, valided } = userData;
+      const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
+      const values = [id, username, firstName, lastName, email, password, valided];
       const newUser = await db.query(query, values);
       return newUser;
     } catch (error) {
@@ -29,6 +19,9 @@ class UserModel {
     try {
       const query = `SELECT *  FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
+      if (user.rowCount == 0) {
+        throw new Error("users doesnt exist");
+      }
       return user.rows[0];
     } catch (error) {
       throw error;
@@ -37,8 +30,11 @@ class UserModel {
 
   static findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
     try {
-      const query = `SELECT username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, valided FROM users WHERE ${paramToSearch} = $1`;
+      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
+      if (user.rowCount == 0) {
+        throw new Error("users doesnt exist");
+      }
       return user.rows[0];
     } catch (error) {
       throw error;
@@ -56,7 +52,20 @@ class UserModel {
       throw error;
     }
   };
-
+  static uploadImageInDB = async (param, buffer, userId) => {
+    return new Promise((next) => {
+      const query = `UPDATE users SET ${param} = $1 WHERE id = $2`;
+      const values = [buffer, userId];
+      db.query(query, values)
+        .then((data) => {
+          if (data.rowCount == 0) {
+            throw new Error("users doesnt exist");
+          }
+          next(data.rows[0]);
+        })
+        .catch((error) => (err) => next(err));
+    });
+  };
   /**
    * Get all potential match for current user
    * @param {string} currentUserId
@@ -67,13 +76,9 @@ class UserModel {
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
     return new Promise((next) => {
-      db.query(
-        "SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1",
-        [currentUserId]
-      )
+      db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
         .then((result) => {
-          const { sexual_preference, rate_fame, position, age } =
-            result.rows[0];
+          const { sexual_preference, rate_fame, position, age } = result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
@@ -115,14 +120,7 @@ class UserModel {
               "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
                 WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
                 AND id != $6",
-              [
-                sexual_preference,
-                min_fame,
-                max_fame,
-                min_age,
-                max_age,
-                currentUserId,
-              ]
+              [sexual_preference, min_fame, max_fame, min_age, max_age, currentUserId]
             );
           };
 
@@ -135,17 +133,10 @@ class UserModel {
           };
 
           const getOnlyClosePeople = (users) => {
-            return users.filter((user) =>
-              Math.floor(
-                distanceBetweenTwoPoints(position, user.position) < max_distance
-              )
-            );
+            return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
           };
 
-          if (
-            sexual_preference !== "both" ||
-            searchParams.action === "search"
-          ) {
+          if (sexual_preference !== "both" || searchParams.action === "search") {
             getMatchesBySexualPreferences()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
@@ -154,6 +145,43 @@ class UserModel {
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }
+        })
+        .catch((err) => next(err));
+    });
+  };
+  static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, position, city, id }) => {
+    const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9, position = POINT($10,$11), city = $12 WHERE id = $13`;
+    const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, position.x, position.y, city, id];
+    return new Promise((next) => {
+      db.query(query, values)
+        .then((data) => {
+          if (data.rowCount == 0) {
+            next(new Error("no data here"));
+          }
+          next(data.rows[0]);
+        })
+        .catch((err) => next(err));
+    });
+  };
+
+  static getAllInformationUser = async (id, idRequester) => {
+    let query = "";
+    if (id === idRequester) {
+      query =
+        "SELECT id, username, email, firstName, gender, beverage, sexual_preference, lastName, tags, description, age, rate_fame, city, position, connected, profile_picture, pictures FROM users WHERE id = $1";
+      // query =
+      // "SELECT id, username, email, firstName, gender, beverage,sexual_preference, lastName, (SELECT array_agg(unnest(tags)) FROM users WHERE id = $1) AS tags, description,  age, rate_fame, city, position, connected, profile_picture , pictures FROM users WHERE id = $1";
+    } else {
+      query =
+        "SELECT id, username, firstName, gender, beverage,sexual_preference, lastName, tags, description,  age, rate_fame, city, position, connected, profile_picture , pictures FROM users WHERE id = $1";
+    }
+    return new Promise((next) => {
+      db.query(query, [id])
+        .then((data) => {
+          if (data.rowCount == 0) {
+            next(new Error("no data here"));
+          }
+          next(data.rows[0]);
         })
         .catch((err) => next(err));
     });
