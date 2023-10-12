@@ -71,12 +71,7 @@ class UserModel {
    * @param {string} currentUserId
    * @param {Object} filterParams
    **/
-  static getAll = (currentUserId, filterParams, sortParams) => {
-    // TODO implement TAGS for matching/filter/sort
-   * Get all potential match for current user
-   * @param {string} currentUserId
-   * @param {Object} searchParams
-   **/
+
   static getAll = (currentUserId, searchParams) => {
     // TODO implement TAGS for matching / search
     const ELO_DIFFERENCE = 300;
