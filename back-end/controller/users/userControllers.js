@@ -23,28 +23,21 @@ class UserController {
         valided,
       };
       const user = await UserModel.createUser(data);
-      if (user.status == 23505) {
-        return res.status(404).json({ msg: "invalid email or user, they are already in use" });
-      }
-      const emailSend = await sendingEmailVerification(id);
-      if (emailSend.status == 401) {
-        return res.status(401).json({ msg: "user doesnt exist" });
-      } else if (emailSend.status == 404) {
-        return res.status(400).send("token not created");
-      }
+      const emailSend = await sendingEmailVerification(username);
       if (emailSend) {
+        console.log("email send perfectly");
         return res.status(201).send(user);
       } else {
         console.log("token not created");
+        return res.status(400).send("token not created");
       }
     } catch (error) {
-      if (error.status == "23505") console.log("ccc", error);
       if (error == "user doesnt exist") {
         console.log("userdoesnt exist");
 
         return res.status(409).send("Details are not correct");
       }
-      return res.status(404).send({ error: error });
+      return res.status(500).send({ error: error });
     }
   };
 

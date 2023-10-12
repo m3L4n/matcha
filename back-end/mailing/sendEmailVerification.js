@@ -6,6 +6,7 @@ const { TokenModel } = require("../models/Tokenmodel");
 module.exports.sendingEmailVerification = async (username) => {
   try {
     const user = await UserModel.findbyId("username", username);
+    console.log("user in findid", user);
     if (user) {
       const userToken = await TokenModel.findToken(user.id);
       if (userToken != undefined) {
@@ -14,7 +15,7 @@ module.exports.sendingEmailVerification = async (username) => {
       const token = crypto.randomBytes(16).toString("hex");
       const tokenCreated = await TokenModel.createToken({ user_id: user.id, token: token });
       if (tokenCreated) {
-        await sendingMail({
+        sendingMail({
           from: "no-reply@matcha-42.com",
           to: `${user.email}`,
           subject: "Account Verification Link",
@@ -22,9 +23,11 @@ module.exports.sendingEmailVerification = async (username) => {
           clicking this link :
           http://localhost:4000/users/verify-email/${user.id}/${token} `,
         });
+        console.log("token", tokenCreated);
         return tokenCreated;
       }
     }
+
     const error = new Error("user doesnt exist cant send email");
     error.status = 401;
     throw error;
