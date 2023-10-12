@@ -69,9 +69,8 @@ class UserModel {
   /**
    * Get all potential match for current user
    * @param {string} currentUserId
-   * @param {Object} filterParams
+   * @param {Object} searchParams
    **/
-
   static getAll = (currentUserId, searchParams) => {
     // TODO implement TAGS for matching / search
     const ELO_DIFFERENCE = 300;
@@ -121,27 +120,12 @@ class UserModel {
               "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
                 WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
                 AND id != $6",
-              [sexual_preference, min_fame, max_fame, min_age, Number(max_age), currentUserId]
-            );
-          };
-              [
-                sexual_preference,
-                min_fame,
-                max_fame,
-                min_age,
-                max_age,
-                currentUserId,
-              ]
+              [sexual_preference, min_fame, max_fame, min_age, max_age, currentUserId]
             );
           };
 
           const getMatchesOfAllSexes = () => {
             return db.query(
-              "SELECT id, username, position, profile_picture, age FROM users \
-                WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND id IS NOT $4",
-              [min_fame, max_fame, min_age, Number(max_age)]
-            );
-          };
               "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
                 WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
               [min_fame, max_fame, min_age, Number(max_age), currentUserId]
@@ -149,95 +133,21 @@ class UserModel {
           };
 
           const getOnlyClosePeople = (users) => {
-            return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < MAX_DISTANCE));
+            return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
           };
 
-          const sortMatches = (users, age) => {
-            let usersSorted = users;
-            if (sortParams.ageSort) {
-              if (sortParams.ageSort == "ascending") {
-                usersSorted = users.sort((a, b) => a.age - age - (b.age - age));
-                console.log(usersSorted);
-              } else {
-                usersSorted = users.sort((a, b) => b.age - age - (a.age - age));
-              }
-            }
-            if (filterParams.fame) {
-              if (sortParams.ageSort == "ascending") usersSorted = users.sort((a, b) => a.rate_fame - rate_fame - (b.rate_fame - rate_fame));
-              else usersSorted = users.sort((a, b) => b.rate_fame - rate_fame - (a.rate_fame - rate_fame));
-            }
-            if (filterParams.location) {
-              if (sortParams.locationSort == "ascending") {
-                usersSorted = users.sort((a, b) => distanceBetweenTwoPoints(position, a.position) - distanceBetweenTwoPoints(position, b.position));
-              } else {
-                usersSorted = users.sort((a, b) => distanceBetweenTwoPoints(position, b.position) - distanceBetweenTwoPoints(position, a.position));
-              }
-            }
-            return usersSorted;
-          };
-
-          if (sexual_preference !== "both") {
-            return users.filter((user) =>
-              Math.floor(
-                distanceBetweenTwoPoints(position, user.position) < max_distance
-              )
-            );
-          };
-
-          if (
-            sexual_preference !== "both" ||
-            searchParams.action === "search"
-          ) {
+          if (sexual_preference !== "both" || searchParams.action === "search") {
             getMatchesBySexualPreferences()
-              .then((result) => next(sortMatches(getOnlyClosePeople(result.rows), age)))
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           } else {
             getMatchesOfAllSexes()
-              .then((result) => next(sortMatches(getOnlyClosePeople(result.rows), age)))
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }
         })
         .catch((err) => next(err));
     });
-  };
-  static getAllEnum = async () => {
-    let enumGender = [];
-    let enumTags = [];
-    let enumSexualPreference = [];
-    let enumBeverage = [];
-    let enumLength = 0;
-    try {
-      enumTags = await db.query("SELECT enum_range(NULL::tags_enum) as tags");
-      enumTags = enumTags.rows[0].tags;
-      enumLength = enumTags.length;
-      if (enumLength > 2) {
-        enumTags = enumTags.substr(1, enumLength - 2).split(",");
-      }
-      enumGender = await db.query("SELECT enum_range(NULL::gender_enum) as gender");
-      enumGender = enumGender.rows[0].gender;
-      enumLength = enumGender.length;
-      if (enumLength > 2) {
-        enumGender = enumGender.substr(1, enumLength - 2).split(",");
-      }
-      enumSexualPreference = await db.query("SELECT enum_range(NULL::sexual_preference_enum) as spref");
-      enumSexualPreference = enumSexualPreference.rows[0].spref;
-      enumLength = enumSexualPreference.length;
-      if (enumLength > 2) {
-        enumSexualPreference = enumSexualPreference.substr(1, enumLength - 2).split(",");
-      }
-      enumBeverage = await db.query("SELECT enum_range(NULL::beverage_enum) as beverage");
-      enumBeverage = enumBeverage.rows[0].beverage;
-      enumLength = enumBeverage.length;
-      if (enumLength > 2) {
-        enumBeverage = enumBeverage.substr(1, enumLength - 2).split(",");
-      }
-      return { enumGender, enumTags, enumBeverage, enumSexualPreference };
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
   };
   static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, position, city, id }) => {
     const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9, position = POINT($10,$11), city = $12 WHERE id = $13`;
