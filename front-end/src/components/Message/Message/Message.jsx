@@ -35,7 +35,11 @@ export default function Message({ setConversationPicker }) {
       </section>
       <form className="search-form">
         <input className="search-form--input" type="text" />
-        <PiPaperPlaneRightFill color="#A4B07E" size={24} />
+        <PiPaperPlaneRightFill
+          className="search-from--send"
+          color="#A4B07E"
+          size={24}
+        />
       </form>
     </div>
   );

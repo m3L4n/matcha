@@ -26,4 +26,10 @@ h1 {
     border-right: 2px solid var(--green);
     height: 100vh
   }
+
+  .conversation-container {
+    display: flex;
+    flex-flow: nowrap row;
+    gap: 1em;
+  }
 }
