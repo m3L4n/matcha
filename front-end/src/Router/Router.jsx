@@ -9,6 +9,7 @@ import ResetPassword from "components/ResetPassword/ResetPassword";
 import { PrivateRoute } from "./ProtectedRoute";
 import { NoneConnectedRoute } from "./NoneConnectedRoute";
 import Profile from "components/Profile/Profile";
+import Notification from "components/Notifications/Notification";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <div>Message</div>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/notifications",
+        element: (
+          <PrivateRoute>
+            <Notification />
           </PrivateRoute>
         ),
       },

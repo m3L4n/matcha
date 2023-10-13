@@ -14,7 +14,9 @@ export default function Card({ id, username, age, city, profilePicture }) {
         <p className="user-infos-age">{age}</p>
         <p> {city} </p>
       </div>
-      <LikeButton id={id} />
+      <div className="user-infos-like">
+        <LikeButton id={id} />
+      </div>
     </div>
   );
 }

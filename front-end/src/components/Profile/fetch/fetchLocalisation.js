@@ -1,5 +1,4 @@
 async function fetchLocalisation({ latitude, longitude }) {
-    console.log(longitude, latitude)
     const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
     const options = {
         method: 'GET',

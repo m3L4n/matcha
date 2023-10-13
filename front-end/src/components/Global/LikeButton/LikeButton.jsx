@@ -1,11 +1,19 @@
 import PropTypes from "prop-types";
 import { BsFillSuitHeartFill } from "react-icons/bs";
 import "./LikeButton.scoped.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const LikeButton = ({ id }) => {
+const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
   const [like, setLike] = useState(false);
-
+  useEffect(() => {
+    if (width && height) {
+      const buttonElement = document.querySelector(".like-button");
+      if (buttonElement) {
+        buttonElement.style.width = width;
+        buttonElement.style.height = height;
+      }
+    }
+  }, []);
   const toggleLike = async (event, id) => {
     event.stopPropagation();
     const options = {
@@ -47,7 +55,7 @@ const LikeButton = ({ id }) => {
       value="button"
     >
       <BsFillSuitHeartFill
-        size={32}
+        size={sizeIcon}
         value="button"
         onMouseMove={(e) => {
           e.stopPropagation();

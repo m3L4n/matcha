@@ -10,13 +10,16 @@ import fetchLocalisationiWithoutKnow from "components/Profile/fetch/fetchLocalis
 import anonymous from "assets/_.jpeg";
 import LayoutUserProfile from "../layoutUserProfil/LayoutUserProfile";
 import { json } from "react-router-dom";
-export default function UserProfile({ allTags, userInformation, ourProfile }) {
+import fetchBlockUser from "../fetch/fetchBlockUser";
+import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
+export default function UserProfile({ allTags, userInformation, ourProfile, relationship }) {
   const mutationUpdateInfo = useMutation(fetchUpdateInfo);
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
   const mutationUploadPD = useMutation(fetchUploadPictureDescription);
-
+  const mutationReportFakeAccount = useMutation(fetchReportFakeAccount);
   const mutationLocalisation = useMutation(fetchLocalisation);
   const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow);
+  const mutationBlockUser = useMutation(fetchBlockUser);
 
   const coords = mutationLocalisation.isLoading ? {} : mutationLocalisation.data;
   const coordKnowNone = mutationLocalisationNoneKnow.isLoading ? {} : mutationLocalisationNoneKnow.data;
@@ -24,6 +27,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
   const [pictureDescription, setPicturesDescription] = useState([]);
   const [profilPicture, setProfilPicture] = useState("");
   const [infoProfile, setInfoProfil] = useState({});
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     if (userInformation) {
@@ -32,6 +36,26 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
       }
     }
   }, [userInformation]);
+
+  useEffect(() => {
+    if (!mutationLocalisation.isLoading) {
+      if (coords) {
+        if (Object.keys(coords).length > 0) {
+          setInfoProfil({ ...infoProfile, ["city"]: coords.city, ["position"]: { x: coords.latitude, y: coords.longitude } });
+        }
+      }
+    }
+  }, [coords]);
+
+  useEffect(() => {
+    if (!mutationLocalisationNoneKnow.isLoading) {
+      if (coordKnowNone) {
+        if (Object.keys(coordKnowNone).length > 0) {
+          setInfoProfil({ ...infoProfile, ["city"]: coordKnowNone.city, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
+        }
+      }
+    }
+  }, [coordKnowNone]);
 
   const fillInfoProfile = (infoUser) => {
     if (Object.keys(infoUser).length > 0) {
@@ -76,6 +100,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
           infoProfileTmp[info] = parameter;
         }
       }
+      setUserId(infoProfileTmp["id"]);
       setInfoProfil(infoProfileTmp);
     }
   };
@@ -117,30 +142,10 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
     setInfoProfil({ ...infoProfile, [name]: value });
   }
 
-  useEffect(() => {
-    if (!mutationLocalisation.isLoading) {
-      if (coords) {
-        if (Object.keys(coords).length > 0) {
-          setInfoProfil({ ...infoProfile, ["city"]: coords.city, ["position"]: { x: coords.latitude, y: coords.longitude } });
-        }
-      }
-    }
-  }, [coords]);
-
-  useEffect(() => {
-    if (!mutationLocalisationNoneKnow.isLoading) {
-      if (coordKnowNone) {
-        if (Object.keys(coordKnowNone).length > 0) {
-          setInfoProfil({ ...infoProfile, ["city"]: coordKnowNone.city, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
-        }
-      }
-    }
-  }, [coordKnowNone]);
-
   const updatePictures = (arrayPicture) => {
     setPicturesDescription(arrayPicture);
   };
-  function saveProfile(event) {
+  function saveProfile() {
     if (pictureDescription.length > 4 || pictureDescription.length < 4) {
       notify("error", "you dont the right number of picture description, the number is 4");
       return;
@@ -181,10 +186,17 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
     notify("success", " account modfy");
   }
 
+  const blockUser = (id, block) => {
+    mutationBlockUser.mutate({ id, block });
+  };
+  const reportAsFakeAccount = (id) => {
+    mutationReportFakeAccount.mutate({ id });
+  };
   return (
     <div>
       <LayoutUserProfile
         {...infoProfile}
+        id={userId}
         pictures={pictureDescription}
         profile_picture={profilPicture}
         ourProfile={ourProfile}
@@ -193,6 +205,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile }) {
         getLocation={getLocation}
         updatePictures={updatePictures}
         saveProfile={saveProfile}
+        blockUser={blockUser}
+        relationship={relationship}
+        reportAsFakeAccount={reportAsFakeAccount}
       />
     </div>
   );

@@ -7,7 +7,7 @@ import { AuthContext, useAuth } from "src/Context/AuthContext";
 export default function Navbar() {
   const { setTriggerReload, user } = useAuth();
   const navigate = useNavigate();
-  let pages = ["match", "profile", "message"];
+  let pages = ["match", "profile", "message", "notifications"];
   const [sidebar, setSidebar] = useState(false);
   const store = useContext(AuthContext);
 
