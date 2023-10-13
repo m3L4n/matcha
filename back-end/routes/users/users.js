@@ -4,18 +4,8 @@ const router = express.Router();
 const { UserController } = require("../../controller/users/userControllers");
 const { isAuth } = require("../../middlewares/userAuth");
 const multer = require("multer");
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/");
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now();
-//     cb(null, uniqueSuffix + file.originalname);
-//   },
-// });
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-// const upload = multer({ storage: storage });
 
 router.post("/", UserController.signup);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);
@@ -32,4 +22,5 @@ router.get("/getAllInfoEnum", isAuth, UserController.getAllInfoEnum);
 router.put("/updateInfoProfile", isAuth, UserController.updateInfoProfile);
 router.post("/uploadPictureDescription", isAuth, upload.array("images"), UserController.updatePictureDescription);
 router.get("/:id", isAuth, UserController.getAllInfoUser);
+router.put("/reportFakeAccount/:id", isAuth, UserController.reportAsFakeAccount);
 module.exports = router;

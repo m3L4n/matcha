@@ -82,6 +82,7 @@ async function createTableUsers(client) {
     rate_fame INT DEFAULT 1500,
     position POINT,
     city TEXT,
+    fake_account INT DEFAULT 0,
     "connected" BOOLEAN DEFAULT false,
     latest_connection TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
