@@ -102,7 +102,8 @@ async function createTableConversations(client) {
   CREATE TABLE IF NOT EXISTS conversations (
     id UUID DEFAULT uuid_generate_v4(),
     id_user_1 UUID REFERENCES users(id) ON DELETE SET NULL,
-    id_user_2 UUID REFERENCES users(id) ON DELETE SET NULL
+    id_user_2 UUID REFERENCES users(id) ON DELETE SET NULL,
+    PRIMARY KEY (id)
      );
      `);
 }

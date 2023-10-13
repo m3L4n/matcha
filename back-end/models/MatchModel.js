@@ -37,6 +37,7 @@ class MatchModel {
    * Create a like
    * @param {string} receiverId
    * @param {string} requesterId
+   * @returns {Promise}
    **/
   static createLike = (requesterId, receiverId) => {
     return new Promise((next) => {
@@ -83,6 +84,7 @@ class MatchModel {
    * Delete a like
    * @param {string} receiverId
    * @param {string} requesterId
+   * @returns {Promise}
    **/
   static removeLike = (receiverId, requesterId) => {
     return new Promise((next) => {

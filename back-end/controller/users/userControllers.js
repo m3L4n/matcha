@@ -1,6 +1,8 @@
 const { sendingMail } = require("../../mailing/mailing");
 const { checkAndChange } = require("../../modules/response.js");
-const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
+const {
+  sendingEmailVerification,
+} = require("../../mailing/sendEmailVerification");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -70,7 +72,9 @@ class UserController {
           if (!updated) {
             return res.status(500).send({ msg: err.message });
           } else {
-            return res.status(200).send("Your account has been successfully verified");
+            return res
+              .status(200)
+              .send("Your account has been successfully verified");
           }
         }
       }
@@ -89,10 +93,22 @@ class UserController {
         if (isSame) {
           const verified = user.valided;
           if (verified) {
-            const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
-              expiresIn: 1 * 24 * 60 * 60 * 1000,
-            });
-            return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ access_token: token });
+            const token = jwt.sign(
+              { id: user.id, username: user.username },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: 1 * 24 * 60 * 60 * 1000,
+              }
+            );
+            return res
+              .cookie("jwt", token, {
+                httpOnly: true,
+                secure: false,
+                maxAge: 3600000,
+                sameSite: true,
+              })
+              .status(201)
+              .send({ access_token: token });
           } else {
             return res.status(401).send({ msg: "user not verified" });
           }
@@ -151,13 +167,16 @@ class UserController {
     }
   };
 
-  static getUsers = async (req, res) => {
+  static index = async (req, res) => {
     const { id } = req.authUser;
     const { action, age, location, fame, tags } = req.query;
-    let users = await UserModel.getAll(
-      id,
-      { action, age, location, fame, tags },
-    );
+    let users = await UserModel.getAll(id, {
+      action,
+      age,
+      location,
+      fame,
+      tags,
+    });
     return res.json(checkAndChange(users));
   };
 

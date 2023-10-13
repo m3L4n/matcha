@@ -10,7 +10,7 @@ router.post("/login", UserController.login);
 router.post("/send-email-verification", UserController.sendEmailVerification);
 router.post("/send-password-reset", UserController.sendEmailResetPassword);
 router.get("/whoami", isAuth, UserController.getUser);
-router.get("/matches", isAuth, UserController.getUsers);
+router.get("/matches", isAuth, UserController.index);
 
 router.put("/changePassword", UserController.changePassword);
 router.delete("/disconnect", isAuth, UserController.disconnectUser);

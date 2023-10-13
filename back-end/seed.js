@@ -87,7 +87,46 @@ const generateUser = async (params) => {
   return db.query(query, params);
 };
 
-for (let i = 0; i < 100; i++) {
+let firstUserUuid = uuidv4();
+function generateSetOfUsers() {
+  for (let i = 0; i < 100; i++) {
+    const random = Math.floor(Math.random() * 10);
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+    const email = `${firstName}.${lastName}@mail.com`;
+    const username = faker.internet.userName();
+    const gender = random % 2 == 0 ? "male" : "female";
+    const beverage = random % 2 == 0 ? "matcha" : "coffee";
+    const sexual_preference = random % 2 == 0 ? "male" : "female";
+    const password = bcrypt.hashSync(faker.string.alphanumeric(), 10);
+    const description = faker.string.alphanumeric(200);
+    const rate_fame = 1500;
+    const age = Math.floor(Math.random() * (50 - 18) + 18);
+    const profile_picture = faker.internet.avatar();
+    const valided = true;
+    let gps_position = gps[Math.floor(Math.random() * gps.length)];
+    let position = `(${gps_position.x}, ${gps_position.y})`;
+    const params = [
+      uuidv4(),
+      username,
+      email,
+      firstName,
+      gender,
+      beverage,
+      sexual_preference,
+      lastName,
+      password,
+      description,
+      rate_fame,
+      position,
+      profile_picture,
+      valided,
+      age,
+    ];
+    generateUser(params)
+      .then(() => console.log(`fake user ${i} inserted ✅`))
+      .catch((error) => console.error(error));
+  }
   const random = Math.floor(Math.random() * 10);
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
@@ -105,7 +144,7 @@ for (let i = 0; i < 100; i++) {
   let gps_position = gps[Math.floor(Math.random() * gps.length)];
   let position = `(${gps_position.x}, ${gps_position.y})`;
   const params = [
-    uuidv4(),
+    firstUserUuid,
     username,
     email,
     firstName,
@@ -121,17 +160,16 @@ for (let i = 0; i < 100; i++) {
     valided,
     age,
   ];
-  generateUser(params)
-    .then(() => console.log(`fake user ${i} inserted ✅`))
-    .catch((error) => console.error(error));
+  return generateUser(params);
 }
-
 // generate a test account
 let gps_position = gps[Math.floor(Math.random() * gps.length)];
 let position = `(${gps_position.x}, ${gps_position.y})`;
+let adminUuid = uuidv4();
+let manonUuid = uuidv4();
 
 const adminParams = [
-  uuidv4(),
+  adminUuid,
   "matchadmin",
   "matchamail@gmail.com",
   "matcha",
@@ -149,7 +187,7 @@ const adminParams = [
 ];
 
 const userParams = [
-  uuidv4(),
+  manonUuid,
   "manouille",
   "manon@gmail.com",
   "Manon",
@@ -166,10 +204,30 @@ const userParams = [
   22,
 ];
 
-generateUser(adminParams)
-  .then(() => console.log(`Fake admin generated! 🍺`))
-  .catch((error) => console.error(error));
+const generateConversation = async (params) => {
+  const query =
+    "INSERT INTO \
+    conversations(id_user_1, id_user_2) VALUES($1, $2)";
+  return db.query(query, params);
+};
 
-generateUser(userParams)
-  .then(() => console.log("Fake user Manon added 🍺"))
-  .catch((error) => console.error(`Error: ${error}`));
+generateSetOfUsers().then(() => {
+  generateUser(adminParams)
+    .then(() => {
+      generateUser(userParams)
+        .then(() => {
+          console.log("Fake user Manon added 🍺");
+          generateConversation([adminUuid, manonUuid])
+            .then(() => {
+              console.log("admin Manon conversation created");
+              generateConversation([adminUuid, firstUserUuid])
+                .then(() => console.log("admin firstUser conversation created"))
+                .catch((error) => console.log(error));
+            })
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.error(`Error: ${error}`));
+      console.log(`Fake admin generated! 🍺`);
+    })
+    .catch((error) => console.error(error));
+});
