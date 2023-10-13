@@ -171,5 +171,5 @@ generateUser(adminParams)
   .catch((error) => console.error(error));
 
 generateUser(userParams)
-  .then(() => console.log("Fake user Mano added 🍺"))
+  .then(() => console.log("Fake user Manon added 🍺"))
   .catch((error) => console.error(`Error: ${error}`));

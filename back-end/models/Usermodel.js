@@ -143,7 +143,7 @@ class UserModel {
           };
 
           if (
-            sexual_preference !== "both" ||
+            sexual_preference !== "other" ||
             searchParams.action === "search"
           ) {
             getMatchesBySexualPreferences()
