@@ -1,6 +1,16 @@
 .messages-container {
     width: 80%;
-    margin: auto;
+    height: 90vh;
+    display: flex;
+    flex-flow: column nowrap;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.messages {
+    text-align: center;
+    width: 89%;
+    margin: auto
 }
 
 .message {
@@ -54,7 +64,7 @@ header img {
     border: 1px solid var(--green);
     border-radius: 20px;
     color: var(--green);
-    padding: .5em 1em;
+    padding: 1em 1em;
 }
 
 .search-form--input:focus {
