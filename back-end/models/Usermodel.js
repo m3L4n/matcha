@@ -1,6 +1,7 @@
 const db = require("../db/db");
 const { distanceBetweenTwoPoints } = require("../modules/distance");
 const { searchValidation } = require("../modules/formValidation");
+const { error } = require("../modules/response");
 
 class UserModel {
   static createUser = async (userData) => {
@@ -190,6 +191,20 @@ class UserModel {
         .then((data) => {
           return next(data);
         })
+        .catch((error) => next(error));
+    });
+  };
+  static handleConnected = (idUser, connected) => {
+    return new Promise((next) => {
+      db.query('UPDATE users set "connected" = $1 WHERE id = $2', [connected, idUser])
+        .then((data) => next(data))
+        .catch((error) => next(error));
+    });
+  };
+  static isUserConnected = (idUser) => {
+    return new Promise((next) => {
+      db.query("SELECT connected FROM users WHERE id = $1", [idUser])
+        .then((data) => next(data.rows[0]))
         .catch((error) => next(error));
     });
   };

@@ -12,7 +12,8 @@ import LayoutUserProfile from "../layoutUserProfil/LayoutUserProfile";
 import { json } from "react-router-dom";
 import fetchBlockUser from "../fetch/fetchBlockUser";
 import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
-export default function UserProfile({ allTags, userInformation, ourProfile, relationship }) {
+import { socket } from "src/socket/socket";
+export default function UserProfile({ allTags, userInformation, ourProfile, relationship, connected }) {
   const mutationUpdateInfo = useMutation(fetchUpdateInfo);
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
   const mutationUploadPD = useMutation(fetchUploadPictureDescription);
@@ -208,6 +209,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
         blockUser={blockUser}
         relationship={relationship}
         reportAsFakeAccount={reportAsFakeAccount}
+        connected={connected}
       />
     </div>
   );
