@@ -7,6 +7,11 @@
     margin-bottom: 2em;
 }
 
+
+.messages-container-back-button {
+    cursor: pointer;
+}
+
 .messages {
     text-align: center;
     width: 89%;
@@ -79,5 +84,9 @@ header img {
 
     .search-from--send {
         margin-right: 1em;
+    }
+
+    .messages-container-back-button {
+        display: none;
     }
 }

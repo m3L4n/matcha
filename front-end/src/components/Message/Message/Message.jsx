@@ -27,7 +27,10 @@ export default function Message({
   return (
     <div className="messages-container">
       <header>
-        <AiOutlineLeft onClick={() => setConversationPicker(true)} />
+        <AiOutlineLeft
+          onClick={() => setConversationPicker(true)}
+          className="messages-container-back-button"
+        />
         <img src="http://placekitten.com/40/40" alt="profile picture" />
         <p className="body">{query?.data?.username}</p>
       </header>
