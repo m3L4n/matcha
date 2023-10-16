@@ -3,13 +3,16 @@ import "./Conversation.scoped.css";
 
 const Conversation = ({
   id,
+  partnerId,
   firstName,
   lastMessage,
   setConversationPicker,
-  setConversationId
+  setConversationId,
+  setConversationPartnerId
 }) => {
   const pickConversation = () => {
     setConversationPicker(false);
+    setConversationPartnerId(partnerId);
     setConversationId(id);
   };
   return (
@@ -22,10 +25,12 @@ const Conversation = ({
 
 Conversation.propTypes = {
   id: PropTypes.string.isRequired,
+  partnerId: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
   lastMessage: PropTypes.string.isRequired,
   setConversationPicker: PropTypes.func.isRequired,
-  setConversationId: PropTypes.func.isRequired
+  setConversationId: PropTypes.func.isRequired,
+  setConversationPartnerId: PropTypes.func.isRequired
 };
 
 export default Conversation;

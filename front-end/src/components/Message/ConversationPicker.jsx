@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 const ConversationPicker = () => {
   const [conversationPicker, setConversationPicker] = useState(true);
   const [conversationId, setConversationId] = useState("");
+  const [conversationPartnerId, setConversationPartnerId] = useState("");
   const isMobile = useMedia({ query: "(max-width: 1259px)" });
 
   const { status, data } = useQuery({
@@ -23,6 +24,7 @@ const ConversationPicker = () => {
   let conversations = data?.result?.rows?.map(conversation => (
     <Conversation
       key={conversation.conversation_id}
+      partnerId={conversation.chat_partner_id}
       id={conversation.conversation_id}
       firstName={conversation.chat_partner_name}
       lastMessage={
@@ -32,12 +34,13 @@ const ConversationPicker = () => {
       }
       setConversationPicker={setConversationPicker}
       setConversationId={setConversationId}
+      setConversationPartnerId={setConversationPartnerId}
     />
   ));
 
   useEffect(() => {
     if (status === "success") {
-      setConversationId(data?.result.rows[0].conversation_id);
+      setConversationPartnerId(data?.result.rows[0].chat_partner_id);
     }
   }, [data?.result.rows, status]);
 
@@ -50,7 +53,7 @@ const ConversationPicker = () => {
         ) : (
           <Message
             setConversationPicker={setConversationPicker}
-            chatPartnerId={data?.result?.rows[0]?.chat_partner_id}
+            chatPartnerId={conversationPartnerId}
           />
         )
       ) : (
@@ -59,7 +62,7 @@ const ConversationPicker = () => {
           {conversationId !== "" && (
             <Message
               setConversationPicker={setConversationPicker}
-              chatPartnerId={data?.result?.rows[0].chat_partner_id}
+              chatPartnerId={conversationPartnerId}
             />
           )}
         </section>
