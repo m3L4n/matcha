@@ -19,6 +19,7 @@
 .conversation {
   margin-bottom: 1em;
   border-bottom: 4px solid var(--green);
+  cursor: pointer;
 }
 
 a {
