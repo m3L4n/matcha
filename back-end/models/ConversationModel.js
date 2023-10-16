@@ -13,6 +13,7 @@ class ConversationModel {
         "SELECT\
         c.id AS conversation_id,\
         u2.username AS chat_partner_name,\
+        u2.id as chat_partner_id, \
         m.content AS last_message\
         FROM conversations c\
         JOIN users u1 ON c.id_user_1 = u1.id\

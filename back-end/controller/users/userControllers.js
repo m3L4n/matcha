@@ -167,6 +167,16 @@ class UserController {
     }
   };
 
+  static show = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await UserModel.findbyId("id", id);
+      return res.status(200).json(user);
+    } catch (e) {
+      return res.status(400).send("This user doesn't exist.");
+    }
+  };
+
   static index = async (req, res) => {
     const { id } = req.authUser;
     const { action, age, location, fame, tags } = req.query;
