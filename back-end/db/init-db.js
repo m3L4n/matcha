@@ -111,11 +111,12 @@ async function createTableConversations(client) {
 async function createTableMessages(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS messages (
-    id UUID PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     id_user_requester UUID REFERENCES users(id) ON DELETE CASCADE,
     id_user_receiver UUID REFERENCES users(id) ON DELETE CASCADE,
     content VARCHAR(255),
-    id_conversation UUID REFERENCES conversations(id) ON DELETE CASCADE
+    id_conversation UUID REFERENCES conversations(id) ON DELETE CASCADE,
+    PRIMARY KEY (id)
      );
      `);
 }

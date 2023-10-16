@@ -1,4 +1,3 @@
-const { error } = require("../modules/response");
 const db = require("../db/db");
 
 class ConversationModel {

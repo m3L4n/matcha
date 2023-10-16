@@ -8,6 +8,7 @@ const { deletedataExpiredFromToken } = require("./db/updateExpiredData");
 const userRouter = require("./routes/users/users");
 const matchRouter = require("./routes/match");
 const conversationRouter = require("./routes/conversation");
+const messageRouter = require("./routes/message");
 const swaggerDocument = require("./swagger.json");
 app.use(express.json());
 
@@ -19,6 +20,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/users", userRouter);
 app.use("/match", matchRouter);
 app.use("/conversation", conversationRouter);
+app.use("/message", messageRouter);
 app.use(function (_, res, next) {
   res.header("content-type", "application/json;charset=utf-8");
   res.header("access-control-allow-credentials", true);

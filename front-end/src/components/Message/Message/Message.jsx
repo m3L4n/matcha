@@ -4,19 +4,25 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
 import { useQuery } from "@tanstack/react-query";
 import getChatPartner from "./fetchChatPartner";
+import getMessages from "./fetchMessages";
+import { useAuth } from "src/Context/AuthContext";
 
-export default function Message({ setConversationPicker, chatPartnerId }) {
-  const messages = [
-    { id: "receiver", content: "Hey Wanna grab a cup of tea ?" },
-    { id: "sender", content: "With pleasure! Meet me at Republique Starbuck" },
-    { id: "receiver", content: "Perfect! Tomorrow 16?" },
-    { id: "sender", content: "Of course, see you tomorrow 😍" }
-  ];
-
+export default function Message({
+  setConversationPicker,
+  chatPartnerId,
+  conversationId
+}) {
   const query = useQuery({
     queryKey: ["chatPartner", chatPartnerId],
     queryFn: getChatPartner
   });
+
+  const { data: messages } = useQuery({
+    queryKey: ["currentMessages", conversationId],
+    queryFn: getMessages
+  });
+
+  const { user: currentUser } = useAuth();
 
   return (
     <div className="messages-container">
@@ -26,12 +32,12 @@ export default function Message({ setConversationPicker, chatPartnerId }) {
         <p className="body">{query?.data?.username}</p>
       </header>
       <section className="messages">
-        {messages.map(message => {
+        {messages?.result.map(message => {
           return (
             <p
-              key={Math.random()}
+              key={message.id}
               className={
-                message.id === "receiver"
+                message.id_user_requester === currentUser.id
                   ? "body message message-sended"
                   : "body message message-received"
               }
@@ -55,5 +61,6 @@ export default function Message({ setConversationPicker, chatPartnerId }) {
 
 Message.propTypes = {
   setConversationPicker: PropTypes.func.isRequired,
-  chatPartnerId: PropTypes.string.isRequired
+  chatPartnerId: PropTypes.string.isRequired,
+  conversationId: PropTypes.string.isRequired
 };

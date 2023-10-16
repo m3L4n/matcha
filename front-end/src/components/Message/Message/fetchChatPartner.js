@@ -10,6 +10,7 @@ async function getChatPartner({ queryKey }) {
   };
 
   const response = await fetch(url, options);
+
   if (!response) {
     throw new Error("Can't get current chat partner");
   }

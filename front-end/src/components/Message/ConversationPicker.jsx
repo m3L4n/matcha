@@ -54,15 +54,17 @@ const ConversationPicker = () => {
           <Message
             setConversationPicker={setConversationPicker}
             chatPartnerId={conversationPartnerId}
+            conversationId={conversationId}
           />
         )
       ) : (
         <section className="conversation-container">
           <section className="conversations">{conversations}</section>
-          {conversationId !== "" && (
+          {conversationPartnerId !== "" && conversationId !== "" && (
             <Message
               setConversationPicker={setConversationPicker}
               chatPartnerId={conversationPartnerId}
+              conversationId={conversationId}
             />
           )}
         </section>
