@@ -36,6 +36,7 @@ export default function Profile() {
   //   }
   // }, [userInformation.connected]);
   useEffect(() => {
+    // if (!ourProfile) {
     socket.emit("user_profile", { userId: paramId, currentUserId: user.id, ourProfile: user.id == paramId });
     socket.on("connected", (msg) => {
       if (Object.hasOwn(msg, "connected")) {
@@ -50,6 +51,7 @@ export default function Profile() {
       socket.off("connected", (reason) => {
         console.log(reason);
       });
+      // };
     };
   }, [paramId]);
   useEffect(() => {

@@ -153,7 +153,7 @@ export default function LayoutUserProfile({
               report as fake account
             </button>
           )}
-          <h3 className="Lcontainer_userInfo-connected"> {connected ? "en ligne" : "deconnecte"}</h3>
+          <h3 className="Lcontainer_userInfo-connected"> {ourProfile ? "en ligne " : connected ? "en ligne" : "deconnecte"}</h3>
           <div className="Lcontainer_userInfo__header">
             <div className="containerInfo-user__profile-img">
               {ShowPreviewImage(profile_picture)}

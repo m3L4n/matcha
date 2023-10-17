@@ -14,14 +14,15 @@ function socket_broacast(io) {
       if (!data.ourProfile) {
         await notificationsController.createNotification(data.currentUserId, data.userId, "view our profile", "view");
       }
-      intervalId = setInterval(async () => {
+      const intervalId = setInterval(async () => {
         const result = await socketController.userIsConnected(data.userId);
+        console.log("HEYYyy", data.userId);
         socket.emit("connected", result);
       }, 1000);
-    });
-    socket.on("remove_listener", (eventName) => {
-      console.log("clear");
-      clearInterval(intervalId);
+      socket.on("remove_listener", (eventName) => {
+        console.log("clear");
+        clearInterval(intervalId);
+      });
     });
 
     socket.on("notifications", async function (data) {
