@@ -13,13 +13,13 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 600000,
       cacheTime: 600000,
-    }
-  }
+    },
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient} >
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <RouterProvider router={router} />
         <ToastContainer />

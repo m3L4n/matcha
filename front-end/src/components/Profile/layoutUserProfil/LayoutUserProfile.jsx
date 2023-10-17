@@ -8,7 +8,9 @@ import { FaFemale, FaMale } from "react-icons/fa";
 import { notify } from "components/Global/toast-notify";
 import { checkMymeType } from "components/Global/checkMymeType";
 import { isValidEmail } from "src/components/Global/check-email";
+import LikeButton from "src/components/Global/LikeButton/LikeButton";
 export default function LayoutUserProfile({
+  id,
   firstname,
   lastname,
   username,
@@ -17,6 +19,7 @@ export default function LayoutUserProfile({
   gender,
   beverage,
   pictures,
+  connected,
   profile_picture,
   age,
   sexual_preference,
@@ -30,8 +33,11 @@ export default function LayoutUserProfile({
   getLocation,
   updatePictures,
   saveProfile,
+  blockUser,
+  relationship,
+  reportAsFakeAccount,
 }) {
-  // console.log("anonym", allEnumData);
+  console.log(connected);
   function showPreview(event) {
     if (checkMymeType(event.target.files[0]) > 0) {
       handleChange(event);
@@ -73,9 +79,11 @@ export default function LayoutUserProfile({
     }
     return (
       <div className="container-picture__picture">
-        <button className="picture-delete title-1" onClick={deleteImage} value={index}>
-          X
-        </button>
+        {ourProfile && (
+          <button className="picture-delete title-1" onClick={deleteImage} value={index}>
+            X
+          </button>
+        )}
         <img src={preview} alt="`img${index}`" />
       </div>
     );
@@ -129,12 +137,37 @@ export default function LayoutUserProfile({
     <div className="containerLayout">
       <div className="containerLayout-body">
         <div className="Lcontainer_userInfo">
+          {!ourProfile &&
+            (!relationship.block ? (
+              <button className="Lcontainer_userInfo-block" onClick={() => blockUser(id, true)}>
+                blocker
+              </button>
+            ) : (
+              <button className="Lcontainer_userInfo-block" onClick={() => blockUser(id, false)}>
+                deblocker
+              </button>
+            ))}
+          {!ourProfile && (
+            <button onClick={() => reportAsFakeAccount(id)} className="Lcontainer_userInfo-fakeAccount ">
+              {" "}
+              report as fake account
+            </button>
+          )}
+          <h3 className="Lcontainer_userInfo-connected"> {connected ? "en ligne" : "deconnecte"}</h3>
           <div className="Lcontainer_userInfo__header">
             <div className="containerInfo-user__profile-img">
               {ShowPreviewImage(profile_picture)}
-              <label htmlFor="file-ip-1" className="profile-image__label">
-                <CiEdit />
-              </label>
+              {ourProfile ? (
+                <label htmlFor="file-ip-1" className="profile-image__label">
+                  <CiEdit size={16} />
+                </label>
+              ) : (
+                !relationship.block && (
+                  <div className="profile-image__like">
+                    <LikeButton id={id} width={"3rem"} height={"3rem"} sizeIcon={16} like={relationship.like} />
+                  </div>
+                )
+              )}
               <input type="file" id="file-ip-1" name="profil_picture" accept="image/*" onChange={showPreview} disabled={ourProfile ? false : true} />
             </div>
             {/* <div className="userInfo__header-identity"> */}
@@ -151,7 +184,7 @@ export default function LayoutUserProfile({
           <form className="Lcontainer_userInfo-form">
             <span className="userInfo-form__span">
               <label className="form-label">
-                <p className="userInfo-form_label title-1"> your name</p>
+                <p className="userInfo-form_label title-1"> Firstname</p>
                 <input
                   className="userInfo-form_input"
                   value={firstname}
@@ -163,7 +196,7 @@ export default function LayoutUserProfile({
                 <div className="controlled__input" id="controlled_input_firstname" />
               </label>
               <label>
-                <p className="userInfo-form_label title-1">your lastname</p>
+                <p className="userInfo-form_label title-1">lastname</p>
                 <input
                   className="userInfo-form_input body"
                   name="lastname"
@@ -178,7 +211,7 @@ export default function LayoutUserProfile({
             </span>
             <span className="userInfo-form__span">
               <label>
-                <p className="userInfo-form_label title-1"> your age</p>
+                <p className="userInfo-form_label title-1"> age</p>
                 <input
                   className="userInfo-form_input body"
                   name="age"
@@ -192,7 +225,7 @@ export default function LayoutUserProfile({
                 <div className="controlled__input" id="controlled_input_age" />
               </label>
               <label className="userInfo-form_cont-label">
-                <p className="userInfo-form_label title-1"> your email</p>
+                <p className="userInfo-form_label title-1"> email</p>
                 <input
                   className="userInfo-form_input body"
                   name="email"
@@ -207,7 +240,7 @@ export default function LayoutUserProfile({
             </span>
             <span className="userInfo-form__span">
               <span className="userInfo-form__span">
-                <p className="userInfo-form_label title-1"> your preference </p>
+                <p className="userInfo-form_label title-1"> preference </p>
                 <div className="userInfo-form__container-button">
                   <button
                     value={"female"}

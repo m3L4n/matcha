@@ -1,14 +1,15 @@
 .like-button {
   color: var(--green);
   background-color: var(--cream);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   border: 1px solid var(--green);
   cursor: pointer;
   border-radius: 50%;
   width: 87px;
   height: 87px;
-  position: relative;
+  /* position: relative;
   top: 220px;
-  left: 200px;
+  left: 200px; */
   display: flex;
   justify-content: center;
   align-items: center;

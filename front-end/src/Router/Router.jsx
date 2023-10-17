@@ -10,6 +10,7 @@ import { PrivateRoute } from "./ProtectedRoute";
 import { NoneConnectedRoute } from "./NoneConnectedRoute";
 import ConversationPicker from "src/components/Message/ConversationPicker";
 import Profile from "components/Profile/Profile";
+import Notification from "components/Notifications/Notification";
 
 export const router = createBrowserRouter([
   {
@@ -31,10 +32,6 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <BrowsingPage />
           </PrivateRoute>
-        )
-      },
-      {
-        path: "/profile",
         ),
       },
       {
@@ -54,6 +51,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/notifications",
+        element: (
+          <PrivateRoute>
+            <Notification />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "/register",
         element: (
           <NoneConnectedRoute>
@@ -67,12 +72,11 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/reset",
-        element: <HomeNoneVerified />
-        ),
+        element: <HomeNoneVerified />,
       },
       {
         path: "/reset",
@@ -92,10 +96,6 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
-        )
-      }
-    ]
-  }
         ),
       },
     ],

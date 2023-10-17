@@ -1,6 +1,7 @@
 const db = require("../db/db");
 const { distanceBetweenTwoPoints } = require("../modules/distance");
 const { searchValidation } = require("../modules/formValidation");
+const { error } = require("../modules/response");
 
 class UserModel {
   static createUser = async (userData) => {
@@ -167,19 +168,17 @@ class UserModel {
     });
   };
 
-  static getAllInformationUser = async (id, idRequester) => {
+  static getAllInformationUser = async (id, idReceiver) => {
     let query = "";
-    if (id === idRequester) {
+    if (id === idReceiver) {
       query =
         "SELECT id, username, email, firstName, gender, beverage, sexual_preference, lastName, tags, description, age, rate_fame, city, position, connected, profile_picture, pictures FROM users WHERE id = $1";
-      // query =
-      // "SELECT id, username, email, firstName, gender, beverage,sexual_preference, lastName, (SELECT array_agg(unnest(tags)) FROM users WHERE id = $1) AS tags, description,  age, rate_fame, city, position, connected, profile_picture , pictures FROM users WHERE id = $1";
     } else {
       query =
         "SELECT id, username, firstName, gender, beverage,sexual_preference, lastName, tags, description,  age, rate_fame, city, position, connected, profile_picture , pictures FROM users WHERE id = $1";
     }
     return new Promise((next) => {
-      db.query(query, [id])
+      db.query(query, [idReceiver])
         .then((data) => {
           if (data.rowCount == 0) {
             next(new Error("no data here"));
@@ -187,6 +186,29 @@ class UserModel {
           next(data.rows[0]);
         })
         .catch((err) => next(err));
+    });
+  };
+  static reportAsFakeAccount = (idReceiver) => {
+    return new Promise((next) => {
+      db.query(`UPDATE users SET fake_account = fake_account + 1 WHERE id = $1`, [idReceiver])
+        .then((data) => {
+          return next(data);
+        })
+        .catch((error) => next(error));
+    });
+  };
+  static handleConnected = (idUser, connected) => {
+    return new Promise((next) => {
+      db.query('UPDATE users set "connected" = $1 WHERE id = $2', [connected, idUser])
+        .then((data) => next(data))
+        .catch((error) => next(error));
+    });
+  };
+  static isUserConnected = (idUser) => {
+    return new Promise((next) => {
+      db.query("SELECT connected FROM users WHERE id = $1", [idUser])
+        .then((data) => next(data.rows[0]))
+        .catch((error) => next(error));
     });
   };
 }

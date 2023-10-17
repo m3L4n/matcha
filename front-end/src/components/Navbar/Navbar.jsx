@@ -1,20 +1,34 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Navbar.scoped.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { disconnect } from "components/Authentification/disconnect/disconnect";
-import { AuthContext, useAuth } from "src/Context/AuthContext";
+
+import { socket } from "src/socket/socket";
+import { useAuth } from "src/Context/AuthContext";
 
 export default function Navbar() {
   const { setTriggerReload, user } = useAuth();
   const navigate = useNavigate();
-  let pages = ["match", "profile", "message"];
+  let pages = ["match", "profile", "message", "notifications"];
   const [sidebar, setSidebar] = useState(false);
-  const store = useContext(AuthContext);
 
-  if (Object.keys(store?.user)?.length == 0) {
+  if (Object.keys(user)?.length == 0) {
     pages = ["login", "register"];
   }
-
+  useEffect(() => {
+    console.log(user);
+    if (Object.keys(user).length > 0) {
+      socket.emit("notifications", { userId: user.id });
+      socket.on("number-notif-not-seen", (msg) => {
+        console.log(msg);
+      });
+    }
+    return () => {
+      socket.off("notifications", (reason) => {
+        console.log(reason);
+      });
+    };
+  }, [user]);
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
     disconnect();
@@ -47,7 +61,7 @@ export default function Navbar() {
           </li>
         ))}
         <li>
-          {sidebar && Object.keys(store?.user)?.length > 0 && (
+          {sidebar && Object.keys(user)?.length > 0 && (
             <button className="disconnect-button body" onClick={handleDisconnect}>
               Disconnect{" "}
             </button>

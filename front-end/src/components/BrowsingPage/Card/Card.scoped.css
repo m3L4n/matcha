@@ -20,3 +20,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.user-infos-like {
+  position: absolute;
+  top: calc(300px - 80px);
+  left: calc(252px - 53px);
+}

@@ -41,6 +41,11 @@ async function createType(client) {
  );
   CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
  END IF;
+      IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'notif_enum') THEN
+     CREATE TYPE notif_enum AS ENUM (
+       'view', 'messages', 'like'
+     );
+ END IF;
  END$$;`);
 }
 async function validateUserTags(client) {
@@ -82,6 +87,7 @@ async function createTableUsers(client) {
     rate_fame INT DEFAULT 1500,
     position POINT,
     city TEXT,
+    fake_account INT DEFAULT 0,
     "connected" BOOLEAN DEFAULT false,
     latest_connection TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -129,26 +135,23 @@ async function createTableTags(client) {
 
 async function insertTags(client) {
   const arrayTags = [
-    "CoffeeLover",
-    "TeaEnthusiast",
-    "BaristaSkills",
-    "CappuccinoArt",
-    "LatteAddict",
-    "HerbalTeas",
-    "EspressoShot",
-    "ChaiTeaFanatic",
-    "HotChocolateDelight",
-    "CoffeeShopHopping",
-    "TeapotCollection",
-    "FrenchPressBrewing",
-    "IcedCoffeeObsession",
-    "TeaCeremony",
-    "MugCollection",
-    "CoffeeBeansRoasting",
-    "TeaLeafReading",
-    "ColdBrewConnoisseur",
-    "CoffeeMugArt",
-    "GreenTeaBenefits",
+    "Gastronomy",
+    "Cinephile",
+    "Travel",
+    "Cook",
+    "Piercing",
+    "Tattoo",
+    "Vegan",
+    "Wine lover",
+    "Cat lover",
+    "Dog lover",
+    "Chicken lover",
+    "Romantic feelings",
+    "Flavors of love",
+    "Refined meetings",
+    "Drinks and conversations",
+    "In search of authentic love",
+    "Open to new experiences",
   ];
   for (const tag of arrayTags) {
     await client.query(`INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`, [tag]);
@@ -160,7 +163,9 @@ async function createTableNotifications(client) {
     id UUID PRIMARY KEY,
     id_user_requester UUID REFERENCES users ON DELETE SET NULL,
     id_user_receiver UUID REFERENCES users ON DELETE CASCADE,
-    action TEXT
+    action TEXT,
+    type  notif_enum,
+    "viewed" BOOLEAN
      );
      `);
 }
@@ -207,6 +212,15 @@ async function createTableToken(client) {
      );
      `);
 }
+async function createTableSocket(client) {
+  await client.query(`CREATE TABLE IF NOT EXISTS socket(
+    id UUID DEFAULT uuid_generate_v4(),
+    id_socket VARCHAR(255),
+    id_user UUID REFERENCES users ON DELETE CASCADE ,
+    UNIQUE (id_user),
+    PRIMARY KEY (id)
+  )`);
+}
 async function createTable() {
   const client = await pool.connect();
   try {
@@ -222,6 +236,7 @@ async function createTable() {
     await createTableprofilViewer(client);
     await createTableNotifications(client);
     await createTableToken(client);
+    await createTableSocket(client);
     console.log('Table "users" created with success.');
     client.release();
   } catch (error) {

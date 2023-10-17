@@ -1,8 +1,6 @@
 const { sendingMail } = require("../../mailing/mailing");
 const { checkAndChange } = require("../../modules/response.js");
-const {
-  sendingEmailVerification,
-} = require("../../mailing/sendEmailVerification");
+const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -118,9 +116,7 @@ class UserController {
           if (!updated) {
             return res.status(404).send({ msg: err.message });
           } else {
-            return res
-              .status(200)
-              .send("Your account has been successfully verified");
+            return res.status(200).send("Your account has been successfully verified");
           }
         }
       }
@@ -177,7 +173,7 @@ class UserController {
   static show = async (req, res) => {
     try {
       const id = req.params.id;
-      const user = await UserModel.findbyId("id", id);
+      const user = await UserModel.findbyIwithouthPassword("id", id);
       return res.status(200).json(user);
     } catch (e) {
       return res.status(400).send("This user doesn't exist.");
@@ -196,22 +192,6 @@ class UserController {
     });
     return res.json(checkAndChange(users));
   };
-
-  // static uploadImage = async (req, res) => {
-  //   // const fileName = req.file.path;
-  //   console.log(req);
-  //   const fileBuffer = req.file.buffer;
-  //   const { id } = req.authUser;
-  //   try {
-  //     const buffer = Buffer.from(fileBuffer);
-  //     const base64String = buffer.toString("base64");
-  //     const dataURL = `data:image/jpeg;base64,${base64String}`;
-  //     await UserModel.uploadImageInDB("profile_picture", dataURL, id);
-  //     res.status(201).json({ message: "image profile uploaded" });
-  //   } catch (error) {
-  //     res.status(404).json({ message: "cant upload image profile" });
-  //   }
-  // };
 
   static getImageProfile = async (req, res) => {
     const { id } = req.authUser;
@@ -235,24 +215,6 @@ class UserController {
       return res.status(404).json({ error: "cant get all enum" });
     }
   };
-
-  // static uploadPictureDescription = async (req, res) => {
-  //   const files = req.files;
-  //   const { id } = req.authUser;
-  //   const pictureArray = [];
-  //   files.map((file) => {
-  //     const buffer = Buffer.from(file.buffer);
-  //     const base64String = buffer.toString("base64");
-  //     const dataURL = `data:image/jpeg;base64,${base64String}`;
-  //     pictureArray.push(dataURL);
-  //   });
-  //   try {
-  //     const res = await UserModel.uploadImageInDB("pictures", pictureArray, id);
-  //     res.json(checkAndChange(res));
-  //   } catch (error) {
-  //     res.json(checkAndChange(error));
-  //   }
-  // };
 
   /** UPLOAD PICTURES  */
   static updateProfilPicture = async (req, res) => {
@@ -295,11 +257,17 @@ class UserController {
   };
 
   static getAllInfoUser = async (req, res) => {
-    const { id } = req.params;
-    const idRequester = req.params.id;
-    const infomartionsUser = await UserModel.getAllInformationUser(id, idRequester);
-    console.log(infomartionsUser);
+    const { id } = req.authUser;
+    const idReceiver = req.params.id;
+    const infomartionsUser = await UserModel.getAllInformationUser(id, idReceiver);
     res.json(checkAndChange(infomartionsUser));
+  };
+  /** REPORT AS FAKE ACCOUNT */
+
+  static reportAsFakeAccount = async (req, res) => {
+    const idReceiver = req.params.id;
+    const resultat = await UserModel.reportAsFakeAccount(idReceiver);
+    res.json(checkAndChange(resultat));
   };
 }
 
