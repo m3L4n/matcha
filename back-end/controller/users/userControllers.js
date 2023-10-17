@@ -1,6 +1,8 @@
 const { sendingMail } = require("../../mailing/mailing");
 const { checkAndChange } = require("../../modules/response.js");
-const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
+const {
+  sendingEmailVerification,
+} = require("../../mailing/sendEmailVerification");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -116,7 +118,9 @@ class UserController {
           if (!updated) {
             return res.status(404).send({ msg: err.message });
           } else {
-            return res.status(200).send("Your account has been successfully verified");
+            return res
+              .status(200)
+              .send("Your account has been successfully verified");
           }
         }
       }
@@ -170,11 +174,26 @@ class UserController {
     }
   };
 
-  /** get all users from research */
-  static getUsers = async (req, res) => {
+  static show = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await UserModel.findbyId("id", id);
+      return res.status(200).json(user);
+    } catch (e) {
+      return res.status(400).send("This user doesn't exist.");
+    }
+  };
+
+  static index = async (req, res) => {
     const { id } = req.authUser;
     const { action, age, location, fame, tags } = req.query;
-    let users = await UserModel.getAll(id, { action, age, location, fame, tags });
+    let users = await UserModel.getAll(id, {
+      action,
+      age,
+      location,
+      fame,
+      tags,
+    });
     return res.json(checkAndChange(users));
   };
 

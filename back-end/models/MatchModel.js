@@ -2,14 +2,7 @@ const { error } = require("../modules/response");
 const db = require("../db/db");
 
 class MatchModel {
-  /**
-   *
-   * @param {String} idPlayer // id requester
-   * @param {String} idOpponent  / id receiver
-   * @param {Number} actual_outcome  // 1 for a win (like-unlike someone with more-less points(elo)) 0 for a loose (unlike / block / like-unlike someone with less-more points(elo)  )
-   * @returns {Promise} // return a promise of query or error
-   */
-  static #updateElo(idPlayer, idOpponent, actual_outcome) {
+  static #updateElo(idPlayer, idOpponent, actual_outcome = 1) {
     const K = 32;
     return new Promise((next) => {
       db.query("SELECT rate_fame from users WHERE id = $1", [idPlayer])
@@ -21,11 +14,12 @@ class MatchModel {
               let expected_outcome = 0.5;
               if (currentUserRating > opponentRating) {
                 expected_outcome = 0;
+                actual_outcome = 0;
               } else if (currentUserRating < opponentRating) {
                 expected_outcome = 1;
               }
               let updatedRateFame = currentUserRating + K * (actual_outcome - expected_outcome);
-              db.query("UPDATE users SET rate_fame = $1 WHERE id = $2", [updatedRateFame, idOpponent])
+              db.query("UPDATE users SET rate_fame = $1 WHERE id = $2", [updatedRateFame, idPlayer])
                 .then((result) => next(result))
                 .catch((error) => next(error));
             })
@@ -87,10 +81,11 @@ class MatchModel {
    * Create a like
    * @param {string} receiverId
    * @param {string} requesterId
+   * @returns {Promise}
    **/
-  static createLike = (receiverId, requesterId) => {
+  static createLike = (requesterId, receiverId) => {
     return new Promise((next) => {
-      db.query('SELECT "like" FROM match WHERE id_receiver = $1', [requesterId])
+      db.query('SELECT "like" FROM match WHERE id_requester = $1', [receiverId])
         .then((result) => {
           this.#updateElo(receiverId, requesterId, 1)
             .then(() => {
@@ -122,7 +117,9 @@ class MatchModel {
    * Delete a like
    * @param {string} receiverId
    * @param {string} requesterId
+   * @returns {Promise}
    **/
+
   static removeLike = (receiverId, requesterId) => {
     return new Promise((next) => {
       db.query('SELECT "like" FROM match WHERE id_requester = $1', [requesterId])

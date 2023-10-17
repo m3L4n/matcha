@@ -137,7 +137,10 @@ class UserModel {
             return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
           };
 
-          if (sexual_preference !== "both" || searchParams.action === "search") {
+          if (
+            sexual_preference !== "other" ||
+            searchParams.action === "search"
+          ) {
             getMatchesBySexualPreferences()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
