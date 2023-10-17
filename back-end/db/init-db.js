@@ -161,12 +161,13 @@ async function insertTags(client) {
 async function createTableNotifications(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS notifications (
-    id UUID PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     id_user_requester UUID REFERENCES users ON DELETE SET NULL,
     id_user_receiver UUID REFERENCES users ON DELETE CASCADE,
     action TEXT,
     type  notif_enum,
-    "viewed" BOOLEAN
+    "viewed" BOOLEAN,
+     PRIMARY KEY (id)
      );
      `);
 }

@@ -1,7 +1,7 @@
 const db = require("../db/db");
 
 class notificationsModel {
-  static create = async ({ id_receiver, id_requester, action, type, view = false }) => {
+  static create = async (id_receiver, id_requester, action, type, view = false) => {
     return new Promise((next) => {
       db.query(`INSERT INTO notifications (id_user_requester, id_user_receiver, action, type, "viewed") VALUES ($1 , $2, $3, $4, $5)`, [id_requester, id_receiver, action, type, view])
         .then((data) => {

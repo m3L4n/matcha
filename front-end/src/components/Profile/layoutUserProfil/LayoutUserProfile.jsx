@@ -186,10 +186,11 @@ export default function LayoutUserProfile({
               <label className="form-label">
                 <p className="userInfo-form_label title-1"> Firstname</p>
                 <input
-                  className="userInfo-form_input"
+                  className="userInfo-form_input body"
                   value={firstname}
                   onChange={handleChange}
                   name="firstname"
+                  disabled={ourProfile ? false : true}
                   onFocus={(event) => triggerControlInput(event, true)}
                   onBlur={(event) => triggerControlInput(event, false)}
                 />
@@ -224,19 +225,21 @@ export default function LayoutUserProfile({
                 />
                 <div className="controlled__input" id="controlled_input_age" />
               </label>
-              <label className="userInfo-form_cont-label">
-                <p className="userInfo-form_label title-1"> email</p>
-                <input
-                  className="userInfo-form_input body"
-                  name="email"
-                  value={email}
-                  onChange={handleEmail}
-                  onFocus={(event) => triggerControlInput(event, true)}
-                  onBlur={(event) => triggerControlInput(event, false)}
-                  disabled={ourProfile ? false : true}
-                />
-                <div className="controlled__input" id="controlled_input_email" />
-              </label>
+              {ourProfile && (
+                <label className="userInfo-form_cont-label">
+                  <p className="userInfo-form_label title-1"> email</p>
+                  <input
+                    className="userInfo-form_input body"
+                    name="email"
+                    value={email}
+                    onChange={handleEmail}
+                    onFocus={(event) => triggerControlInput(event, true)}
+                    onBlur={(event) => triggerControlInput(event, false)}
+                    disabled={ourProfile ? false : true}
+                  />
+                  <div className="controlled__input" id="controlled_input_email" />
+                </label>
+              )}
             </span>
             <span className="userInfo-form__span">
               <span className="userInfo-form__span">
