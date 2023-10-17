@@ -82,8 +82,8 @@ const gps = [
 const generateUser = async (params) => {
   const query =
     "INSERT INTO \
-  users(id, username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age) \
-  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)";
+  users(id, username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city) \
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)";
   return db.query(query, params);
 };
 
@@ -106,6 +106,7 @@ function generateSetOfUsers() {
     const valided = true;
     let gps_position = gps[Math.floor(Math.random() * gps.length)];
     let position = `(${gps_position.x}, ${gps_position.y})`;
+    const city = faker.location.city();
     const params = [
       uuidv4(),
       username,
@@ -122,6 +123,7 @@ function generateSetOfUsers() {
       profile_picture,
       valided,
       age,
+      city,
     ];
     generateUser(params)
       .then(() => console.log(`fake user ${i} inserted ✅`))
@@ -137,6 +139,7 @@ function generateSetOfUsers() {
   const sexual_preference = random % 2 == 0 ? "male" : "female";
   const password = bcrypt.hashSync(faker.string.alphanumeric(), 10);
   const description = faker.string.alphanumeric(200);
+  const city = faker.location.city();
   const rate_fame = 1500;
   const age = Math.floor(Math.random() * (50 - 18) + 18);
   const profile_picture = faker.internet.avatar();
@@ -159,6 +162,7 @@ function generateSetOfUsers() {
     profile_picture,
     valided,
     age,
+    city,
   ];
   return generateUser(params);
 }
@@ -184,6 +188,7 @@ const adminParams = [
   faker.image.avatar(),
   true,
   24,
+  "Paris",
 ];
 
 const userParams = [
@@ -202,6 +207,7 @@ const userParams = [
   faker.image.avatar(),
   true,
   22,
+  "Paris",
 ];
 
 const generateConversation = async (params) => {
