@@ -21,8 +21,8 @@ export default function Profile() {
   const { data: relationShipData, isLoading: relationShipLoading } = useQuery(["relation", paramId], fetchRelationships);
   const [ourProfile, setOurProfil] = useState(false);
   const userInformation = userLoading ? {} : userInformationData.result;
-  const [connected, setConnected] = useState(false);
-
+  // const [connected, setConnected] = useState(false);
+  let connected = false;
   useEffect(() => {
     if (!paramId) {
       navigate("/match");
@@ -32,26 +32,26 @@ export default function Profile() {
 
   useEffect(() => {
     if (Object.keys(userInformation).length > 0) {
-      setConnected(userInformation.connected);
+      connected = userInformation.connected;
     }
-  }, [userInformation]);
+  }, [userInformation.connected]);
   useEffect(() => {
-    socket.emit("user_profile", { userId: paramId });
+    socket.emit("user_profile", { userId: paramId, currentUserId: user.id, ourProfile: user.id == paramId });
     socket.on("connected", (msg) => {
       if (Object.hasOwn(msg, "connected")) {
-        setConnected(msg.connected);
+        connected(msg.connected);
       }
     });
     return () => {
-      setConnected(false);
+      // setConnected(false);
+      setOurProfil(false);
+      socket.off("user_profile", (reason) => {});
+      socket.emit("remove_listener", { name: "user_profile" });
       socket.off("connected", (reason) => {
         console.log(reason);
       });
-      socket.off("user_profile", (reason) => {
-        console.log(reason);
-      });
     };
-  }, []);
+  }, [paramId]);
   useEffect(() => {
     if (paramId === user.id) {
       setOurProfil(true);
