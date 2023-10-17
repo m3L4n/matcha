@@ -108,8 +108,8 @@ async function createTableMatch(client) {
     id UUID DEFAULT uuid_generate_v4(),
     "like"  boolean DEFAULT true,
     "block"  boolean DEFAULT false,
-    id_requester UUID REFERENCES users ON DELETE CASCADE,
     id_receiver UUID REFERENCES users ON DELETE CASCADE,
+    id_requester UUID REFERENCES users ON DELETE CASCADE,
     PRIMARY KEY (id)
      );
     `);
@@ -167,9 +167,10 @@ async function createTableNotifications(client) {
 async function createTableConversations(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS conversations (
-    id UUID PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     id_user_1 UUID REFERENCES users(id) ON DELETE SET NULL,
-    id_user_2 UUID REFERENCES users(id) ON DELETE SET NULL
+    id_user_2 UUID REFERENCES users(id) ON DELETE SET NULL,
+    PRIMARY KEY (id)
      );
      `);
 }
@@ -177,11 +178,12 @@ async function createTableConversations(client) {
 async function createTableMessages(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS messages (
-    id UUID PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     id_user_requester UUID REFERENCES users(id) ON DELETE CASCADE,
     id_user_receiver UUID REFERENCES users(id) ON DELETE CASCADE,
     content VARCHAR(255),
-    id_conversation UUID REFERENCES conversations(id) ON DELETE CASCADE
+    id_conversation UUID REFERENCES conversations(id) ON DELETE CASCADE,
+    PRIMARY KEY (id)
      );
      `);
 }
