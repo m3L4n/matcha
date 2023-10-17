@@ -141,6 +141,7 @@ async function insertTags(client) {
     "Cook",
     "Piercing",
     "Tattoo",
+    "SQL lover",
     "Vegan",
     "Wine lover",
     "Cat lover",
