@@ -9,6 +9,7 @@ const userRouter = require("./routes/users/users");
 const matchRouter = require("./routes/match");
 const conversationRouter = require("./routes/conversation");
 const messageRouter = require("./routes/message");
+const tagsRouter = require("./routes/tags");
 const swaggerDocument = require("./swagger.json");
 app.use(express.json());
 
@@ -21,6 +22,7 @@ app.use("/users", userRouter);
 app.use("/match", matchRouter);
 app.use("/conversation", conversationRouter);
 app.use("/message", messageRouter);
+app.use("/tags", tagsRouter);
 app.use(function (_, res, next) {
   res.header("content-type", "application/json;charset=utf-8");
   res.header("access-control-allow-credentials", true);

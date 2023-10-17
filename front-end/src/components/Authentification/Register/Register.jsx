@@ -12,7 +12,7 @@ export default function Register() {
     firstName: "",
     lastName: "",
     email: "",
-    password: ""
+    password: "",
   });
   function handleFormSignIn(event) {
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -21,44 +21,35 @@ export default function Register() {
     navigate("/login");
   }
   function creationOfUser() {
-    if (
-      user.username.length == 0 ||
-      user.password.length == 0 ||
-      user.firstName.length == 0 ||
-      user.lastName.length == 0 ||
-      user.email.length == 0
-    ) {
+    if (user.username.length == 0 || user.password.length == 0 || user.firstName.length == 0 || user.lastName.length == 0 || user.email.length == 0) {
       notify("error", "you have to fill all the parameter");
       return;
     }
     const options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
     };
     fetch("http://localhost:4000/users", options)
-      .then(response => {
+      .then((response) => {
+        if (response.status == 404) {
+          notify("error", "email or username already in use");
+        }
         if (response.status == 201) {
-          notify("success", "your acount is created, please verify your email");
+          notify("success", "your account is created, please verify your email");
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         if (data.msg == "token not created") {
-          notify(
-            "error",
-            "please retry later, a error appear and we are on this work"
-          );
+          notify("error", "please retry later, a error appear and we are on this work");
         } else if (data.msg == 'Details are not correct"') {
-          notify(
-            "error",
-            "email or username are already token , please retry with another "
-          );
+          notify("error", "email or username are already token , please retry with another ");
         }
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }
   return (
     <div className="container">
@@ -76,45 +67,15 @@ export default function Register() {
         <hr className="hr" />
         <form className="container-form">
           <label className="label body"> Username</label>
-          <input
-            className="input"
-            name="username"
-            type="text"
-            onChange={handleFormSignIn}
-            value={user.username}
-          />
+          <input className="input" name="username" type="text" onChange={handleFormSignIn} value={user.username} />
           <label className="label body"> first name</label>
-          <input
-            className="input"
-            name="firstName"
-            type="text"
-            onChange={handleFormSignIn}
-            value={user.firstName}
-          />
+          <input className="input" name="firstName" type="text" onChange={handleFormSignIn} value={user.firstName} />
           <label className="label body"> last name</label>
-          <input
-            className="input"
-            name="lastName"
-            type="text"
-            onChange={handleFormSignIn}
-            value={user.lastName}
-          />
+          <input className="input" name="lastName" type="text" onChange={handleFormSignIn} value={user.lastName} />
           <label className="label body"> email</label>
-          <input
-            className="input"
-            name="email"
-            type="email"
-            onChange={handleFormSignIn}
-            value={user.email}
-          />
+          <input className="input" name="email" type="email" onChange={handleFormSignIn} value={user.email} />
           <label className="label body"> password</label>
-          <input
-            className="input"
-            name="password"
-            type="password"
-            onChange={handleFormSignIn}
-            value={user.password}
-          />
+          <input className="input" name="password" type="password" onChange={handleFormSignIn} value={user.password} />
         </form>
         <button className="button-submit title-1" onClick={creationOfUser}>
           {" "}

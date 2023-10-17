@@ -39,12 +39,33 @@ async function createType(client) {
  CREATE TYPE sexual_preference_enum AS ENUM (
    'male', 'female', 'both'
  );
+  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
  END IF;
  END$$;`);
 }
+async function validateUserTags(client) {
+  await client.query(`CREATE OR REPLACE FUNCTION validate_user_tags()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT (SELECT bool_and(tag_name = ANY(new.tags)) FROM tags) THEN
+        RAISE EXCEPTION 'At least one tag in the array does not exist in the "tags" table.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;`);
+}
+async function createTriggerTags(client) {
+  await client.query(`
+ CREATE TRIGGER users_tags_validation
+BEFORE INSERT OR UPDATE
+ON users
+FOR EACH ROW
+EXECUTE FUNCTION validate_user_tags();
+
+ `);
+}
 async function createTableUsers(client) {
   await client.query(`
-  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
   CREATE TABLE IF NOT EXISTS users (
     id UUID DEFAULT uuid_generate_v4(),
     username VARCHAR(30) NOT NULL,
@@ -55,13 +76,19 @@ async function createTableUsers(client) {
     sexual_preference sexual_preference_enum,
     lastName TEXT NOT NULL,
     password TEXT,
+    tags VARCHAR(255)[],
     description VARCHAR(255),
     age INT CHECK (age > 17),
     rate_fame INT DEFAULT 1500,
     position POINT,
+    city TEXT,
+    "connected" BOOLEAN DEFAULT false,
+    latest_connection TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    profile_picture BYTEA,
+    profile_picture TEXT,
+    pictures TEXT[],
     "valided" BOOLEAN DEFAULT false,
+    UNIQUE (username, email),
     PRIMARY KEY (id)  
   );
 `);
@@ -86,6 +113,46 @@ async function createTableMatch(client) {
     PRIMARY KEY (id)
      );
     `);
+}
+async function createTableTags(client) {
+  const resultTag = await client.query(`
+  CREATE TABLE IF NOT EXISTS tags (
+    id UUID DEFAULT uuid_generate_v4(),
+     tag_name VARCHAR(255) UNIQUE NOT NULL,
+     PRIMARY KEY (id)
+     );
+     `);
+  if (resultTag.rows) {
+    insertTags(client);
+  }
+}
+
+async function insertTags(client) {
+  const arrayTags = [
+    "CoffeeLover",
+    "TeaEnthusiast",
+    "BaristaSkills",
+    "CappuccinoArt",
+    "LatteAddict",
+    "HerbalTeas",
+    "EspressoShot",
+    "ChaiTeaFanatic",
+    "HotChocolateDelight",
+    "CoffeeShopHopping",
+    "TeapotCollection",
+    "FrenchPressBrewing",
+    "IcedCoffeeObsession",
+    "TeaCeremony",
+    "MugCollection",
+    "CoffeeBeansRoasting",
+    "TeaLeafReading",
+    "ColdBrewConnoisseur",
+    "CoffeeMugArt",
+    "GreenTeaBenefits",
+  ];
+  for (const tag of arrayTags) {
+    await client.query(`INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`, [tag]);
+  }
 }
 async function createTableNotifications(client) {
   await client.query(`
@@ -144,7 +211,10 @@ async function createTable() {
   const client = await pool.connect();
   try {
     await createType(client);
+    await createTableTags(client);
     await createTableUsers(client);
+    // await validateUserTags(client);
+    // await createTriggerTags(client);
     await createTablePictures(client);
     await createTableConversations(client);
     await createTableMatch(client);
@@ -153,9 +223,8 @@ async function createTable() {
     await createTableNotifications(client);
     await createTableToken(client);
     console.log('Table "users" created with success.');
+    client.release();
   } catch (error) {
     console.error("Error when creating table:", error);
-  } finally {
-    client.release();
   }
 }

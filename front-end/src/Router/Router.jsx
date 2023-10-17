@@ -9,6 +9,7 @@ import ResetPassword from "components/ResetPassword/ResetPassword";
 import { PrivateRoute } from "./ProtectedRoute";
 import { NoneConnectedRoute } from "./NoneConnectedRoute";
 import ConversationPicker from "src/components/Message/ConversationPicker";
+import Profile from "components/Profile/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <LandingPage />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/match",
@@ -34,11 +35,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "/profile",
+        ),
+      },
+      {
+        path: "/profile/:id",
         element: (
           <PrivateRoute>
-            <div>Profile</div>
+            <Profile />
           </PrivateRoute>
-        )
+        ),
       },
       {
         path: "/message",
@@ -46,7 +51,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <ConversationPicker />
           </PrivateRoute>
-        )
+        ),
       },
       {
         path: "/register",
@@ -54,7 +59,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/login",
@@ -67,6 +72,11 @@ export const router = createBrowserRouter([
       {
         path: "/reset",
         element: <HomeNoneVerified />
+        ),
+      },
+      {
+        path: "/reset",
+        element: <HomeNoneVerified />,
       },
       {
         path: "/reset-password",
@@ -74,7 +84,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/reset-password/:id",
@@ -86,4 +96,8 @@ export const router = createBrowserRouter([
       }
     ]
   }
+        ),
+      },
+    ],
+  },
 ]);

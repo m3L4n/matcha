@@ -5,18 +5,17 @@
 
 :root {
   /* light theme */
-  --dark-green: #707C4F;
-  --green: #A4B07E;
-  --cream: #E7E2DA;
-  --white: #FFFFFF;
+  --dark-green: #707c4f;
+  --green: #a4b07e;
+  --cream: #e7e2da;
+  --white: #ffffff;
   --black: #000000;
 
   /* dark theme */
-  --dark-brown: #6D4930;
-  --brown: #B9A084;
+  --dark-brown: #6d4930;
+  --brown: #b9a084;
   --form-control-color: var(--green);
 }
-
 body {
   background-color: var(--cream);
   height: 100%;
@@ -24,72 +23,71 @@ body {
 }
 
 .header {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: "Bebas Neue", sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
   letter-spacing: 0.2rem;
 }
 .title-1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.25rem;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.15rem;
   font-weight: 500;
 }
 .title-2 {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.25rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.15rem;
   font-weight: 400;
 }
 .body {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
   font-weight: 400;
 }
 .body-highlight {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.2rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
   font-weight: 700;
 }
 
-button{
+button {
   cursor: pointer;
 }
 
-.passion-one{
-  font-family: 'Passion One', cursive;
+.passion-one {
+  font-family: "Passion One", cursive;
   font-weight: 400;
   font-size: 168px;
 }
 
-
 @media screen and (min-width: 800px) {
   .header {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: "Bebas Neue", sans-serif;
     font-size: 4rem;
     font-weight: 700;
     letter-spacing: 0.2rem;
   }
   .title-1 {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: "Bebas Neue", sans-serif;
     font-size: 1.5rem;
     font-weight: 500;
   }
-  
+
   .title-2 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-size: 1.5rem;
     font-weight: 400;
   }
   .body {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.2rem;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.05rem;
     font-weight: 400;
   }
   .body-highlight {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.2rem;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.05rem;
     font-weight: 700;
   }
-  
+
   .container {
     height: 100%;
     width: 100%;

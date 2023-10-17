@@ -3,6 +3,8 @@
   width: 252px;
   height: 300px;
   position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .user-infos {
