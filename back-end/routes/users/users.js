@@ -24,5 +24,5 @@ router.get("/profil-picture", isAuth, UserController.getImageProfile);
 router.get("/getAllInfoEnum", isAuth, UserController.getAllInfoEnum);
 router.put("/updateInfoProfile", isAuth, UserController.updateInfoProfile);
 router.post("/uploadPictureDescription", isAuth, upload.array("images"), UserController.updatePictureDescription);
-// router.get("/:id", isAuth, UserController.getAllInfoUser);
+router.get("/getInfo/:id", isAuth, UserController.getAllInfoUser);
 module.exports = router;
