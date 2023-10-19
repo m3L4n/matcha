@@ -15,15 +15,20 @@ export default function Navbar() {
     if (Object.keys(user)?.length == 0) {
         pages = ['login', 'register']
     }
-    useEffect(() => {
-        if (Object.keys(user).length > 0) {
-            socket.emit('notifications', { userId: user.id })
-            socket.on('number-notif-not-seen', (msg) => {})
-        }
-        return () => {
-            socket.off('notifications', (reason) => {})
-        }
-    }, [user])
+
+    // useEffect(() => {
+    //   if (Object.keys(user).length > 0) {
+    //     socket.emit("notifications", { userId: user.id });
+    //     socket.on("number-notif-not-seen", (msg) => {
+    //       console.log(msg);
+    //     });
+    //   }
+    //   return () => {
+    //     socket.off("notifications", (reason) => {
+    //       console.log(reason);
+    //     });
+    //   };
+    // }, [user]);
     const toggleSidebar = () => setSidebar(!sidebar)
     const handleDisconnect = async () => {
         disconnect()
