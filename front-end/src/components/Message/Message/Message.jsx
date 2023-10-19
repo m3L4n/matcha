@@ -12,7 +12,6 @@ export default function Message({
     chatPartnerId,
     conversationId,
 }) {
-    console.log(chatPartnerId)
     const query = useQuery({
         queryKey: ['chatPartner', chatPartnerId],
         queryFn: getChatPartner,

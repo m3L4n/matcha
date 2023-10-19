@@ -1,5 +1,5 @@
 async function getConversations() {
-    const url = `${import.meta.env.VITE_BACKEND_API_URL}conversation`
+    const url = `${import.meta.env.VITE_BACKEND_API_URL}/conversation`
     const options = {
         method: 'GET',
         headers: {
