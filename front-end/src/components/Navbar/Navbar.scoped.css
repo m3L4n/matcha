@@ -1,22 +1,23 @@
 .navbar {
   width: 3%;
   min-width: 40px;
-  max-width: 60px;
+  max-width: 40px;
   background-color: var(--green);
-  padding: .5rem;
+  padding: 0.5rem;
   z-index: 99;
   position: fixed;
   left: 0;
   top: 0;
   height: 100%;
   padding-top: 2rem;
-  transition: width .5s;
+  /* transition: width 0.5s; */
+  transition: all ease 0.5s;
 }
 
 .navbar-deployed {
   width: 13.89%;
-  min-width: 110px;
-  transition: all 0.3s ease;
+  min-width: 130px;
+  /* transition: all 0.5s ease; */
 }
 
 .burger-icon {
@@ -38,15 +39,15 @@
 }
 
 .menu-toggle-bar--top {
-    transform: translate(0, 7px);
+  transform: translate(0, 7px);
 }
 
 .menu-toggle-bar--middle {
-    transform: translate(0, 0);
+  transform: translate(0, 0);
 }
 
 .menu-toggle-bar--bottom {
-    transform: translate(0, -7px);
+  transform: translate(0, -7px);
 }
 
 .nav-open .menu-toggle-bar--top {
@@ -61,16 +62,16 @@
   transform: translate(0, -4px) rotate(-45deg);
 }
 
-.navbar-content{
+.navbar-content {
   display: flex;
   flex-flow: column;
   margin-left: -100px;
 }
-.navbar-content-visible{
+.navbar-content-visible {
   margin-left: 0px;
   display: flex;
   flex-flow: column;
-  transition: margin ease-in-out 0.4s;
+  transition: margin ease 0.4s;
 }
 .navbar ul {
   margin-top: 4rem;
@@ -105,7 +106,7 @@
   border-radius: 20px;
   background-color: var(--green);
   color: var(--dark-green);
-  padding: .4em .8em;
+  padding: 0.4em 0.8em;
   font-size: 0.8rem;
   transition: 0.4s;
 }
@@ -114,6 +115,25 @@
   color: #fff;
   background-color: var(--green);
   border-color: #fff;
+}
+.navbar-notif {
+  position: relative;
+}
+.notifications-indicator {
+  position: absolute;
+  background-color: #fa3e3e;
+  width: 15px;
+  font-size: 0.7rem;
+  border-radius: 50%;
+  color: white;
+  font-weight: 500;
+  bottom: 60%;
+  left: 97%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 15px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 @media (max-width: 768px) {
@@ -153,4 +173,3 @@
     background-color: var(--cream);
   }
 }
-

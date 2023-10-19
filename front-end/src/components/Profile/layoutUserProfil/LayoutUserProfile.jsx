@@ -37,7 +37,6 @@ export default function LayoutUserProfile({
   relationship,
   reportAsFakeAccount,
 }) {
-  console.log(connected);
   function showPreview(event) {
     if (checkMymeType(event.target.files[0]) > 0) {
       handleChange(event);
@@ -133,6 +132,7 @@ export default function LayoutUserProfile({
       handleChange(event);
     }
   };
+  console.log(relationship);
   return (
     <div className="containerLayout">
       <div className="containerLayout-body">
@@ -164,7 +164,7 @@ export default function LayoutUserProfile({
               ) : (
                 !relationship.block && (
                   <div className="profile-image__like">
-                    <LikeButton id={id} width={"3rem"} height={"3rem"} sizeIcon={16} like={relationship.like} />
+                    <LikeButton id={id} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like} />
                   </div>
                 )
               )}

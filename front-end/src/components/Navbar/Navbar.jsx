@@ -11,24 +11,32 @@ export default function Navbar() {
   const navigate = useNavigate();
   let pages = ["match", "profile", "message", "notifications"];
   const [sidebar, setSidebar] = useState(false);
+  const [numberNotif, setNumberNotif] = useState(0);
 
   if (Object.keys(user)?.length == 0) {
     pages = ["login", "register"];
   }
 
-  // useEffect(() => {
-  //   if (Object.keys(user).length > 0) {
-  //     socket.emit("notifications", { userId: user.id });
-  //     socket.on("number-notif-not-seen", (msg) => {
-  //       console.log(msg);
-  //     });
-  //   }
-  //   return () => {
-  //     socket.off("notifications", (reason) => {
-  //       console.log(reason);
-  //     });
-  //   };
-  // }, [user]);
+  const isUserReceiveNotif = () => {
+    socket.emit("notifications", { userId: user.id });
+    socket.on("number-notif-not-seen", (msg) => {
+      setNumberNotif(msg.number);
+    });
+  };
+  useEffect(() => {
+    const intervalId = setInterval(isUserReceiveNotif, 5000);
+    // socket.emit("notifications", { userId: user.id });
+    // socket.on("number-notif-not-seen", (msg) => {
+    //   console.log(msg);
+    // });
+    return () => {
+      clearInterval(intervalId);
+      socket.off("number-notif-not-seen", (reason) => {
+        console.log(reason);
+      });
+    };
+  }, [user]);
+
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
     disconnect();
@@ -49,12 +57,19 @@ export default function Navbar() {
         {pages.map((page) => (
           <li key={pages.indexOf(page)}>
             {sidebar &&
-              (page != "profile" ? (
-                <NavLink className={`body`} to={page}>
+              (page == "profile" ? (
+                <NavLink className={`body`} to={`/profile/${user.id}`}>
                   {page}
                 </NavLink>
+              ) : page == "notifications" ? (
+                <div>
+                  <NavLink className={`body navbar-notif`} to={page}>
+                    {numberNotif > 0 && <div className="notifications-indicator"> {numberNotif} </div>}
+                    {page}
+                  </NavLink>
+                </div>
               ) : (
-                <NavLink className={`body`} to={`/profile/${user.id}`}>
+                <NavLink className={`body`} to={page}>
                   {page}
                 </NavLink>
               ))}

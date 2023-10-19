@@ -16,17 +16,21 @@ class notificationsController {
   static findNotifByUser = async (req, res) => {
     const { id } = req.authUser;
     const result = await notificationsModel.findByUser(id);
-    return res.json(checkAndChange(resultat));
+    return res.json(checkAndChange(result));
   };
   static findNotifByNoneView = async (req, res) => {
     const { id } = req.authUser;
     const result = await notificationsModel.findByUser(id, "false");
-    return res.json(checkAndChange(resultat));
+    return res.json(checkAndChange(result));
+  };
+  static findNotifByNoneView = async (idUser) => {
+    const result = await notificationsModel.findByUser(idUser, "false");
+    return result;
   };
   static updateNotification = async (req, res) => {
     const id_notif = req.params.id;
     const result = await notificationsModel.updateById(id_notif);
-    return res.json(checkAndChange(resultat));
+    return res.json(checkAndChange(result));
   };
 }
 

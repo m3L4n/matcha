@@ -3,8 +3,8 @@ import { BsFillSuitHeartFill } from "react-icons/bs";
 import "./LikeButton.scoped.css";
 import { useEffect, useState } from "react";
 
-const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
-  const [like, setLike] = useState(false);
+const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = false }) => {
+  const [like, setLike] = useState(likeProps);
   useEffect(() => {
     if (width && height) {
       const buttonElement = document.querySelector(".like-button");

@@ -9,8 +9,10 @@ function socket_broacast(io) {
     });
 
     socket.on("user_profile", async function (data) {
-      if (!data.ourProfile) {
-        await notificationsController.createNotification(data.currentUserId, data.userId, "view our profile", "view");
+      if (data.userId != null && data.currentUserId != null) {
+        if (!data.ourProfile) {
+          await notificationsController.createNotification(data.userId, data.currentUserId, "view our profile", "view");
+        }
       }
     });
     socket.on("response_connected", async (data) => {
@@ -19,7 +21,8 @@ function socket_broacast(io) {
     });
 
     socket.on("notifications", async function (data) {
-      socket.emit("number-notif-not-seen", { user: "cc" });
+      const notif = await notificationsController.findNotifByNoneView(data.userId);
+      socket.emit("number-notif-not-seen", { data: notif.data, number: notif.number });
     });
 
     // event pour savoir quand on like / unlike

@@ -18,15 +18,15 @@ class notificationsModel {
     });
   };
   static findByUser = async (id_user, view = true) => {
-    let query = "SLECT * FROM notifications WHERE id_user_receiver = $1 ";
+    let query = "SELECT * FROM notifications WHERE id_user_receiver = $1 ";
     let value = [id_user];
     if (!view) {
-      query = `SLECT * FROM notifications WHERE id_user_receiver = $1 AND "view" = $2`;
+      query = `SELECT * FROM notifications WHERE id_user_receiver = $1 AND "view" = $2`;
       value = [id_user, view];
     }
     return new Promise((next) => {
       db.query(query, value)
-        .then((data) => next(data.rows[0]))
+        .then((data) => next({ data: data.rows, number: data.rowCount }))
         .catch((error) => next(error));
     });
   };
