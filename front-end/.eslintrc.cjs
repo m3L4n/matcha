@@ -22,7 +22,7 @@ module.exports = {
     "no-var": "error",
 
     // Exemple : forcer l'indentation avec 2 espaces
-    indent: ["warn", 2],
+    indent: ["warn", 4],
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
   },
 };

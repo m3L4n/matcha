@@ -77,12 +77,14 @@ class MatchModel {
     //   if like
     //   if block
   };
+
   /**
    * Create a like
    * @param {string} receiverId
    * @param {string} requesterId
    * @returns {Promise}
    **/
+
   static createLike = (requesterId, receiverId) => {
     return new Promise((next) => {
       db.query('SELECT "like" FROM match WHERE id_requester = $1', [receiverId])
