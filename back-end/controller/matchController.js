@@ -18,8 +18,7 @@ class MatchController {
   static block = async (req, res) => {
     let requesterId = req.authUser.id;
     const receiverId = req.params.id;
-    const block = req.body.block;
-    let match = await MatchModel.blockUser(requesterId, receiverId, block);
+    let match = await MatchModel.blockUser(requesterId, receiverId);
     res.json(checkAndChange(match));
   };
 

@@ -1,6 +1,6 @@
 const db = require("../db/db");
 
-class notificationsModel {
+class NotificationsModel {
   static create = async (id_receiver, id_requester, action, type, view = false) => {
     return new Promise((next) => {
       db.query(`INSERT INTO notifications (id_user_requester, id_user_receiver, action, type, "viewed") VALUES ($1 , $2, $3, $4, $5)`, [id_requester, id_receiver, action, type, view])
@@ -15,6 +15,16 @@ class notificationsModel {
       db.query("SELECT * FROM notifications WHERE id = $1", [id])
         .then((data) => next(data.rows[0]))
         .catch((err) => next(err));
+    });
+  };
+  static findByUserDetail = async (id_user, view = true) => {
+    let query = `SELECT username, profile_picture,id_user_requester, type, action FROM notifications INNER JOIN users
+        ON notifications.id_user_requester = users.id WHERE id_user_receiver = $1 `;
+    let value = [id_user];
+    return new Promise((next) => {
+      db.query(query, value)
+        .then((data) => next({ data: data.rows, number: data.rowCount }))
+        .catch((error) => next(error));
     });
   };
   static findByUser = async (id_user, view = true) => {
@@ -41,5 +51,5 @@ class notificationsModel {
 }
 
 module.exports = {
-  notificationsModel,
+  NotificationsModel,
 };

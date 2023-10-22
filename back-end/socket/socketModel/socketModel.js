@@ -19,6 +19,7 @@ class socketModel {
     });
   };
   static deletebySocketId = (idSocket) => {
+    console.log(idSocket);
     return new Promise((next) => {
       db.query("DELETE FROM socket where id_socket = $1", [idSocket])
         .then((data) => next(data))

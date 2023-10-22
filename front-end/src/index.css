@@ -40,12 +40,12 @@ body {
 }
 .body {
   font-family: "Montserrat", sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 400;
 }
 .body-highlight {
   font-family: "Montserrat", sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
@@ -84,7 +84,7 @@ button {
   }
   .body-highlight {
     font-family: "Montserrat", sans-serif;
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 700;
   }
 

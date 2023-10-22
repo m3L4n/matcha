@@ -17,18 +17,21 @@ class socketController {
         id_socket: "",
         id_user: "",
       };
+      console.log(idSocket);
       socket = await socketModel.findByIdsocket(idSocket);
+      console.log(socket);
+      const res = await UserModel.handleConnected(socket.id_user, "false");
       const result = await socketModel.deletebySocketId(idSocket);
-      await UserModel.handleConnected(socket.id_user, "false");
-      console.log("user disconnect", idUser);
+      return socket.id_user;
+      // console.log("user disconnect", idUser);
     } catch (error) {
-      console.log("user cant be disconnected");
+      console.log("user cant be disconnected", error);
     }
   };
   static userIsConnected = async (idUser) => {
     try {
-      const resultat = await UserModel.isUserConnected(idUser);
-      return resultat;
+      const result = await UserModel.isUserConnected(idUser);
+      return result;
     } catch (error) {}
   };
 }

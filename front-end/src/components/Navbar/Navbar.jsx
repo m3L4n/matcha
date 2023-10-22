@@ -9,7 +9,7 @@ import { useAuth } from "src/Context/AuthContext";
 export default function Navbar() {
   const { setTriggerReload, user } = useAuth();
   const navigate = useNavigate();
-  let pages = ["match", "profile", "message", "notifications"];
+  let pages = ["match", "profile", "message", "notifications", "view history"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
 
@@ -25,10 +25,6 @@ export default function Navbar() {
   };
   useEffect(() => {
     const intervalId = setInterval(isUserReceiveNotif, 5000);
-    // socket.emit("notifications", { userId: user.id });
-    // socket.on("number-notif-not-seen", (msg) => {
-    //   console.log(msg);
-    // });
     return () => {
       clearInterval(intervalId);
       socket.off("number-notif-not-seen", (reason) => {
@@ -41,6 +37,7 @@ export default function Navbar() {
   const handleDisconnect = async () => {
     disconnect();
     setTriggerReload(true);
+    socket.emit("listener-button-deconnection", { userId: user.id });
     navigate("/");
   };
 
@@ -68,6 +65,10 @@ export default function Navbar() {
                     {page}
                   </NavLink>
                 </div>
+              ) : page == "view history" ? (
+                <NavLink className={`body`} to={"/HistoryView"}>
+                  {page}
+                </NavLink>
               ) : (
                 <NavLink className={`body`} to={page}>
                   {page}

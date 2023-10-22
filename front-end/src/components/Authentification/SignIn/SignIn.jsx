@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { notify } from "components/Global/toast-notify";
 import { useAuth } from "src/Context/AuthContext";
+import { socket } from "src/socket/socket";
 export default function SignIn() {
   const navigate = useNavigate();
   const { setTriggerReload } = useAuth();
@@ -41,6 +42,9 @@ export default function SignIn() {
         return response.json();
       })
       .then((data) => {
+        if (data.status == 201) {
+          socket.emit("login", { userId: data.userId });
+        }
         console.log("data request :", data);
         if (data.msg == "Authentication failed") {
           notify("warning", "please sign up , we cant match username and password");

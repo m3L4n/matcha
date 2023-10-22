@@ -54,7 +54,7 @@ class UserController {
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
               expiresIn: 1 * 24 * 60 * 60 * 1000,
             });
-            return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ access_token: token });
+            return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ status: 201, userId: user.id });
           } else {
             return res.status(401).send({ msg: "user not verified" });
           }

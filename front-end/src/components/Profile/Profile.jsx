@@ -11,14 +11,16 @@ import fetchUser from "./fetch/fetchUser";
 import { socket } from "src/socket/socket";
 import GlobalLoading from "../Global/GLoading/GlobalLoading";
 import fetchLocalisationiWithoutKnow from "./fetch/fetchLocalisationWithoutKnow";
+import { useMutation } from "@tanstack/react-query";
 import fetchRelationships from "./fetch/fetchRelationship";
+import { fetchCreateProfilViewHistory } from "./fetch/fetchCreateProfilViewHistory";
 export default function Profile() {
   const paramId = useParams().id;
   const navigate = useNavigate();
   const { user } = useAuth();
   const [connected, setConnected] = useState(false);
   const [ourProfile, setOurProfil] = useState(false);
-
+  const mutationCreateProfilView = useMutation(fetchCreateProfilViewHistory);
   const { data: allTagsData, isLoading: allTagsLoading } = useQuery(["tags"], fetchTags);
   const { data: userInformationData, isLoading: userLoading } = useQuery(["id", paramId], fetchUser);
   const { data: relationShipData, isLoading: relationShipLoading } = useQuery(["relation", paramId], fetchRelationships);
@@ -33,35 +35,44 @@ export default function Profile() {
     }
   }, []);
 
-  const isUserIsConnected = async () => {
-    socket.emit("response_connected", { userId: paramId });
-    socket.on("isConnect", (msg) => {
-      setConnected(msg.connected);
-    });
-  };
   useEffect(() => {
+    if (user.id != paramId) {
+      socket.on("alert-disconnect", (msg) => {
+        if (msg.userId == paramId) {
+          setConnected(false);
+        }
+      });
+      socket.on("alert-connect", (msg) => {
+        if (msg.userId == paramId) {
+          setConnected(true);
+        }
+      });
+    }
     socket.emit("user_profile", { userId: paramId, currentUserId: user.id, ourProfile: user.id == paramId });
-    const intervalId = setInterval(isUserIsConnected, 2000);
 
     return () => {
       setConnected(false);
       setOurProfil(false);
-      clearInterval(intervalId);
       socket.off("user_profile", (reason) => {});
-      socket.off("isConnect", (reason) => {});
+      socket.off("alert-disconnect", (reason) => {});
+      socket.off("alert-connect", (reason) => {});
     };
   }, [paramId]);
 
   useEffect(() => {
     if (paramId === user.id) {
       setOurProfil(true);
+    } else {
+      mutationCreateProfilView.mutate({ paramId });
     }
   }, [paramId, user.id]);
 
   return (
     <>
       {(allTagsLoading || relationShipLoading || userLoading) && <GlobalLoading />}
-      {!allTagsLoading && <UserProfile allTags={allTags} userInformation={userInformation} ourProfile={ourProfile} relationship={relationship} connected={connected} />}
+      {!allTagsLoading && !relationShipLoading && !userLoading && (
+        <UserProfile allTags={allTags} userInformation={userInformation} ourProfile={ourProfile} relationship={relationship} connected={connected} />
+      )}
     </>
   );
 }

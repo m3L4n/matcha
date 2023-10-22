@@ -132,7 +132,6 @@ export default function LayoutUserProfile({
       handleChange(event);
     }
   };
-  console.log(relationship);
   return (
     <div className="containerLayout">
       <div className="containerLayout-body">
@@ -143,9 +142,7 @@ export default function LayoutUserProfile({
                 blocker
               </button>
             ) : (
-              <button className="Lcontainer_userInfo-block" onClick={() => blockUser(id, false)}>
-                deblocker
-              </button>
+              <h3> user blocked </h3>
             ))}
           {!ourProfile && (
             <button onClick={() => reportAsFakeAccount(id)} className="Lcontainer_userInfo-fakeAccount ">

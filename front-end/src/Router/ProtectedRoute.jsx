@@ -3,7 +3,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "src/Context/AuthContext";
 import { socket } from "src/socket/socket";
 export function PrivateRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { user, loading, setUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation().pathname;
 
@@ -20,11 +20,14 @@ export function PrivateRoute({ children }) {
       navigate("/");
     }
     if (!loading && Object.keys(user).length > 0) {
-      socket.emit("login", { userId: user.id });
+      // socket.emit("login", { userId: user.id });
       if (!user.gender || !user.beverage || !user.sexual_preference) {
         navigate(`/profile/${user.id}`);
         console.log(user);
       }
+      // else{
+
+      // }
     }
     return () => {};
   }, [loading, user, location]);

@@ -11,6 +11,7 @@ import { NoneConnectedRoute } from "./NoneConnectedRoute";
 import ConversationPicker from "src/components/Message/ConversationPicker";
 import Profile from "components/Profile/Profile";
 import Notification from "components/Notifications/Notification";
+import ViewHistory from "src/components/ViewHistory/ViewHistory";
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +56,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Notification />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/HistoryView",
+        element: (
+          <PrivateRoute>
+            <ViewHistory />
           </PrivateRoute>
         ),
       },

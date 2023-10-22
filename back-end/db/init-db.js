@@ -198,9 +198,10 @@ async function createTableMessages(client) {
 async function createTableprofilViewer(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS profilViewer (
-    id UUID PRIMARY KEY,
+     id UUID DEFAULT uuid_generate_v4(),
     id_watcher UUID REFERENCES users ON DELETE SET NULL,
-    id_watched UUID REFERENCES users ON DELETE SET NULL
+    id_watched UUID REFERENCES users ON DELETE SET NULL,
+    PRIMARY KEY (id)
      );
      `);
 }

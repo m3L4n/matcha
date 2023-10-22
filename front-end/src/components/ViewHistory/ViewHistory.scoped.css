@@ -1,11 +1,10 @@
-.container-notification {
+.container-history {
   min-height: 100vh;
   height: 100%;
   width: 100vw;
   overflow-x: hidden;
 }
-
-.container-notification__header {
+.container-history__header {
   margin: auto;
   height: 80%;
   padding-top: 4ch;
@@ -16,31 +15,20 @@
 .header-text {
   color: var(--green);
 }
-.container-notification__body {
-  display: flex;
-  flex-flow: column;
-  gap: 1rem;
-  margin: 1rem;
+.container-history__body {
 }
-.notificatio__body-button {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  gap: 2rem;
-}
-.button-notif {
-  flex: 1;
-}
-.container-render-notif {
+.container-render-history {
   display: flex;
   margin-top: 2rem;
+  margin: 1rem;
   flex-flow: column;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1.5rem;
+  transition: all 0.3s;
 }
-.container-notif {
-  cursor: pointer;
+.container-view {
   display: flex;
+  cursor: pointer;
   flex-flow: row wrap;
   background-color: white;
   gap: 1rem;
@@ -52,31 +40,35 @@
   border: 0.1rem solid var(--green);
   transition: all ease 0.3s;
 }
-.container-notif:hover {
+.container-view:hover {
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
-.container-notif img {
+
+.container-view img {
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
 }
 
 @media (min-width: 460px) {
-  .container-notification__header {
+  .container-history__header {
     width: 70%;
+  }
+  .container-render-history {
+    width: 70%;
+    margin: auto;
   }
 }
 @media (min-width: 760px) {
-  .container-notification__header {
+  .container-history__header {
     width: 50%;
   }
-  .container-notification__body {
+  .container-render-history {
     width: 60%;
     max-width: 700px;
-    gap: 3rem;
     margin: auto;
   }
-  .container-notif img {
+  .container-view img {
     width: 5.5rem;
     height: 5.5rem;
   }

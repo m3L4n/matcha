@@ -29,6 +29,21 @@ class MatchModel {
     });
   }
 
+  static update(id_requester, id_receiver, like, block) {
+    return new Promise((next) => {
+      db.query(`UPDATE match SET block = $1, like= $2 WHERE id_requester = $3 AND id_receiver = $4 OR id_requester = $4 AND id_receiver = $3 RETURNING * `, [
+        block,
+        like,
+        id_requester,
+        id_receiver,
+      ])
+        .then((data) => {
+          next(data);
+        })
+        .catch((error) => next(error));
+    });
+  }
+
   /**
    * create a new match with paramter modifiable
    * @param {String} id_requester
@@ -38,44 +53,78 @@ class MatchModel {
    */
   static #createMatch = (id_requester, id_receiver, like = false, block = false) => {
     return new Promise((next) => {
-      db.query(
-        `INSERT INTO match (id_requester, id_receiver, "like", "block") \
-      VALUES ($1, $2, $3, $4) RETURNING *`,
-        [id_requester, id_receiver, like, block]
-      )
+      db.query(`SELECT * FROM match WHERE id_requester = $1 AND id_receiver = $2 OR id_requester = $2 AND id_receiver = $1`, [id_requester, id_receiver])
         .then((match) => {
-          if (match.rowCount == 1) {
-            return next(match);
+          if (match.rowCount > 0) {
+            this.update(id_requester, id_receiver, like, block)
+              .then((data) => {
+                let elo = 0;
+                if (like == true || block == true) {
+                  elo = 1;
+                }
+                this.#updateElo(id_requester, id_receiver, elo)
+                  .then((eloUpdate) => next(eloUpdate))
+                  .catch((error) => next(error));
+              })
+              .catch((error) => next(error));
           } else {
-            const error = new Error("cant create new match");
-            error.status = 500;
-            return next(error);
+            db.query(
+              `INSERT INTO match (id_requester, id_receiver, "like", "block") \
+      VALUES ($1, $2, $3, $4) RETURNING *`,
+              [id_requester, id_receiver, like, block]
+            )
+              .then((dataInserted) => {
+                if (dataInserted.rowCount > 0) {
+                  console.log("create match ok with this arg : like :", like, "block:", block);
+                  let elo = 0;
+                  if (like == true || block == true) {
+                    elo = 1;
+                  }
+                  this.#updateElo(id_requester, id_receiver, elo)
+                    .then((eloUpdate) => next(eloUpdate))
+                    .catch((error) => next(error));
+                } else {
+                  const error = new Error("cant create new match");
+                  error.status = 500;
+                  return next(error);
+                }
+              })
+              .catch((error) => next(error));
           }
         })
-        .catch((error) => {
-          return next(error);
-        });
+        .catch((error) => next(error));
     });
   };
 
   static getRelationship = (requesterId, receiverId) => {
     return new Promise((next) => {
-      db.query(`SELECT "like", "block" FROM match WHERE id_requester = $1 AND id_receiver= $2`, [requesterId, receiverId])
+      db.query(`SELECT "like", "block" FROM match WHERE id_requester = $1 AND id_receiver= $2 `, [requesterId, receiverId])
         .then((data) => {
-          const relationShipData = {
-            like: false,
-            block: false,
-          };
+          let relationShipData = {};
           if (data.rowCount == 1) {
-            relationShipData.like = data.rows[0].like;
             relationShipData.block = data.rows[0].block;
+            if (!data.rows[0].block) {
+              relationShipData.like = true;
+            }
+            console.log(relationShipData);
+            return next(relationShipData);
+          } else {
+            db.query(`SELECT "like", "block" FROM match WHERE id_requester = $2 AND id_receiver= $1 `, [requesterId, receiverId])
+              .then((data) => {
+                if (data.rowCount == 1) {
+                  relationShipData.block = data.rows[0].block;
+                  if (!data.rows[0].block) {
+                    relationShipData.like = data.rows[0].like;
+                  }
+                  return next(relationShipData);
+                }
+              })
+              .catch((error) => next(error));
           }
-          return next(relationShipData);
+          return next({});
         })
         .catch((error) => next(error));
     });
-    //   if like
-    //   if block
   };
 
   /**
