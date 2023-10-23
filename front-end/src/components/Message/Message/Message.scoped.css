@@ -84,6 +84,7 @@ header img {
 
     .search-from--send {
         margin-right: 1em;
+        cursor: pointer;
     }
 
     .messages-container-back-button {

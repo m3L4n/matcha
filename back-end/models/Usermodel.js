@@ -89,7 +89,7 @@ class UserModel {
     return new Promise((next) => {
       db.query(
         "SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1",
-        [currentUserId]
+        [currentUserId],
       )
         .then((result) => {
           const { sexual_preference, rate_fame, position, age } =
@@ -142,7 +142,7 @@ class UserModel {
                 min_age,
                 max_age,
                 currentUserId,
-              ]
+              ],
             );
           };
 
@@ -150,27 +150,28 @@ class UserModel {
             return db.query(
               "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
                 WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
-              [min_fame, max_fame, min_age, Number(max_age), currentUserId]
+              [min_fame, max_fame, min_age, Number(max_age), currentUserId],
             );
           };
 
           const getOnlyClosePeople = (users) => {
             return users.filter((user) =>
               Math.floor(
-                distanceBetweenTwoPoints(position, user.position) < max_distance
-              )
+                distanceBetweenTwoPoints(position, user.position) <
+                  max_distance,
+              ),
             );
           };
 
           if (
-            sexual_preference !== "other" ||
+            sexual_preference === "both" ||
             searchParams.action === "search"
           ) {
-            getMatchesBySexualPreferences()
+            getMatchesOfAllSexes()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           } else {
-            getMatchesOfAllSexes()
+            getMatchesBySexualPreferences()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }
@@ -244,7 +245,7 @@ class UserModel {
     return new Promise((next) => {
       db.query(
         `UPDATE users SET fake_account = fake_account + 1 WHERE id = $1`,
-        [idReceiver]
+        [idReceiver],
       )
         .then((data) => {
           return next(data);

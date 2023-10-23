@@ -1,6 +1,8 @@
-const { notificationsController } = require("../controller/notificationsController");
+const {
+  notificationsController,
+} = require("../controller/notificationsController");
 const { socketController } = require("./socketController/socketController");
-
+const { MessageModel } = require("../models/MessageModel");
 function socket_broacast(io) {
   io.on("connect", (socket) => {
     socket.on("login", async function (data) {
@@ -10,7 +12,12 @@ function socket_broacast(io) {
 
     socket.on("user_profile", async function (data) {
       if (!data.ourProfile) {
-        await notificationsController.createNotification(data.currentUserId, data.userId, "view our profile", "view");
+        await notificationsController.createNotification(
+          data.currentUserId,
+          data.userId,
+          "view our profile",
+          "view"
+        );
       }
     });
     socket.on("response_connected", async (data) => {
@@ -25,6 +32,21 @@ function socket_broacast(io) {
     // event pour savoir quand on like / unlike
     // event pour savoir quand on voit
     // event pour savoir le rate frame qui s'actualiser ?
+
+    socket.on("message_sended", async (message) => {
+      try {
+        const response = await MessageModel.createMessage(
+          message.idUserRequester,
+          message.idUserReceiver,
+          message.messageContent,
+          message.conversationId
+        );
+        io.emit("receive_message", response.rows[0]);
+        return response.rows;
+      } catch (e) {
+        return e.message;
+      }
+    });
 
     socket.on("disconnect", (reason) => {
       socketController.disconnect(socket.id);

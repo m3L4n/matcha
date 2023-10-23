@@ -6,23 +6,45 @@ import { useQuery } from '@tanstack/react-query'
 import getChatPartner from './fetchChatPartner'
 import getMessages from './fetchMessages'
 import { useAuth } from 'src/Context/AuthContext'
+import { socket } from 'src/socket/socket'
+import { useState, useRef, useEffect } from 'react'
 
 export default function Message({
     setConversationPicker,
     chatPartnerId,
     conversationId,
 }) {
+    const [messageContent, setMessageContent] = useState('')
+    const messageInput = useRef(null)
+    const [messages, setMessages] = useState([])
+
     const query = useQuery({
         queryKey: ['chatPartner', chatPartnerId],
         queryFn: getChatPartner,
     })
 
-    const { data: messages } = useQuery({
+    const { status, data } = useQuery({
         queryKey: ['currentMessages', conversationId],
         queryFn: getMessages,
     })
 
     const { user: currentUser } = useAuth()
+
+    useEffect(() => {
+        if (status === 'success') {
+            setMessages(data?.result)
+        }
+    }, [status, data?.result])
+
+    useEffect(() => {
+        socket.on('receive_message', (message) => {
+            if (message.id_conversation == conversationId) {
+                setMessages((messages) => messages.concat(message))
+            }
+        })
+
+        return () => socket.off('receive_message')
+    }, [])
 
     return (
         <div className="messages-container">
@@ -31,11 +53,11 @@ export default function Message({
                     onClick={() => setConversationPicker(true)}
                     className="messages-container-back-button"
                 />
-                <img src="http://placekitten.com/40/40" alt="profile picture" />
+                <img src={query?.data?.profile_picture} alt="profile picture" />
                 <p className="body">{query?.data?.username}</p>
             </header>
             <section className="messages">
-                {messages?.result.map((message) => {
+                {messages?.map((message) => {
                     return (
                         <p
                             key={message.id}
@@ -51,11 +73,27 @@ export default function Message({
                 })}
             </section>
             <form className="search-form">
-                <input className="search-form--input" type="text" />
+                <input
+                    className="search-form--input"
+                    type="text"
+                    onChange={(e) => {
+                        setMessageContent(e.target.value)
+                    }}
+                    ref={messageInput}
+                />
                 <PiPaperPlaneRightFill
                     className="search-from--send"
                     color="#A4B07E"
                     size={24}
+                    onClick={() => {
+                        socket.emit('message_sended', {
+                            idUserRequester: currentUser.id,
+                            idUserReceiver: chatPartnerId,
+                            conversationId: conversationId,
+                            messageContent: messageContent,
+                        })
+                        messageInput.current.value = ''
+                    }}
                 />
             </form>
         </div>

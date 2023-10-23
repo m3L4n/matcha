@@ -11,6 +11,7 @@ class socketController {
       console.log("connexion cant be etablished", error);
     }
   };
+
   static disconnect = async (idSocket) => {
     try {
       let socket = {
@@ -25,11 +26,21 @@ class socketController {
       console.log("user cant be disconnected");
     }
   };
+
   static userIsConnected = async (idUser) => {
     try {
-      const resultat = await UserModel.isUserConnected(idUser);
-      return resultat;
+      const result = await UserModel.isUserConnected(idUser);
+      return result;
     } catch (error) {}
+  };
+
+  static show = async (idUser) => {
+    try {
+      const result = await socketModel.findByIdUser(idUser);
+      return result;
+    } catch (e) {
+      return e;
+    }
   };
 }
 module.exports = {

@@ -10,16 +10,16 @@ class ConversationModel {
     return new Promise((next) => {
       db.query(
         "SELECT\
-        c.id AS conversation_id,\
+        DISTINCT ON (c.id) c.id AS conversation_id,\
         u2.username AS chat_partner_name,\
-        u2.id as chat_partner_id, \
+        u2.id AS chat_partner_id, \
         m.content AS last_message\
         FROM conversations c\
         JOIN users u1 ON c.id_user_1 = u1.id\
         JOIN users u2 ON c.id_user_2 = u2.id\
         LEFT JOIN messages m ON c.id = m.id_conversation\
         WHERE u1.id = $1 OR u2.id = $1",
-        [id]
+        [id],
       )
         .then((result) => next(result))
         .catch((error) => next(error));
