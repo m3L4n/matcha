@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <LandingPage />
           </NoneConnectedRoute>
-        ),
+        )
       },
       {
         path: "/match",
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <BrowsingPage />
           </PrivateRoute>
-        ),
+        )
       },
       {
         path: "/profile/:id",
@@ -40,7 +40,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
-        ),
+        )
       },
       {
         path: "/message",
@@ -48,7 +48,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <ConversationPicker />
           </PrivateRoute>
-        ),
+        )
       },
       {
         path: "/notifications",
@@ -56,7 +56,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <Notification />
           </PrivateRoute>
-        ),
+        )
       },
       {
         path: "/register",
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
-        ),
+        )
       },
       {
         path: "/login",
@@ -72,15 +72,15 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
-        ),
+        )
       },
       {
         path: "/reset",
-        element: <HomeNoneVerified />,
+        element: <HomeNoneVerified />
       },
       {
         path: "/reset",
-        element: <HomeNoneVerified />,
+        element: <HomeNoneVerified />
       },
       {
         path: "/reset-password",
@@ -88,7 +88,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
-        ),
+        )
       },
       {
         path: "/reset-password/:id",
@@ -96,8 +96,8 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
-        ),
-      },
-    ],
-  },
+        )
+      }
+    ]
+  }
 ]);

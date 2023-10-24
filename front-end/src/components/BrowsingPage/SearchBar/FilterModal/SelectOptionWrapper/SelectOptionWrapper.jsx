@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./SelectOptionWrapper.scoped.css"
+import "./SelectOptionWrapper.scoped.css";
 import { AiOutlineRight, AiOutlineDown } from "react-icons/ai";
 
 const SelectOptionWrapper = ({ option, children }) => {
@@ -7,16 +7,13 @@ const SelectOptionWrapper = ({ option, children }) => {
 
   return (
     <div className="menu-button">
-      <div className="options" onClick={() => (setMenu(!menu))}>
-        <p>{option}</p><p> {menu ? <AiOutlineDown /> : <AiOutlineRight />} </p>
-      </div>
-      {menu &&
-        <>
-          {children}
-        </>
-      }
-    </div >
+      <button className="options" onClick={() => setMenu(!menu)}>
+        <p>{option}</p>
+        <p> {menu ? <AiOutlineDown /> : <AiOutlineRight />} </p>
+      </button>
+      {menu && <>{children}</>}
+    </div>
   );
-}
+};
 
 export default SelectOptionWrapper;

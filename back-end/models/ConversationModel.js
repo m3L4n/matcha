@@ -10,7 +10,7 @@ class ConversationModel {
     return new Promise((next) => {
       db.query(
         "SELECT\
-          c.id AS conversation_id,\
+          DISTINCT ON (c.id) c.id AS conversation_id,\
           CASE\
             WHEN u1.id = $1 THEN u2.id\
             WHEN u2.id = $1 THEN u1.id\

@@ -1,9 +1,7 @@
 import React from "react";
-import { useContext } from "react";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../../Context/AuthContext";
 import { notify } from "../../Global/toast-notify";
 import "./HomeNoneVerified.scoped.css";
 export default function HomeNoneVerified() {
@@ -31,20 +29,23 @@ export default function HomeNoneVerified() {
     const options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json;charset=utf-8",
+        "Content-Type": "application/json;charset=utf-8"
       },
       credentials: "include",
-      body: JSON.stringify(objToSend),
+      body: JSON.stringify(objToSend)
     };
     fetch("http://localhost:4000/users/send-email-verification", options)
-      .then((response) => {
+      .then(response => {
         if (response.status == 200) {
-          notify("success", "check your email, your link will be send in the second");
+          notify(
+            "success",
+            "check your email, your link will be send in the second"
+          );
         }
         return response.json();
       })
-      .then((data) => console.log(data))
-      .catch((error) => {
+      .then(data => console.log(data))
+      .catch(() => {
         notify("error", "we can't send email for the moment, please retry");
       });
   }
