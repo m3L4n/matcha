@@ -3,14 +3,22 @@
   min-width: 40px;
   max-width: 60px;
   background-color: var(--green);
-  padding: .5rem;
+  padding: 0.5rem;
   z-index: 99;
   position: fixed;
   left: 0;
   top: 0;
   height: 100%;
   padding-top: 2rem;
-  transition: width .5s;
+  transition: width 0.5s;
+}
+
+.sidebar-toggle {
+  width: 100%;
+  height: 100%;
+  background-color: var(--green);
+  border: none;
+  margin-left: -0.4em;
 }
 
 .navbar-deployed {
@@ -22,8 +30,7 @@
 .burger-icon {
   cursor: pointer;
   height: 26px;
-  width: 26px;
-  margin: auto;
+  width: 20px;
 }
 
 .navbar .burger {
@@ -38,15 +45,15 @@
 }
 
 .menu-toggle-bar--top {
-    transform: translate(0, 7px);
+  transform: translate(0, 7px);
 }
 
 .menu-toggle-bar--middle {
-    transform: translate(0, 0);
+  transform: translate(0, 0);
 }
 
 .menu-toggle-bar--bottom {
-    transform: translate(0, -7px);
+  transform: translate(0, -7px);
 }
 
 .nav-open .menu-toggle-bar--top {
@@ -61,12 +68,12 @@
   transform: translate(0, -4px) rotate(-45deg);
 }
 
-.navbar-content{
+.navbar-content {
   display: flex;
   flex-flow: column;
   margin-left: -100px;
 }
-.navbar-content-visible{
+.navbar-content-visible {
   margin-left: 0px;
   display: flex;
   flex-flow: column;
@@ -105,7 +112,7 @@
   border-radius: 20px;
   background-color: var(--green);
   color: var(--dark-green);
-  padding: .4em .8em;
+  padding: 0.4em 0.8em;
   font-size: 0.8rem;
   transition: 0.4s;
 }
@@ -152,5 +159,8 @@
     color: var(--dark-green);
     background-color: var(--cream);
   }
-}
 
+  .sidebar-toggle {
+    background-color: var(--cream);
+  }
+}
