@@ -106,18 +106,18 @@ export default function BrowsingPage() {
         );
       }
       if (filterParams.fameGap !== "") {
-        const minFame = currentUser.rate_fame - filterMatches.fameGap;
-        const maxFame = currentUser.rate_fame + filterMatches.fameGap;
+        console.log(filterParams);
+        const minFame = currentUser.rate_fame - Number(filterParams.fameGap);
+        const maxFame = currentUser.rate_fame + Number(filterParams.fameGap);
         toFilter = toFilter.filter(
           user => user.rate_fame >= minFame && user.rate_fame <= maxFame
         );
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
-        const currentUserPosition = Number(currentUser.position);
         toFilter = toFilter.filter(
           user =>
-            distanceBetweenTwoPoints(currentUserPosition, user.position) <
+            distanceBetweenTwoPoints(currentUser.position, user.position) <
             locationGap
         );
       }

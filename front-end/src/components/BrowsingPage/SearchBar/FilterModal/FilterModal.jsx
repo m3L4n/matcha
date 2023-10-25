@@ -42,8 +42,8 @@ const FilterModal = ({ setFilterParams }) => {
                 {option === "Fame rating" && (
                   <Slider
                     min={0}
-                    max={5200}
-                    defaultValue={1500}
+                    max={1000}
+                    defaultValue={300}
                     name="fame"
                     mesureUnit="fame rate"
                   />
