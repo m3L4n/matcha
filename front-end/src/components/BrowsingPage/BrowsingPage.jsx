@@ -32,6 +32,7 @@ export default function BrowsingPage() {
   });
 
   const [matches, setMatches] = useState([]);
+  const { user: currentUser } = useAuth();
 
   function distanceBetweenTwoPoints(positionA, positionB) {
     // Haversine algorithm
@@ -59,8 +60,13 @@ export default function BrowsingPage() {
     if (filterParams.sortBy === "age") {
       toSort.sort((a, b) => a.age - b.age);
     } else if (filterParams.sortBy === "location") {
-      toSort.sort((a, b) => a.location - b.location);
+      toSort.sort(
+        (a, b) =>
+          distanceBetweenTwoPoints(a.position, currentUser.position) -
+          distanceBetweenTwoPoints(b.position, currentUser.position)
+      );
     } else if (filterParams.sortBy === "fame") {
+      console.log(toSort);
       toSort.sort((a, b) => a.rate_fame - b.rate_fame);
     }
     return toSort;
@@ -103,8 +109,6 @@ export default function BrowsingPage() {
     }
     return toFilter;
   };
-
-  const { user: currentUser } = useAuth();
 
   const { status, error, data: users } = useQuery({
     queryKey: ["matches", requestParams],

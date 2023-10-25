@@ -140,7 +140,7 @@ function generateSetOfUsers() {
   const password = bcrypt.hashSync(faker.string.alphanumeric(), 10);
   const description = faker.string.alphanumeric(200);
   const city = faker.location.city();
-  const rate_fame = 1500;
+  const rate_fame = Math.floor(Math.random() * (1800 - 1000 + 1) + 1000);
   const age = Math.floor(Math.random() * (50 - 18) + 18);
   const profile_picture = faker.internet.avatar();
   const valided = true;

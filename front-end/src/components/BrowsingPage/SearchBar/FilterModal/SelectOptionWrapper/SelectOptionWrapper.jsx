@@ -7,7 +7,13 @@ const SelectOptionWrapper = ({ option, children }) => {
 
   return (
     <div className="menu-button">
-      <button className="options" onClick={() => setMenu(!menu)}>
+      <button
+        className="options"
+        onClick={e => {
+          e.preventDefault();
+          setMenu(!menu);
+        }}
+      >
         <p>{option}</p>
         <p> {menu ? <AiOutlineDown /> : <AiOutlineRight />} </p>
       </button>
