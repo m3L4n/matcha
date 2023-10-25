@@ -102,7 +102,7 @@ function generateSetOfUsers() {
     const description = faker.string.alphanumeric(200);
     const rate_fame = 1500;
     const age = Math.floor(Math.random() * (50 - 18) + 18);
-    const profile_picture = faker.image.avatar();
+    const profile_picture = faker.internet.avatar();
     const valided = true;
     let gps_position = gps[Math.floor(Math.random() * gps.length)];
     let position = `(${gps_position.x}, ${gps_position.y})`;
@@ -142,7 +142,7 @@ function generateSetOfUsers() {
   const city = faker.location.city();
   const rate_fame = 1500;
   const age = Math.floor(Math.random() * (50 - 18) + 18);
-  const profile_picture = faker.image.avatar();
+  const profile_picture = faker.internet.avatar();
   const valided = true;
   let gps_position = gps[Math.floor(Math.random() * gps.length)];
   let position = `(${gps_position.x}, ${gps_position.y})`;
@@ -185,7 +185,7 @@ const adminParams = [
   "Hello world!",
   1500,
   position,
-  faker.image.avatar(),
+  faker.internet.avatar(),
   true,
   24,
   "Paris",
@@ -204,7 +204,7 @@ const userParams = [
   "Hello world!",
   1500,
   position,
-  faker.image.avatar(),
+  faker.internet.avatar(),
   true,
   22,
   "Paris",
