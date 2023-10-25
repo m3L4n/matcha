@@ -98,7 +98,7 @@ class UserModel {
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
-          let max_distance = 300;
+          let max_distance = 200;
 
           const validatedSearchCriteria = searchValidation(searchParams);
           if (validatedSearchCriteria !== "ok") {
@@ -150,7 +150,7 @@ class UserModel {
             return db.query(
               "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
                 WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
-              [min_fame, max_fame, min_age, Number(max_age), currentUserId]
+              [min_fame, max_fame, min_age, max_age, currentUserId]
             );
           };
 

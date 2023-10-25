@@ -5,7 +5,7 @@ import Input from "../../../Global/FormInput/Input/Input";
 import Select from "src/components/Global/FormInput/Select/Select";
 import PropTypes from "prop-types";
 
-const FILTER_OPTIONS = ["Age gap", "Location", "Fame rating", "Tags"];
+const FILTER_OPTIONS = ["Age gap", "Location gap", "Fame rating", "Tags"];
 
 const FilterModal = ({ setFilterParams }) => {
   return (
@@ -48,11 +48,11 @@ const FilterModal = ({ setFilterParams }) => {
                     mesureUnit="fame rate"
                   />
                 )}
-                {option === "Location" && (
+                {option === "Location gap" && (
                   <Slider
                     min={5}
                     max={600}
-                    defaultValue={300}
+                    defaultValue={200}
                     name="location"
                     mesureUnit="km"
                   />
