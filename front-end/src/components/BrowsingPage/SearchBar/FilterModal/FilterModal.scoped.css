@@ -21,7 +21,8 @@
   color: var(--green);
 }
 
-.filter-matches-wrapper, .sort-matches-wrapper {
+.filter-matches-wrapper,
+.sort-matches-wrapper {
   display: flex;
   flex-flow: nowrap row;
   align-items: center;
@@ -33,7 +34,7 @@ label {
   cursor: pointer;
 }
 
-.select-effect input[type="radio"] {
+input[type="radio"] {
   -webkit-appearance: none;
   appearance: none;
   background-color: var(--cream);
@@ -47,12 +48,13 @@ label {
   display: grid;
   place-content: center;
   cursor: pointer;
+  transform: translateY(-0.075em);
 }
 
 input[type="radio"]::before {
   content: "";
-  width: 0.58em;
-  height: 0.58em;
+  width: 0.65em;
+  height: 0.65em;
   border-radius: 50%;
   transform: scale(0);
   transition: 120ms transform ease-in-out;
@@ -68,7 +70,7 @@ input[type="radio"]:checked::before {
 }
 
 .select-effect input {
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 
 .filter-submit {
@@ -89,7 +91,17 @@ input[type="radio"]:checked::before {
   border: 1px solid var(--green);
 }
 
-.sort-select {
-  border: 4px solid red;
-  cursor: pointer;
+.sort-options {
+  color: var(--green);
+  display: flex;
+  flex-flow: row nowrap;
+  margin-top: 1em;
+  gap: 1em;
+}
+
+.radio-ascending,
+.radio-descending {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5em;
 }

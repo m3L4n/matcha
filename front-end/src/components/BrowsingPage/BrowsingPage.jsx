@@ -58,16 +58,31 @@ export default function BrowsingPage() {
 
   const sortMatches = toSort => {
     if (filterParams.sortBy === "age") {
-      toSort.sort((a, b) => a.age - b.age);
+      if (filterParams.sortOption === "ascending") {
+        toSort.sort((a, b) => a.age - b.age);
+      } else {
+        toSort.sort((a, b) => b.age - a.age);
+      }
     } else if (filterParams.sortBy === "location") {
-      toSort.sort(
-        (a, b) =>
-          distanceBetweenTwoPoints(a.position, currentUser.position) -
-          distanceBetweenTwoPoints(b.position, currentUser.position)
-      );
+      if (filterParams.sortOption === "ascending") {
+        toSort.sort(
+          (a, b) =>
+            distanceBetweenTwoPoints(a.position, currentUser.position) -
+            distanceBetweenTwoPoints(b.position, currentUser.position)
+        );
+      } else {
+        toSort.sort(
+          (a, b) =>
+            distanceBetweenTwoPoints(b.position, currentUser.position) -
+            distanceBetweenTwoPoints(a.position, currentUser.position)
+        );
+      }
     } else if (filterParams.sortBy === "fame") {
-      console.log(toSort);
-      toSort.sort((a, b) => a.rate_fame - b.rate_fame);
+      if (filterParams.sortOption === "ascending") {
+        toSort.sort((a, b) => a.rate_fame - b.rate_fame);
+      } else {
+        toSort.sort((a, b) => b.rate_fame - a.rate_fame);
+      }
     }
     return toSort;
   };

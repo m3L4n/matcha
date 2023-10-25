@@ -21,7 +21,7 @@ const FilterModal = ({ setFilterParams }) => {
             locationGap: formData.get("location") ?? "",
             fameGap: formData.get("fame") ?? "",
             sortBy: sortBy,
-            sortOption: "ascending"
+            sortOption: formData.get("sort-type") ?? "ascending"
           };
           setFilterParams(filterParams);
         }}
@@ -75,7 +75,30 @@ const FilterModal = ({ setFilterParams }) => {
             ]}
             name="sort"
             label="Sort by"
+            className="sort-select"
           />
+          <div className="sort-options">
+            <div className="radio-ascending">
+              <input
+                type="radio"
+                name="sort-type"
+                id="ascending"
+                value="ascending"
+                defaultChecked
+              />
+              <label htmlFor="ascending">ascending</label>
+            </div>
+
+            <div className="radio-descending">
+              <input
+                type="radio"
+                name="sort-type"
+                id="descending"
+                value="descending"
+              />
+              <label htmlFor="descending">descending</label>
+            </div>
+          </div>
         </div>
         <input className="filter-submit" type="submit" value="Filter" />
       </form>
