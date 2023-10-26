@@ -164,8 +164,8 @@ class UserModel {
               )
               .sort(
                 (a, b) =>
-                  distanceBetweenTwoPoints(position, a.position) -
-                  distanceBetweenTwoPoints(position, b.position)
+                  distanceBetweenTwoPoints(a.position, position) -
+                  distanceBetweenTwoPoints(b.position, position)
               );
           };
 
