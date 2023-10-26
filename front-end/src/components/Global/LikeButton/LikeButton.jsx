@@ -14,6 +14,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
       }
     }
   }, []);
+
   const toggleLike = async (event, id) => {
     event.stopPropagation();
     const options = {
@@ -33,7 +34,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
     else {
       options.method = "PUT";
       await fetch(
-        `${import.meta.env.VITE_BACKEND_API_URL}/match/unlike`,
+        `${import.meta.env.VITE_BACKEND_API_URL}/match/update`,
         options
       );
     }

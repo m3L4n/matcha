@@ -3,17 +3,17 @@ const { MatchModel } = require("../models/MatchModel");
 
 class MatchController {
   static create = async (req, res) => {
-    let requesterId = req.authUser.id;
+    const requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
-    let match = MatchModel.createLike(requesterId, receiverId);
+    const match = await MatchModel.createLike(requesterId, receiverId);
     res.json(checkAndChange(match));
   };
 
-  static delete = async (req, res) => {
-    let requesterId = req.authUser.id;
+  static update = async (req, res) => {
+    const requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
-    let match = MatchModel.removeLike(requesterId, receiverId);
-    res.json(checkAndChange(match));
+    const matchToUpdate = await MatchModel.removeLike(requesterId, receiverId);
+    res.json(checkAndChange(matchToUpdate));
   };
   static block = async (req, res) => {
     let requesterId = req.authUser.id;
@@ -24,9 +24,9 @@ class MatchController {
   };
 
   static getRelationShip = async (req, res) => {
-    let requesterId = req.authUser.id;
+    const requesterId = req.authUser.id;
     const receiverId = req.params.id;
-    let match = await MatchModel.getRelationship(requesterId, receiverId);
+    const match = await MatchModel.getRelationship(requesterId, receiverId);
     res.json(checkAndChange(match));
   };
 }
