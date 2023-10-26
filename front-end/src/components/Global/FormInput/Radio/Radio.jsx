@@ -6,19 +6,29 @@ const Radio = ({ name }) => {
     <>
       <h3 className="body">Sort by:</h3>
       <label className="form-control" htmlFor={name + "Ascending"}>
-        <input type="radio" name={name} id={name + "Ascending"} value="ascending" />
+        <input
+          type="radio"
+          name={name}
+          id={name + "Ascending"}
+          value="ascending"
+        />
         ascending
       </label>
       <label className="form-control" htmlFor={name + "Descending"}>
-        <input type="radio" name={name} id={name + "Descending"} value="descending" />
+        <input
+          type="radio"
+          name={name}
+          id={name + "Descending"}
+          value="descending"
+        />
         descending
       </label>
     </>
-  )
-}
+  );
+};
 
 Radio.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
 };
 
 export default Radio;

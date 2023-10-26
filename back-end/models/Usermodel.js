@@ -6,9 +6,19 @@ const { error } = require("../modules/response");
 class UserModel {
   static createUser = async (userData) => {
     try {
-      const { id, username, firstName, lastName, email, password, valided } = userData;
-      const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
-      const values = [id, username, firstName, lastName, email, password, valided];
+      const { id, username, firstName, lastName, email, password, valided } =
+        userData;
+      const query =
+        "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
+      const values = [
+        id,
+        username,
+        firstName,
+        lastName,
+        email,
+        password,
+        valided,
+      ];
       const newUser = await db.query(query, values);
       return newUser;
     } catch (error) {
@@ -31,7 +41,7 @@ class UserModel {
 
   static findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
     try {
-      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided FROM users WHERE ${paramToSearch} = $1`;
+      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided, age FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
       if (user.rowCount == 0) {
         throw new Error("users doesnt exist");
@@ -77,14 +87,18 @@ class UserModel {
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
     return new Promise((next) => {
-      db.query("SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1", [currentUserId])
+      db.query(
+        "SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1",
+        [currentUserId]
+      )
         .then((result) => {
-          const { sexual_preference, rate_fame, position, age } = result.rows[0];
+          const { sexual_preference, rate_fame, position, age } =
+            result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
-          let max_distance = 300;
+          let max_distance = 200;
 
           const validatedSearchCriteria = searchValidation(searchParams);
           if (validatedSearchCriteria !== "ok") {
@@ -118,34 +132,45 @@ class UserModel {
 
           const getMatchesBySexualPreferences = () => {
             return db.query(
-              "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
+              "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
                 WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
                 AND id != $6",
-              [sexual_preference, min_fame, max_fame, min_age, max_age, currentUserId]
+              [
+                sexual_preference,
+                min_fame,
+                max_fame,
+                min_age,
+                max_age,
+                currentUserId,
+              ]
             );
           };
 
           const getMatchesOfAllSexes = () => {
             return db.query(
-              "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
+              "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
                 WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
-              [min_fame, max_fame, min_age, Number(max_age), currentUserId]
+              [min_fame, max_fame, min_age, max_age, currentUserId]
             );
           };
 
           const getOnlyClosePeople = (users) => {
-            return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
+            return users.filter((user) =>
+              Math.floor(
+                distanceBetweenTwoPoints(position, user.position) < max_distance
+              )
+            );
           };
 
           if (
-            sexual_preference !== "other" ||
+            sexual_preference === "both" ||
             searchParams.action === "search"
           ) {
-            getMatchesBySexualPreferences()
+            getMatchesOfAllSexes()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           } else {
-            getMatchesOfAllSexes()
+            getMatchesBySexualPreferences()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }
@@ -153,9 +178,36 @@ class UserModel {
         .catch((err) => next(err));
     });
   };
-  static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, position, city, id }) => {
+  static updateAllInformation = async ({
+    firstname,
+    gender,
+    age,
+    email,
+    lastname,
+    sexual_preference,
+    tags,
+    beverage,
+    description,
+    position,
+    city,
+    id,
+  }) => {
     const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9, position = POINT($10,$11), city = $12 WHERE id = $13`;
-    const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, position.x, position.y, city, id];
+    const values = [
+      firstname,
+      lastname,
+      gender,
+      email,
+      sexual_preference,
+      tags,
+      age,
+      beverage,
+      description,
+      position.x,
+      position.y,
+      city,
+      id,
+    ];
     return new Promise((next) => {
       db.query(query, values)
         .then((data) => {
@@ -190,7 +242,10 @@ class UserModel {
   };
   static reportAsFakeAccount = (idReceiver) => {
     return new Promise((next) => {
-      db.query(`UPDATE users SET fake_account = fake_account + 1 WHERE id = $1`, [idReceiver])
+      db.query(
+        `UPDATE users SET fake_account = fake_account + 1 WHERE id = $1`,
+        [idReceiver]
+      )
         .then((data) => {
           return next(data);
         })
@@ -199,7 +254,10 @@ class UserModel {
   };
   static handleConnected = (idUser, connected) => {
     return new Promise((next) => {
-      db.query('UPDATE users set "connected" = $1 WHERE id = $2', [connected, idUser])
+      db.query('UPDATE users set "connected" = $1 WHERE id = $2', [
+        connected,
+        idUser,
+      ])
         .then((data) => next(data))
         .catch((error) => next(error));
     });

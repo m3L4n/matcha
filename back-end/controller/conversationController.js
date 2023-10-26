@@ -4,8 +4,8 @@ const { ConversationModel } = require("../models/ConversationModel");
 class ConversationController {
   static index = async (req, res) => {
     const { id: currentUserID } = req.authUser;
-    let conversation = await ConversationModel.getAll(currentUserID);
-    return res.json(checkAndChange(conversation));
+    let conversations = await ConversationModel.getAll(currentUserID);
+    return res.json(checkAndChange(conversations));
   };
 }
 

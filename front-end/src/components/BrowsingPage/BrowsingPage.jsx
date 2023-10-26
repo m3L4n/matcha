@@ -20,7 +20,7 @@ export default function BrowsingPage() {
     age: "",
     location: "",
     fame: "",
-    tags: "",
+    tags: ""
   });
 
   const [filterParams, setFilterParams] = useState({
@@ -28,10 +28,11 @@ export default function BrowsingPage() {
     locationGap: "",
     fameGap: "",
     sortBy: "",
-    sortOption: "ascending",
+    sortOption: "ascending"
   });
 
   const [matches, setMatches] = useState([]);
+  const { user: currentUser } = useAuth();
 
   function distanceBetweenTwoPoints(positionA, positionB) {
     // Haversine algorithm
@@ -46,25 +47,47 @@ export default function BrowsingPage() {
     let distLong = longB - longA;
     let distLat = latB - latA;
 
-    let a = Math.pow(Math.sin(distLat / 2), 2) + Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(distLong / 2), 2);
+    let a =
+      Math.pow(Math.sin(distLat / 2), 2) +
+      Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(distLong / 2), 2);
 
     let c = 2 * Math.asin(Math.sqrt(a));
 
     return c * EARTH_RADIUS * 1000;
   }
 
-  const sortMatches = (toSort) => {
+  const sortMatches = toSort => {
     if (filterParams.sortBy === "age") {
-      toSort.sort((a, b) => a.age - b.age);
+      if (filterParams.sortOption === "ascending") {
+        toSort.sort((a, b) => a.age - b.age);
+      } else {
+        toSort.sort((a, b) => b.age - a.age);
+      }
     } else if (filterParams.sortBy === "location") {
-      toSort.sort((a, b) => a.location - b.location);
+      if (filterParams.sortOption === "ascending") {
+        toSort.sort(
+          (a, b) =>
+            distanceBetweenTwoPoints(a.position, currentUser.position) -
+            distanceBetweenTwoPoints(b.position, currentUser.position)
+        );
+      } else {
+        toSort.sort(
+          (a, b) =>
+            distanceBetweenTwoPoints(b.position, currentUser.position) -
+            distanceBetweenTwoPoints(a.position, currentUser.position)
+        );
+      }
     } else if (filterParams.sortBy === "fame") {
-      toSort.sort((a, b) => a.rate_fame - b.rate_fame);
+      if (filterParams.sortOption === "ascending") {
+        toSort.sort((a, b) => a.rate_fame - b.rate_fame);
+      } else {
+        toSort.sort((a, b) => b.rate_fame - a.rate_fame);
+      }
     }
     return toSort;
   };
 
-  const filterMatches = (toFilter) => {
+  const filterMatches = toFilter => {
     if (isNotEmptyButNaN(filterParams.ageGap)) {
       notify("Error: invalid age gap filter parameters");
     } else if (isNotEmptyButNaN(filterParams.fameGap)) {
@@ -78,33 +101,39 @@ export default function BrowsingPage() {
         let minAge = currentUserAge - ageGap;
         minAge = minAge < 18 ? 18 : minAge;
         const maxAge = currentUserAge + ageGap;
-        toFilter = toFilter.filter((user) => Number(user.age) >= minAge && Number(user.age) <= maxAge);
+        toFilter = toFilter.filter(
+          user => Number(user.age) >= minAge && Number(user.age) <= maxAge
+        );
       }
       if (filterParams.fameGap !== "") {
-        const minFame = currentUser.rate_fame - filterMatches.fameGap;
-        const maxFame = currentUser.rate_fame + filterMatches.fameGap;
-        toFilter = toFilter.filter((user) => user.rate_fame >= minFame && user.rate_fame <= maxFame);
+        console.log(filterParams);
+        const minFame = currentUser.rate_fame - Number(filterParams.fameGap);
+        const maxFame = currentUser.rate_fame + Number(filterParams.fameGap);
+        toFilter = toFilter.filter(
+          user => user.rate_fame >= minFame && user.rate_fame <= maxFame
+        );
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
-        const currentUserPosition = Number(currentUser.position);
-        toFilter = toFilter.filter((user) => distanceBetweenTwoPoints(currentUserPosition, user.position) < locationGap);
+        toFilter = toFilter.filter(
+          user =>
+            distanceBetweenTwoPoints(currentUser.position, user.position) <
+            locationGap
+        );
       }
     }
     return toFilter;
   };
 
-  const { user: currentUser } = useAuth();
-
   const { status, error, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
-    enabled: currentUser.valided,
+    enabled: currentUser.valided
   });
 
   useEffect(() => {
     if (status === "success") {
-      const filterAndSort = (users) => sortMatches(filterMatches(users));
+      const filterAndSort = users => sortMatches(filterMatches(users));
       setMatches(filterAndSort(users?.result ?? []));
     }
   }, [status, users]);
@@ -122,10 +151,23 @@ export default function BrowsingPage() {
       <header className="title">
         <h1 className="header-title header">Matcha</h1>
       </header>
-      <SearchBar requestParams={requestParams} setRequestParams={setRequestParams} setFilterParams={setFilterParams} />
+      <SearchBar
+        requestParams={requestParams}
+        setRequestParams={setRequestParams}
+        setFilterParams={setFilterParams}
+      />
       <section className="matches">
-        {sortMatches(filterMatches(matches)).map((user) => {
-          return <Card key={user.id} id={user.id} username={user.username} age={user.age} profilePicture={user.profile_picture} city={user.city} />;
+        {sortMatches(filterMatches(matches)).map(user => {
+          return (
+            <Card
+              key={user.id}
+              id={user.id}
+              username={user.username}
+              age={user.age}
+              profilePicture={user.profile_picture}
+              city={user.city}
+            />
+          );
         })}
       </section>
     </>

@@ -5,22 +5,18 @@ export async function disconnect() {
     headers: {
       "Content-Type": "application/json;charset=utf-8"
     },
-    credentials: "include",
+    credentials: "include"
   };
   fetch("http://localhost:4000/users/disconnect", options)
     .then(response => {
       if (response.status == 200) {
-        notify(
-          "success",
-          "disconnected"
-        );
-        return {}
+        notify("success", "disconnected");
+        return {};
       }
       return response.json();
     })
     .then(data => console.log(data))
-    .catch(error => {
+    .catch(() => {
       notify("error", "we can't disconnect you, please retry");
     });
-
 }

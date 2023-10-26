@@ -18,8 +18,12 @@ class MatchModel {
               } else if (currentUserRating < opponentRating) {
                 expected_outcome = 1;
               }
-              let updatedRateFame = currentUserRating + K * (actual_outcome - expected_outcome);
-              db.query("UPDATE users SET rate_fame = $1 WHERE id = $2", [updatedRateFame, idPlayer])
+              let updatedRateFame =
+                currentUserRating + K * (actual_outcome - expected_outcome);
+              db.query("UPDATE users SET rate_fame = $1 WHERE id = $2", [
+                updatedRateFame,
+                idPlayer,
+              ])
                 .then((result) => next(result))
                 .catch((error) => next(error));
             })
@@ -36,7 +40,12 @@ class MatchModel {
    * @param {boolean} like //
    * @param {boolean} block
    */
-  static #createMatch = (id_requester, id_receiver, like = false, block = false) => {
+  static #createMatch = (
+    id_requester,
+    id_receiver,
+    like = false,
+    block = false
+  ) => {
     return new Promise((next) => {
       db.query(
         `INSERT INTO match (id_requester, id_receiver, "like", "block") \
@@ -60,7 +69,10 @@ class MatchModel {
 
   static getRelationship = (requesterId, receiverId) => {
     return new Promise((next) => {
-      db.query(`SELECT "like", "block" FROM match WHERE id_requester = $1 AND id_receiver= $2`, [requesterId, receiverId])
+      db.query(
+        `SELECT "like", "block" FROM match WHERE id_requester = $1 AND id_receiver= $2`,
+        [requesterId, receiverId]
+      )
         .then((data) => {
           const relationShipData = {
             like: false,
@@ -120,20 +132,36 @@ class MatchModel {
    * @returns {Promise}
    **/
 
-  static removeLike = (receiverId, requesterId) => {
+  static removeLike = (requesterId, receiverId) => {
     return new Promise((next) => {
-      db.query('SELECT "like" FROM match WHERE id_requester = $1', [requesterId])
+      db.query(
+        'SELECT "like" FROM match \
+        WHERE id_requester = $1 AND id_receiver = $2',
+        [requesterId, receiverId]
+      )
         .then((result) => {
           this.#updateElo(receiverId, requesterId, 0)
             .then(() => {
-              if (result.rows.length > 0) {
-                db.query(
-                  'UPDATE match SET "like" = false \
-              WHERE id_requester = $1 AND id_receiver = $2',
-                  [requesterId, receiverId]
-                )
-                  .then((result) => next(result))
-                  .catch((error) => next(error));
+              if (result.rowCount > 0) {
+                if (result.rows[0].like) {
+                  db.query(
+                    'UPDATE match SET "like" = false \
+                  WHERE id_requester = $1 AND id_receiver = $2\
+                  RETURNING *',
+                    [requesterId, receiverId]
+                  )
+                    .then((result) => next(result))
+                    .catch((error) => next(error));
+                } else {
+                  db.query(
+                    "DELETE FROM match\
+                    WHERE id_requester = $1 AND id_receiver = $2\
+                    RETURNING *",
+                    [requesterId, receiverId]
+                  )
+                    .then((result) => next(result))
+                    .catch((error) => next(error));
+                }
               } else {
                 next(result);
               }
@@ -151,9 +179,11 @@ class MatchModel {
    * @returns {Object} // return the row modified
    */
   static blockUser = (requesterId, receiverId, block = true) => {
-    console.log(requesterId, "receiver", receiverId);
     return new Promise((next) => {
-      db.query("SELECT * FROM match WHERE id_requester = $1 AND id_receiver = $2", [requesterId, receiverId])
+      db.query(
+        "SELECT * FROM match WHERE id_requester = $1 AND id_receiver = $2",
+        [requesterId, receiverId]
+      )
         .then((match) => {
           if (match.rowCount == 0) {
             this.#createMatch(requesterId, receiverId, false, true)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import fetchLocalisation from "components/Profile//fetch/fetchLocalisation";
 import { notify } from "components/Global/toast-notify";
 import fetchUpdateInfo from "components/Profile/fetch/fetchUpdateInfo";
@@ -9,21 +9,31 @@ import { isValidEmail } from "src/components/Global/check-email";
 import fetchLocalisationiWithoutKnow from "components/Profile/fetch/fetchLocalisationWithoutKnow";
 import anonymous from "assets/_.jpeg";
 import LayoutUserProfile from "../layoutUserProfil/LayoutUserProfile";
-import { json } from "react-router-dom";
 import fetchBlockUser from "../fetch/fetchBlockUser";
 import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
-import { socket } from "src/socket/socket";
-export default function UserProfile({ allTags, userInformation, ourProfile, relationship, connected }) {
+export default function UserProfile({
+  allTags,
+  userInformation,
+  ourProfile,
+  relationship,
+  connected
+}) {
   const mutationUpdateInfo = useMutation(fetchUpdateInfo);
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
   const mutationUploadPD = useMutation(fetchUploadPictureDescription);
   const mutationReportFakeAccount = useMutation(fetchReportFakeAccount);
   const mutationLocalisation = useMutation(fetchLocalisation);
-  const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow);
+  const mutationLocalisationNoneKnow = useMutation(
+    fetchLocalisationiWithoutKnow
+  );
   const mutationBlockUser = useMutation(fetchBlockUser);
 
-  const coords = mutationLocalisation.isLoading ? {} : mutationLocalisation.data;
-  const coordKnowNone = mutationLocalisationNoneKnow.isLoading ? {} : mutationLocalisationNoneKnow.data;
+  const coords = mutationLocalisation.isLoading
+    ? {}
+    : mutationLocalisation.data;
+  const coordKnowNone = mutationLocalisationNoneKnow.isLoading
+    ? {}
+    : mutationLocalisationNoneKnow.data;
 
   const [pictureDescription, setPicturesDescription] = useState([]);
   const [profilPicture, setProfilPicture] = useState("");
@@ -42,7 +52,11 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     if (!mutationLocalisation.isLoading) {
       if (coords) {
         if (Object.keys(coords).length > 0) {
-          setInfoProfil({ ...infoProfile, ["city"]: coords.city, ["position"]: { x: coords.latitude, y: coords.longitude } });
+          setInfoProfil({
+            ...infoProfile,
+            ["city"]: coords.city,
+            ["position"]: { x: coords.latitude, y: coords.longitude }
+          });
         }
       }
     }
@@ -52,13 +66,20 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     if (!mutationLocalisationNoneKnow.isLoading) {
       if (coordKnowNone) {
         if (Object.keys(coordKnowNone).length > 0) {
-          setInfoProfil({ ...infoProfile, ["city"]: coordKnowNone.city, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
+          setInfoProfil({
+            ...infoProfile,
+            ["city"]: coordKnowNone.city,
+            ["position"]: {
+              x: coordKnowNone.latitude,
+              y: coordKnowNone.longitude
+            }
+          });
         }
       }
     }
   }, [coordKnowNone]);
 
-  const fillInfoProfile = (infoUser) => {
+  const fillInfoProfile = infoUser => {
     if (Object.keys(infoUser).length > 0) {
       let infoProfileTmp = structuredClone(infoUser);
       for (const info in infoProfileTmp) {
@@ -106,7 +127,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     }
   };
   const getLocation = async () => {
-    const geoSuccess = async (position) => {
+    const geoSuccess = async position => {
       await mutationLocalisation.mutate(position.coords);
     };
     const geoError = async () => {
@@ -130,7 +151,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       return;
     } else if (name == "tags") {
       let tmpTags = JSON.parse(JSON.stringify(infoProfile.tags));
-      const index = tmpTags.findIndex((elem) => elem == value);
+      const index = tmpTags.findIndex(elem => elem == value);
       if (index == -1) {
         tmpTags.push(value);
       } else {
@@ -143,12 +164,15 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     setInfoProfil({ ...infoProfile, [name]: value });
   }
 
-  const updatePictures = (arrayPicture) => {
+  const updatePictures = arrayPicture => {
     setPicturesDescription(arrayPicture);
   };
   function saveProfile() {
     if (pictureDescription.length > 4 || pictureDescription.length < 4) {
-      notify("error", "you dont the right number of picture description, the number is 4");
+      notify(
+        "error",
+        "you dont the right number of picture description, the number is 4"
+      );
       return;
     } else if (profilPicture.length <= 0 || profilPicture == anonymous) {
       notify("error", "you must have profile picture");
@@ -171,7 +195,10 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       !infoProfile.position ||
       infoProfile.rate_fame < 0
     ) {
-      notify("error", "you cant save you profile you need to fill all the input");
+      notify(
+        "error",
+        "you cant save you profile you need to fill all the input"
+      );
       return;
     }
 
@@ -190,7 +217,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   const blockUser = (id, block) => {
     mutationBlockUser.mutate({ id, block });
   };
-  const reportAsFakeAccount = (id) => {
+  const reportAsFakeAccount = id => {
     mutationReportFakeAccount.mutate({ id });
   };
   return (

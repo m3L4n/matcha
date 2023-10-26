@@ -1,9 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import "./Navbar.scoped.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { disconnect } from "components/Authentification/disconnect/disconnect";
-
-import { socket } from "src/socket/socket";
 import { useAuth } from "src/Context/AuthContext";
 
 export default function Navbar() {
@@ -16,19 +14,6 @@ export default function Navbar() {
     pages = ["login", "register"];
   }
 
-  // useEffect(() => {
-  //   if (Object.keys(user).length > 0) {
-  //     socket.emit("notifications", { userId: user.id });
-  //     socket.on("number-notif-not-seen", (msg) => {
-  //       console.log(msg);
-  //     });
-  //   }
-  //   return () => {
-  //     socket.off("notifications", (reason) => {
-  //       console.log(reason);
-  //     });
-  //   };
-  // }, [user]);
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
     disconnect();
@@ -39,14 +24,21 @@ export default function Navbar() {
   return (
     <nav className={sidebar ? "navbar navbar-deployed" : "navbar"}>
       <div className="burger-icon">
-        <a className={sidebar ? "sidebar-toggle nav-open" : "sidebar-toggle"} onClick={toggleSidebar}>
+        <button
+          className={sidebar ? "sidebar-toggle nav-open" : "sidebar-toggle"}
+          onClick={toggleSidebar}
+        >
           <span className="burger menu-toggle-bar--top"></span>
           <span className="burger menu-toggle-bar--middle"></span>
           <span className="burger menu-toggle-bar--bottom"></span>
-        </a>
+        </button>
       </div>
-      <ul className={sidebar ? "navbar-content navbar-content-visible" : "navbar-content"}>
-        {pages.map((page) => (
+      <ul
+        className={
+          sidebar ? "navbar-content navbar-content-visible" : "navbar-content"
+        }
+      >
+        {pages.map(page => (
           <li key={pages.indexOf(page)}>
             {sidebar &&
               (page != "profile" ? (
@@ -62,7 +54,10 @@ export default function Navbar() {
         ))}
         <li>
           {sidebar && Object.keys(user)?.length > 0 && (
-            <button className="disconnect-button body" onClick={handleDisconnect}>
+            <button
+              className="disconnect-button body"
+              onClick={handleDisconnect}
+            >
               Disconnect{" "}
             </button>
           )}

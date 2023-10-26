@@ -15,7 +15,10 @@
 .messages {
     text-align: center;
     width: 89%;
-    margin: auto
+    height: 60vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    margin: auto;
 }
 
 .message {
@@ -84,6 +87,7 @@ header img {
 
     .search-from--send {
         margin-right: 1em;
+        cursor: pointer;
     }
 
     .messages-container-back-button {

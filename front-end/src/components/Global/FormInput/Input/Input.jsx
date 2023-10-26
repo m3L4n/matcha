@@ -7,11 +7,11 @@ const Input = ({ name, placeholder }) => {
       <input type="text" id={name} name={name} placeholder={placeholder} />
     </div>
   );
-}
+};
 
 Input.propTypes = {
   placeholder: PropTypes.string,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
 };
 
 export default Input;

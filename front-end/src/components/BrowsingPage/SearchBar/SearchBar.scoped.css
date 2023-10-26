@@ -43,7 +43,6 @@ form {
   margin-left: 0.5rem;
 }
 
-
 button[type="submit"] {
   overflow: hidden;
   background-color: var(--cream);
@@ -54,7 +53,7 @@ button[type="submit"] {
   border: 1px solid transparent;
   border-radius: inherit;
   cursor: pointer;
-  padding-right: .7rem;
+  padding-right: 0.7rem;
 }
 
 button[type="submit"]:hover {
@@ -67,7 +66,7 @@ button[type="submit"]:hover {
 .searchbar::placeholder {
   color: var(--green);
   opacity: 0.8;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   font-weight: 400;
   padding: 0.3rem;
@@ -83,11 +82,13 @@ button[type="submit"]:hover {
 
 .filter {
   color: var(--green);
+  background-color: var(--cream);
+  border: none;
   font-size: 2rem;
   vertical-align: middle;
   cursor: pointer;
   transition: color 0.5s ease;
-  margin-bottom: .7em;
+  margin-bottom: 0.7em;
 }
 
 .filter:hover {

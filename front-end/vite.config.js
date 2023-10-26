@@ -8,26 +8,26 @@ export default defineConfig({
   plugins: [
     react(),
     eslintPlugin({
-      cache: false,
+      cache: false
     }),
-    reactScopedCssPlugin(),
+    reactScopedCssPlugin()
   ],
   css: {
     modules: {
       localsConvention: "camelCase",
-      generateScopedName: "[local]_[hash:base64:2]",
-    },
+      generateScopedName: "[local]_[hash:base64:2]"
+    }
   },
   server: {
     host: true,
     strictPort: true,
-    port: 3000,
+    port: 3000
   },
   resolve: {
     alias: {
       src: "/src",
       components: "/src/components",
-      assets: "/src/assets",
-    },
-  },
+      assets: "/src/assets"
+    }
+  }
 });

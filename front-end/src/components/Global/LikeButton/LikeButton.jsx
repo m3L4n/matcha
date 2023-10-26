@@ -14,28 +14,36 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
       }
     }
   }, []);
+
   const toggleLike = async (event, id) => {
     event.stopPropagation();
     const options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({ receiverId: `${id}` }),
-      credentials: "include",
+      credentials: "include"
     };
 
-    if (!like) await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/create`, options);
+    if (!like)
+      await fetch(
+        `${import.meta.env.VITE_BACKEND_API_URL}/match/create`,
+        options
+      );
     else {
       options.method = "PUT";
-      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/unlike`, options);
+      await fetch(
+        `${import.meta.env.VITE_BACKEND_API_URL}/match/update`,
+        options
+      );
     }
     setLike(!like);
   };
   return (
     <button
-      onClick={(event) => toggleLike(event, id)}
-      onMouseMove={(e) => {
+      onClick={event => toggleLike(event, id)}
+      onMouseMove={e => {
         e.stopPropagation();
         let x = e.nativeEvent.offsetX;
         let y = e.nativeEvent.offsetY;
@@ -45,9 +53,14 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
         let moveX = x - boxWidth / 1.5;
         let moveY = y - boxHeight / 1.5;
 
-        e.target.style.transform = `translate(${moveX * 0.4}px,${moveY * 0.4}px)`;
+        e.target.style.transform = `translate(${moveX * 0.4}px,${moveY *
+          0.4}px)`;
       }}
-      onMouseOut={(e) => {
+      onMouseOut={e => {
+        e.stopPropagation();
+        e.target.style.transform = "translate(0px, 0px)";
+      }}
+      onBlur={e => {
         e.stopPropagation();
         e.target.style.transform = "translate(0px, 0px)";
       }}
@@ -57,7 +70,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
       <BsFillSuitHeartFill
         size={sizeIcon}
         value="button"
-        onMouseMove={(e) => {
+        onMouseMove={e => {
           e.stopPropagation();
           e.target.style.transform = "";
         }}
@@ -67,7 +80,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32 }) => {
 };
 
 LikeButton.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired
 };
 
 export default LikeButton;

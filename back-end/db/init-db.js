@@ -155,7 +155,10 @@ async function insertTags(client) {
     "Open to new experiences",
   ];
   for (const tag of arrayTags) {
-    await client.query(`INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`, [tag]);
+    await client.query(
+      `INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`,
+      [tag],
+    );
   }
 }
 async function createTableNotifications(client) {
