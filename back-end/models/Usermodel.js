@@ -155,11 +155,18 @@ class UserModel {
           };
 
           const getOnlyClosePeople = (users) => {
-            return users.filter((user) =>
-              Math.floor(
-                distanceBetweenTwoPoints(position, user.position) < max_distance
+            return users
+              .filter((user) =>
+                Math.floor(
+                  distanceBetweenTwoPoints(position, user.position) <
+                    max_distance
+                )
               )
-            );
+              .sort(
+                (a, b) =>
+                  distanceBetweenTwoPoints(a.position, position) -
+                  distanceBetweenTwoPoints(b.position, position)
+              );
           };
 
           if (

@@ -7,7 +7,7 @@ import getChatPartner from "./fetchChatPartner";
 import getMessages from "./fetchMessages";
 import { useAuth } from "src/Context/AuthContext";
 import { socket } from "src/socket/socket";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Message({
   setConversationPicker,
@@ -15,7 +15,6 @@ export default function Message({
   conversationId
 }) {
   const [messageContent, setMessageContent] = useState("");
-  const messageInput = useRef(null);
   const [messages, setMessages] = useState([]);
 
   const query = useQuery({
@@ -23,9 +22,10 @@ export default function Message({
     queryFn: getChatPartner
   });
 
-  const { status, data } = useQuery({
+  const { status, data, refetch } = useQuery({
     queryKey: ["currentMessages", conversationId],
-    queryFn: getMessages
+    queryFn: getMessages,
+    enabled: false
   });
 
   const { user: currentUser } = useAuth();
@@ -37,6 +37,7 @@ export default function Message({
   }, [status, data?.result]);
 
   useEffect(() => {
+    refetch();
     socket.on("receive_message", message => {
       if (message.id_conversation == conversationId) {
         setMessages(messages => messages.concat(message));
@@ -44,7 +45,19 @@ export default function Message({
     });
 
     return () => socket.off("receive_message");
-  }, []);
+  }, [conversationId]);
+
+  const sendMessage = () => {
+    if (messageContent !== "") {
+      socket.emit("message_sended", {
+        idUserRequester: currentUser.id,
+        idUserReceiver: chatPartnerId,
+        conversationId: conversationId,
+        messageContent: messageContent
+      });
+    }
+    setMessageContent("");
+  };
 
   return (
     <div className="messages-container">
@@ -74,26 +87,16 @@ export default function Message({
       </section>
       <form className="search-form">
         <input
+          value={messageContent}
           className="search-form--input"
           type="text"
-          onChange={e => {
-            setMessageContent(e.target.value);
-          }}
-          ref={messageInput}
+          onChange={e => setMessageContent(e.target.value)}
         />
         <PiPaperPlaneRightFill
           className="search-from--send"
           color="#A4B07E"
           size={24}
-          onClick={() => {
-            socket.emit("message_sended", {
-              idUserRequester: currentUser.id,
-              idUserReceiver: chatPartnerId,
-              conversationId: conversationId,
-              messageContent: messageContent
-            });
-            messageInput.current.value = "";
-          }}
+          onClick={() => sendMessage()}
         />
       </form>
     </div>
