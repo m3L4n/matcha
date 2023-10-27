@@ -4,15 +4,21 @@ import { CiEdit } from "react-icons/ci";
 import anonymous from "assets/_.jpeg";
 import { IoMaleFemaleSharp, IoFemale, IoMaleSharp } from "react-icons/io5";
 import { MdQuestionMark } from "react-icons/md";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FaFemale, FaMale } from "react-icons/fa";
 import { notify } from "components/Global/toast-notify";
 import { checkMymeType } from "components/Global/checkMymeType";
 import { isValidEmail } from "src/components/Global/check-email";
 import LikeButton from "src/components/Global/LikeButton/LikeButton";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
+
 export default function LayoutUserProfile({
   id,
   firstname,
   lastname,
+  latest_connection,
   username,
   email,
   tags,
@@ -35,8 +41,15 @@ export default function LayoutUserProfile({
   saveProfile,
   blockUser,
   relationship,
+  fake_account,
   reportAsFakeAccount,
+  locationInput,
+  updateLocationInput,
 }) {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  dayjs.extend(localizedFormat);
+  dayjs.tz.guess();
   function showPreview(event) {
     if (checkMymeType(event.target.files[0]) > 0) {
       handleChange(event);
@@ -132,6 +145,8 @@ export default function LayoutUserProfile({
       handleChange(event);
     }
   };
+  const d2 = dayjs(latest_connection).format("llll");
+
   return (
     <div className="containerLayout">
       <div className="containerLayout-body">
@@ -139,7 +154,7 @@ export default function LayoutUserProfile({
           {!ourProfile &&
             (!relationship.block ? (
               <button className="Lcontainer_userInfo-block" onClick={() => blockUser(id, true)}>
-                blocker
+                block
               </button>
             ) : (
               <h3> user blocked </h3>
@@ -155,9 +170,12 @@ export default function LayoutUserProfile({
             <div className="containerInfo-user__profile-img">
               {ShowPreviewImage(profile_picture)}
               {ourProfile ? (
-                <label htmlFor="file-ip-1" className="profile-image__label">
-                  <CiEdit size={16} />
-                </label>
+                <>
+                  <label htmlFor="file-ip-1" className="profile-image__label">
+                    <CiEdit size={16} />
+                  </label>
+                  <input type="file" id="file-ip-1" name="profil_picture" accept="image/*" onChange={showPreview} disabled={ourProfile ? false : true} />
+                </>
               ) : (
                 !relationship.block && (
                   <div className="profile-image__like">
@@ -165,7 +183,6 @@ export default function LayoutUserProfile({
                   </div>
                 )
               )}
-              <input type="file" id="file-ip-1" name="profil_picture" accept="image/*" onChange={showPreview} disabled={ourProfile ? false : true} />
             </div>
             {/* <div className="userInfo__header-identity"> */}
             <h1 className="title-1 Lcontainer_userInfo__header-title">{`@${username}`}</h1>
@@ -173,11 +190,22 @@ export default function LayoutUserProfile({
             <p className="title-1 Lcontainer_userInfo__header-title">{city}</p>
             {/* </div> */}
             {ourProfile && (
-              <button onClick={getLocation} className="button-location">
-                Update position
-              </button>
+              <>
+                <form className="container__gps-position">
+                  <label htmlFor="longitude">Longitude :</label>
+                  <input id="longitude" type="number" name="longitude" value={locationInput.longitude} onChange={updateLocationInput} />
+                  <label htmlFor="latitude">Latitude :</label>
+                  <input id="latitude" type="number" name="latitude" value={locationInput.latitude} onChange={updateLocationInput} />
+                  <input type="submit" value={"submit"} onClick={updateLocationInput} />
+                </form>
+                <button onClick={getLocation} className="button-location">
+                  Update position
+                </button>
+              </>
             )}
           </div>
+          <p>latest connexion : {d2}</p>
+          <p>report as fake account : {fake_account} times</p>
           <form className="Lcontainer_userInfo-form">
             <span className="userInfo-form__span">
               <label className="form-label">

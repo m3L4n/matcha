@@ -7,7 +7,7 @@ import { useAuth } from "src/Context/AuthContext";
 
 const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = false }) => {
   const [like, setLike] = useState(false);
-  const [changeState, setChangeState] = useState(false);
+  // const [changeState, setChangeState] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = fals
       options.method = "PUT";
       await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/unlike`, options);
     }
-    socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like });
+    socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like, currentLike: like });
     setLike(!like);
   };
 

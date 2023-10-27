@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Notification.scoped.css";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNotifUser } from "./fetch/fetchNotifUser";
 import GlobalLoading from "../Global/GLoading/GlobalLoading";
 import { useNavigate } from "react-router-dom";
+import { socket } from "src/socket/socket";
+import { useAuth } from "src/Context/AuthContext";
 
 export default function Notification() {
   const types = ["messages", "view", "like", "all"];
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [viewType, setViewType] = useState(types[3]);
-  const { data: notificationsData, isLoading: notificationsLoading } = useQuery(["notifications"], fetchNotifUser);
+  const { data: notificationsData, isLoading: notificationsLoading, refetch: refetchNotif } = useQuery(["notifications"], fetchNotifUser);
 
   const allNotifications = notificationsLoading ? [] : notificationsData.result.data;
 
@@ -19,6 +22,18 @@ export default function Notification() {
   const getArrayFiltered = (typeFilter) => {
     return allNotifications.filter(({ type }) => type == typeFilter);
   };
+
+  useEffect(() => {
+    socket.emit("user-view-notif", { userId: user.id });
+    socket.on("alert-new-notif", (msg) => {
+      if (msg.userReciver == user.id) {
+        refetchNotif();
+      }
+    });
+    return () => {
+      socket.off("alert-new-notif");
+    };
+  }, []);
 
   const RenderNotifFilter = () => {
     let notificationToShow = [];
@@ -30,7 +45,6 @@ export default function Notification() {
     return (
       <div className="container-render-notif">
         {notificationToShow.map((elem, index) => {
-          console.log(elem);
           return (
             <div key={index} className="container-notif" onClick={() => navigate(`/profile/${elem.id_user_requester}`)}>
               <img src={elem.profile_picture} />

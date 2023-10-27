@@ -34,7 +34,7 @@ export default function Profile() {
       return notify("warning", "you cant access user profile like this");
     }
   }, []);
-
+  console.log(userInformation);
   useEffect(() => {
     if (user.id != paramId) {
       socket.on("alert-disconnect", (msg) => {

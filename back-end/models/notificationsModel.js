@@ -31,7 +31,7 @@ class NotificationsModel {
     let query = "SELECT * FROM notifications WHERE id_user_receiver = $1 ";
     let value = [id_user];
     if (!view) {
-      query = `SELECT * FROM notifications WHERE id_user_receiver = $1 AND "view" = $2`;
+      query = `SELECT * FROM notifications WHERE id_user_receiver = $1 AND "viewed" = $2`;
       value = [id_user, view];
     }
     return new Promise((next) => {
@@ -43,8 +43,8 @@ class NotificationsModel {
   static findNotifByUserNoneSeen;
   static updateById = async (id, view = true) => {
     return new Promise((next) => {
-      db.query(`UPDATE  notifications SET "view" = $1  WHERE  id= $2 `, [view, id])
-        .then((data) => next(data.rows[0]))
+      db.query(`UPDATE  notifications SET "viewed" = $1  WHERE  id_user_receiver = $2 RETURNING * `, [view, id])
+        .then((data) => next(data.rows))
         .catch((error) => next(error));
     });
   };

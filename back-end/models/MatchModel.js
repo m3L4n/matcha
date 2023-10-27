@@ -101,7 +101,7 @@ class MatchModel {
       db.query(`SELECT "like", "block" FROM match WHERE id_requester = $1 AND id_receiver= $2 `, [requesterId, receiverId])
         .then((data) => {
           let relationShipData = {};
-          if (data.rowCount == 1) {
+          if (data.rowCount > 0) {
             relationShipData.block = data.rows[0].block;
             if (!data.rows[0].block) {
               relationShipData.like = true;
@@ -111,7 +111,7 @@ class MatchModel {
           } else {
             db.query(`SELECT "like", "block" FROM match WHERE id_requester = $2 AND id_receiver= $1 `, [requesterId, receiverId])
               .then((data) => {
-                if (data.rowCount == 1) {
+                if (data.rowCount > 0) {
                   relationShipData.block = data.rows[0].block;
                   if (!data.rows[0].block) {
                     relationShipData.like = data.rows[0].like;

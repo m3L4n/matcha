@@ -137,10 +137,7 @@ class UserModel {
             return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
           };
 
-          if (
-            sexual_preference !== "other" ||
-            searchParams.action === "search"
-          ) {
+          if (sexual_preference !== "other" || searchParams.action === "search") {
             getMatchesBySexualPreferences()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
@@ -172,10 +169,10 @@ class UserModel {
     let query = "";
     if (id === idReceiver) {
       query =
-        "SELECT id, username, email, firstName, gender, beverage, sexual_preference, lastName, tags, description, age, rate_fame, city, position, connected, profile_picture, pictures FROM users WHERE id = $1";
+        "SELECT id, username, email, firstName, gender, beverage, sexual_preference, lastName, tags, description, age, rate_fame, city, position, connected, latest_connection,  profile_picture, fake_account,  pictures FROM users WHERE id = $1";
     } else {
       query =
-        "SELECT id, username, firstName, gender, beverage,sexual_preference, lastName, tags, description,  age, rate_fame, city, position, connected, profile_picture , pictures FROM users WHERE id = $1";
+        "SELECT id, username, firstName, gender, beverage,sexual_preference, lastName, tags, description,  age, rate_fame, city, position, connected, profile_picture , latest_connection, fake_account,  pictures FROM users WHERE id = $1";
     }
     return new Promise((next) => {
       db.query(query, [idReceiver])
@@ -199,7 +196,7 @@ class UserModel {
   };
   static handleConnected = (idUser, connected) => {
     return new Promise((next) => {
-      db.query('UPDATE users set "connected" = $1 WHERE id = $2', [connected, idUser])
+      db.query('UPDATE users set "connected" = $1 , latest_connection = NOW()::timestamp WHERE id = $2', [connected, idUser])
         .then((data) => next(data))
         .catch((error) => next(error));
     });

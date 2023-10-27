@@ -13,6 +13,7 @@ import { json } from "react-router-dom";
 import fetchBlockUser from "../fetch/fetchBlockUser";
 import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
 import { socket } from "src/socket/socket";
+import LayoutUserProfilev2 from "../layoutUserProfil/LayoutUserProfilv2";
 export default function UserProfile({ allTags, userInformation, ourProfile, relationship, connected }) {
   const mutationUpdateInfo = useMutation(fetchUpdateInfo);
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
@@ -29,6 +30,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   const [profilPicture, setProfilPicture] = useState("");
   const [infoProfile, setInfoProfil] = useState({});
   const [userId, setUserId] = useState("");
+  const [locationInput, setLocationInput] = useState({ longitude: 0, latitude: 0 });
 
   useEffect(() => {
     if (userInformation) {
@@ -42,6 +44,8 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     if (!mutationLocalisation.isLoading) {
       if (coords) {
         if (Object.keys(coords).length > 0) {
+          console.log(coords);
+          setLocationInput({ ...locationInput, ["latitude"]: coords.latitude, ["longitude"]: coords.longitude });
           setInfoProfil({ ...infoProfile, ["city"]: coords.city, ["position"]: { x: coords.latitude, y: coords.longitude } });
         }
       }
@@ -51,7 +55,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   useEffect(() => {
     if (!mutationLocalisationNoneKnow.isLoading) {
       if (coordKnowNone) {
+        console.log(coordKnowNone);
         if (Object.keys(coordKnowNone).length > 0) {
+          setLocationInput({ ...locationInput, ["latitude"]: coordKnowNone.latitude, ["longitude"]: coordKnowNone.longitude });
           setInfoProfil({ ...infoProfile, ["city"]: coordKnowNone.city, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
         }
       }
@@ -96,6 +102,11 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
           setProfilPicture(infoProfileTmp[info]);
         } else if (info == "pictures") {
           setPicturesDescription(infoProfileTmp[info]);
+        } else if (info == "position") {
+          setLocationInput({
+            longitude: infoProfileTmp[info].y,
+            latitude: infoProfileTmp[info].x,
+          });
         }
         if (info != "profile_picture" && info != "pictures") {
           infoProfileTmp[info] = parameter;
@@ -107,10 +118,10 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   };
   const getLocation = async () => {
     const geoSuccess = async (position) => {
-      await mutationLocalisation.mutate(position.coords);
+      mutationLocalisation.mutate(position.coords);
     };
     const geoError = async () => {
-      await mutationLocalisationNoneKnow.mutate("localisation");
+      mutationLocalisationNoneKnow.mutate("localisation");
     };
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
   };
@@ -186,7 +197,20 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     mutationUpdateInfo.mutate(infoProfileWithoutPicture);
     notify("success", " account modfy");
   }
-
+  const updateLocationInput = async (event) => {
+    event.preventDefault();
+    if (event.target.name == "longitude" || event.target.name == "latitude") {
+      setLocationInput({ ...locationInput, [event.target.name]: event.target.valueAsNumber });
+      return;
+    }
+    let result = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${locationInput.latitude}&longitude=${locationInput.longitude}`);
+    result = await result.json();
+    if (result.status == 401) {
+      notify("error", result.description);
+      return;
+    }
+    setInfoProfil({ ...infoProfile, ["city"]: result.locality, ["position"]: { x: result.latitude, y: result.longitude } });
+  };
   const blockUser = (id, block) => {
     mutationBlockUser.mutate({ id, block });
   };
@@ -195,7 +219,16 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   };
   return (
     <div>
-      <LayoutUserProfile
+      <LayoutUserProfilev2
+        userInformation={infoProfile}
+        ourProfile={ourProfile}
+        handleChange={handleChange}
+        allTags={allTags}
+        pictureDescription={pictureDescription}
+        profilPicture={profilPicture}
+        updatePictures={updatePictures}
+      />
+      {/* <LayoutUserProfile
         {...infoProfile}
         id={userId}
         pictures={pictureDescription}
@@ -210,7 +243,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
         relationship={relationship}
         reportAsFakeAccount={reportAsFakeAccount}
         connected={connected}
-      />
+        locationInput={locationInput}
+        updateLocationInput={updateLocationInput}
+      /> */}
     </div>
   );
 }

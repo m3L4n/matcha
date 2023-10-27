@@ -1,0 +1,46 @@
+.container-input {
+  width: 100%;
+  flex: 1;
+}
+.userInfo-form_label {
+  width: 100%;
+  text-align: center;
+  color: var(--dark-green);
+}
+.userInfo-form_input {
+  position: relative;
+  width: 100%;
+  border: none;
+  text-align: center;
+  outline: none;
+}
+
+.controlled__input {
+  width: 0px;
+  margin: 0;
+  margin-right: 50%;
+  margin-left: 50%;
+  height: 3px;
+
+  transition: all ease-in 0.3s;
+}
+
+.input-focused {
+  width: 60%;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  margin-left: 20%;
+  margin-right: 20%;
+  background-color: var(--green);
+}
+
+.input-wrong {
+  width: 60%;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  margin-left: 20%;
+  margin-right: 20%;
+  background-color: red;
+}
