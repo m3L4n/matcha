@@ -132,7 +132,7 @@ class UserModel {
 
           const getMatchesBySexualPreferences = () => {
             return db.query(
-              "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
+              "SELECT id, username, position, profile_picture, age, rate_fame, city, tags FROM users \
                 WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
                 AND id != $6",
               [
@@ -148,7 +148,7 @@ class UserModel {
 
           const getMatchesOfAllSexes = () => {
             return db.query(
-              "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
+              "SELECT id, username, position, profile_picture, age, rate_fame, city, tags FROM users \
                 WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
               [min_fame, max_fame, min_age, max_age, currentUserId]
             );
