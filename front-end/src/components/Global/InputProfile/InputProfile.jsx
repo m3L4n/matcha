@@ -49,8 +49,10 @@ export default function InputProfile({ name, value, label, type, handleInput, ou
 
   return (
     <div className="container-input">
-      <label htmlFor={name} className="form-label">
-        <p className="userInfo-form_label body-highlight">{label}</p>
+      <label htmlFor={name} className="userInfo-form_label body-highlight">
+        {label}
+      </label>
+      <span>
         <input
           type={type}
           className="userInfo-form_input body"
@@ -63,7 +65,7 @@ export default function InputProfile({ name, value, label, type, handleInput, ou
           onBlur={(event) => triggerControlInput(event, false)}
         />
         <div className="controlled__input" id={`controlled_input_${name}`} />
-      </label>
+      </span>
     </div>
   );
 }

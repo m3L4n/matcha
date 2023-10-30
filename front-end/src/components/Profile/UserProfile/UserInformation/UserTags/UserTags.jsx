@@ -4,7 +4,7 @@ import "./UserTags.scoped.css";
 export default function UserTags({ allTags, tags, handleChange, ourProfile }) {
   return (
     <div className="container__user-tags">
-      <h3 className="title-1"> Tags </h3>
+      <h3 className="body-highlight"> Tags </h3>
       <ul className="ul__user-tags">
         {allTags?.map((elem, index) => {
           return (

@@ -38,3 +38,11 @@
   border: 1px solid black;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+@media (min-width: 880px) {
+  .userInfo-form_label {
+    text-align: left;
+  }
+  .multiple-button {
+    justify-content: start;
+  }
+}

@@ -10,7 +10,7 @@ import fetchTags from "./fetch/fetchTags";
 import fetchUser from "./fetch/fetchUser";
 import { socket } from "src/socket/socket";
 import GlobalLoading from "../Global/GLoading/GlobalLoading";
-import fetchLocalisationiWithoutKnow from "./fetch/fetchLocalisationWithoutKnow";
+// import fetchLocalisationiWithoutKnow from "./fetch/fetchLocalisationWithoutKnow";
 import { useMutation } from "@tanstack/react-query";
 import fetchRelationships from "./fetch/fetchRelationship";
 import { fetchCreateProfilViewHistory } from "./fetch/fetchCreateProfilViewHistory";
@@ -34,7 +34,6 @@ export default function Profile() {
       return notify("warning", "you cant access user profile like this");
     }
   }, []);
-  console.log(userInformation);
   useEffect(() => {
     if (user.id != paramId) {
       socket.on("alert-disconnect", (msg) => {

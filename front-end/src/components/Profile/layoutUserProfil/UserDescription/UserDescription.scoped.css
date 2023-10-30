@@ -1,8 +1,0 @@
-.container-user-description {
-  width: 100%;
-  display: flex;
-  flex-flow: column wrap;
-  gap: 1rem;
-  margin: 5% auto 5% auto;
-  text-align: center;
-}

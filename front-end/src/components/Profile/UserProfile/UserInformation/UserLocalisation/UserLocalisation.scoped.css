@@ -1,0 +1,66 @@
+.container-user-location {
+  width: 100%;
+  /* margin: auto; */
+  text-align: center;
+}
+.user-location-body {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  gap: 1rem;
+}
+.button-update-location {
+  width: fit-content;
+  background-color: white;
+  padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+  display: flex;
+  margin: auto;
+  border-radius: 10px;
+  border: 2px solid var(--dark-green);
+  transition: all ease 0.3s;
+}
+.button-update-location:hover,
+.button-submit-gps:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.button-submit-gps {
+  background-color: var(--green);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  transition: all ease 0.3s;
+  border: 2px solid var(--dark-green);
+}
+.container-input {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1rem;
+}
+.input-row {
+  display: flex;
+  flex-flow: row;
+  gap: 3rem;
+}
+@media (min-width: 880px) {
+  .container-user-location {
+    min-width: 800px;
+    width: 65%;
+    text-align: left;
+  }
+  .container-input {
+    flex-flow: row;
+    border: 1px solid back;
+    margin: 0;
+    gap: 3rem;
+    align-items: center;
+  }
+  .button-update-location {
+    margin: 0;
+  }
+
+  .input-row {
+  }
+}

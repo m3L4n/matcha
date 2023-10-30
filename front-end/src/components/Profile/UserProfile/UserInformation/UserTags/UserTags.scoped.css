@@ -40,3 +40,16 @@
   border: 1px solid black;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+@media (min-width: 880px) {
+  .container__user-tags {
+    text-align: left;
+  }
+  .button-select {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+  /* .container-form-information{
+
+  } */
+}

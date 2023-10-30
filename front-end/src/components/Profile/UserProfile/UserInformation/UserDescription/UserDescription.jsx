@@ -4,8 +4,10 @@ import "./UserDescription.scoped.css";
 export default function UserDescription({ userInformation, handleChange, ourProfile }) {
   return (
     <div className="container-user-description">
-      <h3 className="title-1"> Description </h3>
-      <TextAreaProfile description={userInformation.description} handleChange={handleChange} ourProfile={ourProfile} />
+      <h3 className="body-highlight"> Description </h3>
+      <div className="container-text-area">
+        <TextAreaProfile description={userInformation.description} handleChange={handleChange} ourProfile={ourProfile} />
+      </div>
     </div>
   );
 }
