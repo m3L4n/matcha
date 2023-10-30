@@ -1,7 +1,7 @@
 import React from "react";
 import "./InputProfile.scoped.css";
 import { isValidEmail } from "src/components/Global/check-email";
-import PropTypes, { element } from "prop-types";
+import PropTypes from "prop-types";
 export default function InputProfile({ name, value, label, type, handleInput, ourProfile }) {
   const triggerControlInput = (event, needAdd) => {
     const name = event.target.name;

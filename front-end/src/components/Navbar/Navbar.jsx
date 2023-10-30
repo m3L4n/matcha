@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import "./Navbar.scoped.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { disconnect } from "components/Authentification/disconnect/disconnect";
-
 import { socket } from "src/socket/socket";
+import { disconnect } from "components/Authentification/disconnect/disconnect";
 import { useAuth } from "src/Context/AuthContext";
 
 export default function Navbar() {
@@ -44,11 +43,11 @@ export default function Navbar() {
   return (
     <nav className={sidebar ? "navbar navbar-deployed" : "navbar"}>
       <div className="burger-icon">
-        <a className={sidebar ? "sidebar-toggle nav-open" : "sidebar-toggle"} onClick={toggleSidebar}>
+        <button className={sidebar ? "sidebar-toggle nav-open" : "sidebar-toggle"} onClick={toggleSidebar}>
           <span className="burger menu-toggle-bar--top"></span>
           <span className="burger menu-toggle-bar--middle"></span>
           <span className="burger menu-toggle-bar--bottom"></span>
-        </a>
+        </button>
       </div>
       <ul className={sidebar ? "navbar-content navbar-content-visible" : "navbar-content"}>
         {pages.map((page) => (

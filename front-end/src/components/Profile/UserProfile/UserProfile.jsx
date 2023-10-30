@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import fetchLocalisation from "components/Profile//fetch/fetchLocalisation";
 import { notify } from "components/Global/toast-notify";
 import fetchUpdateInfo from "components/Profile/fetch/fetchUpdateInfo";
@@ -13,7 +13,7 @@ import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
 import "./UserProfile.scoped.css";
 import UserInformation from "./UserInformation/UserInformation";
 import FormButton from "src/components/Global/FormButton/FormButton";
-export default function UserProfile({ allTags, userInformation, ourProfile, relationship, connected }) {
+export default function UserProfile({ allTags, userInformation, ourProfile, relationship }) {
   const mutationUpdateInfo = useMutation(fetchUpdateInfo);
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
   const mutationUploadPD = useMutation(fetchUploadPictureDescription);
@@ -188,9 +188,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       mutationUploadPP.mutate(profilPicture);
     }
     let infoProfileWithoutPicture = { ...infoProfile };
-    delete infoProfileWithoutPicture["profile_pictures"];
+    delete infoProfileWithoutPicture["profile_picture"];
     delete infoProfileWithoutPicture["pictures"];
-
+    console.log(infoProfileWithoutPicture);
     mutationUploadPD.mutate(pictureDescription);
     mutationUpdateInfo.mutate(infoProfileWithoutPicture);
     notify("success", " account modfy");

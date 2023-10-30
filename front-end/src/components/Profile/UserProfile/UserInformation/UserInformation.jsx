@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CiEdit } from "react-icons/ci";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -6,7 +6,6 @@ import { checkMymeType } from "components/Global/checkMymeType";
 import LikeButton from "src/components/Global/LikeButton/LikeButton";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
-import PropTypes, { element } from "prop-types";
 import "./UserInformation.scoped.css";
 import UserDescription from "./UserDescription/UserDescription";
 import UserTags from "./UserTags/UserTags";
@@ -46,7 +45,7 @@ export default function UserInformation({
       if (elem instanceof File) {
         preview = URL.createObjectURL(elem);
       }
-      return <img alt="profile-picture" name="profile_picture" id="profile-picture" src={preview} className="profile-picture" />;
+      return <img alt="main" name="profile_picture" id="profile-picture" src={preview} className="profile-picture" />;
     };
 
     return (
@@ -83,7 +82,7 @@ export default function UserInformation({
         <span>
           {" "}
           tags{" "}
-          {userInformation.tags?.map((elem, index) => {
+          {userInformation.tags?.map((elem) => {
             console.log(elem);
           })}
         </span>

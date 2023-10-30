@@ -70,10 +70,16 @@ export default function SignIn() {
         </header>
         <hr className="hr" />
         <div className="container-form">
-          <label className="label body"> Username</label>
-          <input className="input" name="username" type="text" value={user.username} onChange={handleChange} />
-          <label className="label body"> password</label>
-          <input className="input" name="password" type="password" value={user.password} onChange={handleChange} />
+          <label className="label body" htmlFor="username">
+            {" "}
+            Username
+          </label>
+          <input className="input" name="username" id="username" type="text" value={user.username} onChange={handleChange} />
+          <label className="label body" htmlFor="password">
+            {" "}
+            password
+          </label>
+          <input className="input" name="password" id="password" type="password" value={user.password} onChange={handleChange} />
         </div>
         <button className="button-submit title-1" onClick={signIn}>
           {" "}

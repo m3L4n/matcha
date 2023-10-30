@@ -6,9 +6,10 @@
 .sort-select {
   border: 1px solid var(--green);
   border-radius: 20px;
-  padding: .5em;
+  padding: 0.5em;
   background-color: transparent;
   color: var(--green);
+  cursor: pointer;
 }
 
 .sort-select:focus {

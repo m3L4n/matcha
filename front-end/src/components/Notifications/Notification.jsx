@@ -46,12 +46,12 @@ export default function Notification() {
       <div className="container-render-notif">
         {notificationToShow.map((elem, index) => {
           return (
-            <div key={index} className="container-notif" onClick={() => navigate(`/profile/${elem.id_user_requester}`)}>
-              <img src={elem.profile_picture} />
+            <button key={index} className="container-notif" onClick={() => navigate(`/profile/${elem.id_user_requester}`)}>
+              <img alt="profile_picture" src={elem.profile_picture} />
               <span className="body-highlight">
                 {elem.username} {elem.action}
               </span>
-            </div>
+            </button>
           );
         })}
         {notificationToShow.length == 0 && <h3> 0 notificatons of {viewType}</h3>}

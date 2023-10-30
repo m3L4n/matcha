@@ -52,7 +52,6 @@
   }
   .container-input {
     flex-flow: row;
-    border: 1px solid back;
     margin: 0;
     gap: 3rem;
     align-items: center;

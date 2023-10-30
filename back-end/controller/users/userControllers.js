@@ -8,6 +8,20 @@ const { TokenModel } = require("../../models/Tokenmodel");
 const { UserModel } = require("../../models/Usermodel");
 
 class UserController {
+  static #checkEMail = (email) => {
+    const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return pattern.test(email);
+  };
+  static #checkPassword = (password) => {
+    const pattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return pattern.test(password);
+  };
+  static #checkUsername = (username) => {
+    if (username.length > 20) {
+      return false;
+    }
+    return true;
+  };
   static signup = async (req, res, needValidation = false) => {
     try {
       const valided = false;
@@ -22,6 +36,9 @@ class UserController {
         password: await bcrypt.hash(password, 10),
         valided,
       };
+      if (!this.#checkEMail(email) || !this.#checkPassword(password) || !this.#checkUsername(username)) {
+        return res.status(400).json({ status: 400, msg: "parameter non valid" });
+      }
       const user = await UserModel.createUser(data);
       const emailSend = await sendingEmailVerification(username);
       if (emailSend) {
@@ -54,8 +71,6 @@ class UserController {
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
               expiresIn: 1 * 24 * 60 * 60 * 1000,
             });
-            //set connection to true
-            // set derniere connection
             return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ status: 201, userId: user.id });
           } else {
             return res.status(401).send({ msg: "user not verified" });
@@ -74,6 +89,9 @@ class UserController {
   static changePassword = async (req, res) => {
     try {
       const { id, password } = req.body;
+      if (!this.#checkPassword(password)) {
+        return res.status(400).json({ status: 400, msg: "password doesn't respect the security test" });
+      }
       const psswdCrypt = await bcrypt.hash(password, 10);
       await UserModel.update(id, "password", psswdCrypt);
       return res.status(200).send("update sucessfuly");

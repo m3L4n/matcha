@@ -1,7 +1,7 @@
 import React from "react";
 import "./UserLocalisation.scoped.css";
 import InputProfile from "src/components/Global/InputProfile/InputProfile";
-export default function UserLocalisation({ locationInput, getLocation, updateLocationInput, userInformation, ourProfile }) {
+export default function UserLocalisation({ locationInput, getLocation, updateLocationInput, ourProfile }) {
   return (
     <div className="container-user-location">
       <h3 className="body-highlight"> Localisation</h3>

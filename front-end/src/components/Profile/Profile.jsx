@@ -22,18 +22,20 @@ export default function Profile() {
   const [ourProfile, setOurProfil] = useState(false);
   const mutationCreateProfilView = useMutation(fetchCreateProfilViewHistory);
   const { data: allTagsData, isLoading: allTagsLoading } = useQuery(["tags"], fetchTags);
-  const { data: userInformationData, isLoading: userLoading } = useQuery(["id", paramId], fetchUser);
+  const { data: userInformationData, isLoading: userLoading } = useQuery(["id", paramId], fetchUser, {
+    staleTime: 10000,
+  });
   const { data: relationShipData, isLoading: relationShipLoading } = useQuery(["relation", paramId], fetchRelationships);
   const allTags = allTagsLoading ? [] : allTagsData.result;
   const relationship = relationShipLoading ? {} : relationShipData.result;
   const userInformation = userLoading ? {} : userInformationData.result;
-
   useEffect(() => {
     if (!paramId) {
       navigate("/match");
       return notify("warning", "you cant access user profile like this");
     }
   }, []);
+
   useEffect(() => {
     if (user.id != paramId) {
       socket.on("alert-disconnect", (msg) => {
@@ -52,9 +54,9 @@ export default function Profile() {
     return () => {
       setConnected(false);
       setOurProfil(false);
-      socket.off("user_profile", (reason) => {});
-      socket.off("alert-disconnect", (reason) => {});
-      socket.off("alert-connect", (reason) => {});
+      socket.off("user_profile", () => {});
+      socket.off("alert-disconnect", () => {});
+      socket.off("alert-connect", () => {});
     };
   }, [paramId]);
 

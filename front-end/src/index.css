@@ -20,6 +20,11 @@ body {
   background-color: var(--cream);
   height: 100%;
   width: 100%;
+  overflow-x: hidden;
+}
+
+button:focus {
+  outline: none;
 }
 
 .header {
@@ -100,4 +105,29 @@ button {
     height: 100%;
     margin: auto;
   }
+}
+
+/* Custom scrollbars */
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--cream);
+  border-radius: 20px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--green);
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-green);
 }

@@ -6,23 +6,58 @@ import { useQuery } from "@tanstack/react-query";
 import getChatPartner from "./fetchChatPartner";
 import getMessages from "./fetchMessages";
 import { useAuth } from "src/Context/AuthContext";
+import { socket } from "src/socket/socket";
+import { useState, useEffect } from "react";
 
 export default function Message({
   setConversationPicker,
   chatPartnerId,
   conversationId
 }) {
+  const [messageContent, setMessageContent] = useState("");
+  const [messages, setMessages] = useState([]);
+
   const query = useQuery({
     queryKey: ["chatPartner", chatPartnerId],
     queryFn: getChatPartner
   });
 
-  const { data: messages } = useQuery({
+  const { status, data, refetch } = useQuery({
     queryKey: ["currentMessages", conversationId],
-    queryFn: getMessages
+    queryFn: getMessages,
+    enabled: false
   });
 
   const { user: currentUser } = useAuth();
+
+  useEffect(() => {
+    if (status === "success") {
+      setMessages(data?.result);
+    }
+  }, [status, data?.result]);
+
+  useEffect(() => {
+    refetch();
+    socket.on("receive_message", message => {
+      if (message.id_conversation == conversationId) {
+        setMessages(messages => messages.concat(message));
+      }
+    });
+
+    return () => socket.off("receive_message");
+  }, [conversationId]);
+
+  const sendMessage = () => {
+    if (messageContent !== "") {
+      socket.emit("message_sended", {
+        idUserRequester: currentUser.id,
+        idUserReceiver: chatPartnerId,
+        conversationId: conversationId,
+        messageContent: messageContent
+      });
+    }
+    setMessageContent("");
+  };
 
   return (
     <div className="messages-container">
@@ -31,11 +66,11 @@ export default function Message({
           onClick={() => setConversationPicker(true)}
           className="messages-container-back-button"
         />
-        <img src="http://placekitten.com/40/40" alt="profile picture" />
+        <img src={query?.data?.profile_picture} alt="chat partner avatar" />
         <p className="body">{query?.data?.username}</p>
       </header>
       <section className="messages">
-        {messages?.result.map(message => {
+        {messages?.map(message => {
           return (
             <p
               key={message.id}
@@ -51,11 +86,17 @@ export default function Message({
         })}
       </section>
       <form className="search-form">
-        <input className="search-form--input" type="text" />
+        <input
+          value={messageContent}
+          className="search-form--input"
+          type="text"
+          onChange={e => setMessageContent(e.target.value)}
+        />
         <PiPaperPlaneRightFill
           className="search-from--send"
           color="#A4B07E"
           size={24}
+          onClick={() => sendMessage()}
         />
       </form>
     </div>

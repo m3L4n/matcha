@@ -61,7 +61,7 @@ export default function UserPictures({ pictureDescription, ourProfile, updatePic
       )}
       <div id="body-picture-list" className="container-picture">
         {pictureDescription?.map((elem, index) => {
-          return ShowImage(elem, index);
+          return <React.Fragment key={index}>{ShowImage(elem, index)}</React.Fragment>;
         })}
       </div>
     </div>

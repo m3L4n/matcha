@@ -5,7 +5,7 @@ import Input from "../../../Global/FormInput/Input/Input";
 import Select from "src/components/Global/FormInput/Select/Select";
 import PropTypes from "prop-types";
 
-const FILTER_OPTIONS = ["Age gap", "Location", "Fame rating", "Tags"];
+const FILTER_OPTIONS = ["Age gap", "Location gap", "Fame rating", "Tags"];
 
 const FilterModal = ({ setFilterParams }) => {
   return (
@@ -21,7 +21,7 @@ const FilterModal = ({ setFilterParams }) => {
             locationGap: formData.get("location") ?? "",
             fameGap: formData.get("fame") ?? "",
             sortBy: sortBy,
-            sortOption: "ascending"
+            sortOption: formData.get("sort-type") ?? "ascending"
           };
           setFilterParams(filterParams);
         }}
@@ -42,17 +42,17 @@ const FilterModal = ({ setFilterParams }) => {
                 {option === "Fame rating" && (
                   <Slider
                     min={0}
-                    max={5200}
-                    defaultValue={1500}
+                    max={1000}
+                    defaultValue={300}
                     name="fame"
                     mesureUnit="fame rate"
                   />
                 )}
-                {option === "Location" && (
+                {option === "Location gap" && (
                   <Slider
                     min={5}
                     max={600}
-                    defaultValue={300}
+                    defaultValue={200}
                     name="location"
                     mesureUnit="km"
                   />
@@ -75,7 +75,30 @@ const FilterModal = ({ setFilterParams }) => {
             ]}
             name="sort"
             label="Sort by"
+            className="sort-select"
           />
+          <div className="sort-options">
+            <div className="radio-ascending">
+              <input
+                type="radio"
+                name="sort-type"
+                id="ascending"
+                value="ascending"
+                defaultChecked
+              />
+              <label htmlFor="ascending">ascending</label>
+            </div>
+
+            <div className="radio-descending">
+              <input
+                type="radio"
+                name="sort-type"
+                id="descending"
+                value="descending"
+              />
+              <label htmlFor="descending">descending</label>
+            </div>
+          </div>
         </div>
         <input className="filter-submit" type="submit" value="Filter" />
       </form>

@@ -2,7 +2,7 @@
   color: var(--dark-green);
   margin-bottom: 1em;
   padding-left: 1em;
-  padding-top: .8em;
+  padding-top: 0.8em;
 }
 
 .body {
@@ -18,8 +18,13 @@
 
 .conversation {
   margin-bottom: 1em;
+  border: none;
   border-bottom: 4px solid var(--green);
   cursor: pointer;
+  background-color: var(--cream);
+  display: block;
+  width: 100%;
+  text-align: left;
 }
 
 a {

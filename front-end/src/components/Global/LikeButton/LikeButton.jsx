@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { BsFillSuitHeartFill } from "react-icons/bs";
 import "./LikeButton.scoped.css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { socket } from "src/socket/socket";
 import { useAuth } from "src/Context/AuthContext";
 
@@ -38,7 +38,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = fals
     if (!like) await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/create`, options);
     else {
       options.method = "PUT";
-      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/unlike`, options);
+      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/update`, options);
     }
     socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like, currentLike: like });
     setLike(!like);
@@ -60,6 +60,10 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = fals
         e.target.style.transform = `translate(${moveX * 0.4}px,${moveY * 0.4}px)`;
       }}
       onMouseOut={(e) => {
+        e.stopPropagation();
+        e.target.style.transform = "translate(0px, 0px)";
+      }}
+      onBlur={(e) => {
         e.stopPropagation();
         e.target.style.transform = "translate(0px, 0px)";
       }}

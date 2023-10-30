@@ -9,7 +9,7 @@ export default function NavbarWrapper() {
       {currentPath !== "/" && <Navbar />}
       <section className="content">
         <Outlet />
-        {currentPath !== "/" && <Footer />}
+        {currentPath !== "/" && currentPath !== "/message" && <Footer />}
       </section>
     </div>
   );

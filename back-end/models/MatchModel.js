@@ -171,20 +171,36 @@ class MatchModel {
    * @returns {Promise}
    **/
 
-  static removeLike = (receiverId, requesterId) => {
+  static removeLike = (requesterId, receiverId) => {
     return new Promise((next) => {
-      db.query('SELECT "like" FROM match WHERE id_requester = $1', [requesterId])
+      db.query(
+        'SELECT "like" FROM match \
+        WHERE id_requester = $1 AND id_receiver = $2',
+        [requesterId, receiverId]
+      )
         .then((result) => {
           this.#updateElo(receiverId, requesterId, 0)
             .then(() => {
-              if (result.rows.length > 0) {
-                db.query(
-                  'UPDATE match SET "like" = false \
-              WHERE id_requester = $1 AND id_receiver = $2',
-                  [requesterId, receiverId]
-                )
-                  .then((result) => next(result))
-                  .catch((error) => next(error));
+              if (result.rowCount > 0) {
+                if (result.rows[0].like) {
+                  db.query(
+                    'UPDATE match SET "like" = false \
+                  WHERE id_requester = $1 AND id_receiver = $2\
+                  RETURNING *',
+                    [requesterId, receiverId]
+                  )
+                    .then((result) => next(result))
+                    .catch((error) => next(error));
+                } else {
+                  db.query(
+                    "DELETE FROM match\
+                    WHERE id_requester = $1 AND id_receiver = $2\
+                    RETURNING *",
+                    [requesterId, receiverId]
+                  )
+                    .then((result) => next(result))
+                    .catch((error) => next(error));
+                }
               } else {
                 next(result);
               }
@@ -202,7 +218,6 @@ class MatchModel {
    * @returns {Object} // return the row modified
    */
   static blockUser = (requesterId, receiverId, block = true) => {
-    console.log(requesterId, "receiver", receiverId);
     return new Promise((next) => {
       db.query("SELECT * FROM match WHERE id_requester = $1 AND id_receiver = $2", [requesterId, receiverId])
         .then((match) => {

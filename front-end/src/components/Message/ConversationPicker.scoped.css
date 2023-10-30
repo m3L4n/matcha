@@ -23,9 +23,9 @@ h1 {
 
   .conversations {
     width: 20%;
-    margin-left: 3%;
+    margin-left: 2.2%;
     border-right: 3px solid var(--green);
-    height: 100vh
+    height: 100vh;
   }
 
   .conversation-container {

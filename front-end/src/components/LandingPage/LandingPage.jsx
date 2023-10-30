@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.scoped.css";
-import { socket } from "src/socket/socket";
 export default function LandingPage() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
   // const [fooEvents, setFooEvents] = useState([]);
@@ -95,28 +93,39 @@ export default function LandingPage() {
   function AboutUs() {
     return (
       <article className="aboutUs">
-        <h1 className="title-2 aboutUs-title">💖 Discover Love, Differently. 💖</h1>
+        <h1 className="title-2 aboutUs-title">
+          💖 Discover Love, Differently. 💖
+        </h1>
         <article></article>
         <article className="">
           <h3 className="title-1"> 🌟 Gender Equality 🌟</h3>
           <p className="body">
-            {"We believe in complete gender equality, ensuring that everyone is treated with respect and fairness. women and men have equal rights and opportunities to find their soulmate."}
+            {
+              "We believe in complete gender equality, ensuring that everyone is treated with respect and fairness. women and men have equal rights and opportunities to find their soulmate."
+            }
           </p>
         </article>
         <article className="body">
           <h3 className="title-1"> 🌱 Eco-Friendly Commitment 🌱</h3>
           <p className="body">
-            {"Our planet is precious, which is why we're dedicated to reducing our carbon footprint"} <br />
+            {
+              "Our planet is precious, which is why we're dedicated to reducing our carbon footprint"
+            }{" "}
+            <br />
           </p>
         </article>
         <article className="">
           <h3 className="title-1"> 🔒 Safety and Privacy 🔒</h3>
           <p className="body">
-            {"Your safety is our top priority. We employ cutting-edge technology to safeguard your personal data and conversations, allowing you to focus on building real, sincere connections."}{" "}
+            {
+              "Your safety is our top priority. We employ cutting-edge technology to safeguard your personal data and conversations, allowing you to focus on building real, sincere connections."
+            }{" "}
             <br />
           </p>
         </article>
-        <p className="body">{" Join us and let's build a more equal and greener future. 💚🌍"}</p>
+        <p className="body">
+          {" Join us and let's build a more equal and greener future. 💚🌍"}
+        </p>
       </article>
     );
   }
@@ -133,11 +142,17 @@ export default function LandingPage() {
         </div>
         <div className="body-landing-page">
           <header className="landingPage__header">
-            <button className="landingPage__header-button body" onClick={redirectionToSignIn}>
+            <button
+              className="landingPage__header-button body"
+              onClick={redirectionToSignIn}
+            >
               {" "}
               Sign in
             </button>
-            <button className="landingPage__header-button body" onClick={redirectionToRegister}>
+            <button
+              className="landingPage__header-button body"
+              onClick={redirectionToRegister}
+            >
               {" "}
               Sign up{" "}
             </button>
@@ -145,7 +160,10 @@ export default function LandingPage() {
           <div className="center-landing-page">
             <p className="header"> MATCHA</p>
             <p className="title-2"> Date at your favorite coffee shop !</p>
-            <button className="title-1 button-action" onClick={redirectionToRegister}>
+            <button
+              className="title-1 button-action"
+              onClick={redirectionToRegister}
+            >
               {" "}
               Start dating now !
             </button>

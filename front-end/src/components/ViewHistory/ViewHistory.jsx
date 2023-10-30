@@ -25,10 +25,10 @@ export default function ViewHistory() {
             ) : (
               historyUser.map((elem, index) => {
                 return (
-                  <div key={index} className="container-view" onClick={() => navigate(`/profile/${elem.id_watched}`)}>
+                  <button key={index} className="container-view" onClick={() => navigate(`/profile/${elem.id_watched}`)}>
                     <img alt="profil_picture" src={elem.profile_picture} />
                     <p className="body-highlight">{elem.username}</p>
-                  </div>
+                  </button>
                 );
               })
             )}

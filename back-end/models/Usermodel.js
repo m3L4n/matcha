@@ -31,7 +31,7 @@ class UserModel {
 
   static findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
     try {
-      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided FROM users WHERE ${paramToSearch} = $1`;
+      const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided, age FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
       if (user.rowCount == 0) {
         throw new Error("users doesnt exist");
@@ -84,7 +84,7 @@ class UserModel {
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
-          let max_distance = 300;
+          let max_distance = 200;
 
           const validatedSearchCriteria = searchValidation(searchParams);
           if (validatedSearchCriteria !== "ok") {
@@ -118,7 +118,7 @@ class UserModel {
 
           const getMatchesBySexualPreferences = () => {
             return db.query(
-              "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
+              "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
                 WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
                 AND id != $6",
               [sexual_preference, min_fame, max_fame, min_age, max_age, currentUserId]
@@ -127,22 +127,24 @@ class UserModel {
 
           const getMatchesOfAllSexes = () => {
             return db.query(
-              "SELECT id, username, position, profile_picture, age, rate_fame FROM users \
+              "SELECT id, username, position, profile_picture, age, rate_fame, city FROM users \
                 WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
-              [min_fame, max_fame, min_age, Number(max_age), currentUserId]
+              [min_fame, max_fame, min_age, max_age, currentUserId]
             );
           };
 
           const getOnlyClosePeople = (users) => {
-            return users.filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance));
+            return users
+              .filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance))
+              .sort((a, b) => distanceBetweenTwoPoints(a.position, position) - distanceBetweenTwoPoints(b.position, position));
           };
 
-          if (sexual_preference !== "other" || searchParams.action === "search") {
-            getMatchesBySexualPreferences()
+          if (sexual_preference === "both" || searchParams.action === "search") {
+            getMatchesOfAllSexes()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           } else {
-            getMatchesOfAllSexes()
+            getMatchesBySexualPreferences()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
           }

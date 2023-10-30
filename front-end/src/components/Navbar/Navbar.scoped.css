@@ -172,4 +172,8 @@
     color: var(--dark-green);
     background-color: var(--cream);
   }
+
+  .sidebar-toggle {
+    background-color: var(--cream);
+  }
 }

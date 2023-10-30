@@ -15,11 +15,12 @@ const Conversation = ({
     setConversationPartnerId(partnerId);
     setConversationId(id);
   };
+
   return (
-    <div className="conversation" onClick={pickConversation}>
+    <button className="conversation" onClick={pickConversation}>
       <p className="body-highlight">{firstName}</p>
       <p className="body">{lastMessage}</p>
-    </div>
+    </button>
   );
 };
 
