@@ -88,11 +88,11 @@ class UserModel {
     const AGE_DIFFERENCE = 10;
     return new Promise((next) => {
       db.query(
-        "SELECT sexual_preference, rate_fame, position, age FROM users WHERE id = $1",
+        "SELECT sexual_preference, rate_fame, position, age, tags FROM users WHERE id = $1",
         [currentUserId]
       )
         .then((result) => {
-          const { sexual_preference, rate_fame, position, age } =
+          const { sexual_preference, rate_fame, position, age, tags } =
             result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
@@ -132,7 +132,8 @@ class UserModel {
 
           const getMatchesBySexualPreferences = () => {
             return db.query(
-              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city, u.tags\
+              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city,\
+              array_cat(u.tags, $7) common_tags\
               FROM users u\
                 WHERE u.gender = $1\
                 AND u.rate_fame BETWEEN $2 AND $3\
@@ -154,13 +155,15 @@ class UserModel {
                 min_age,
                 max_age,
                 currentUserId,
+                tags,
               ]
             );
           };
 
           const getMatchesOfAllSexes = () => {
             return db.query(
-              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city, u.tags\
+              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city,\
+              array_cat(u.tags, $6) common_tags\
               FROM users u\
                 AND u.rate_fame BETWEEN $1 AND $2\
                 AND u.age BETWEEN $3 AND $4\
@@ -174,7 +177,7 @@ class UserModel {
                   FROM match m\
                   WHERE m.id_receiver = $5\
                   AND m.like = true)",
-              [min_fame, max_fame, min_age, max_age, currentUserId]
+              [min_fame, max_fame, min_age, max_age, currentUserId, tags]
             );
           };
 

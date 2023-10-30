@@ -106,7 +106,6 @@ export default function BrowsingPage() {
         );
       }
       if (filterParams.fameGap !== "") {
-        console.log(filterParams);
         const minFame = currentUser.rate_fame - Number(filterParams.fameGap);
         const maxFame = currentUser.rate_fame + Number(filterParams.fameGap);
         toFilter = toFilter.filter(
@@ -134,7 +133,13 @@ export default function BrowsingPage() {
   useEffect(() => {
     if (status === "success") {
       const filterAndSort = users => sortMatches(filterMatches(users));
-      setMatches(filterAndSort(users?.result ?? []));
+      setMatches(
+        filterAndSort(
+          users?.result.filter(
+            user => [...new Set(user.common_tags)].length > 1
+          ) ?? []
+        )
+      );
     }
   }, [status, users]);
 
