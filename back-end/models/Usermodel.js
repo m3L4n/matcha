@@ -131,10 +131,23 @@ class UserModel {
           }
 
           const getMatchesBySexualPreferences = () => {
+            console.log("get by sexual pref");
             return db.query(
-              "SELECT id, username, position, profile_picture, age, rate_fame, city, tags FROM users \
-                WHERE gender = $1 AND rate_fame BETWEEN $2 AND $3 AND age BETWEEN $4 AND $5 \
-                AND id != $6",
+              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city, u.tags\
+              FROM users u\
+                WHERE u.gender = $1\
+                AND u.rate_fame BETWEEN $2 AND $3\
+                AND u.age BETWEEN $4 AND $5\
+                AND u.id != $6\
+                AND u.id NOT IN (\
+                  SELECT m.id_receiver\
+                  FROM match m\
+                  WHERE m.id_requester = $6)\
+                AND u.id NOT IN(\
+                  SELECT m.id_requester\
+                  FROM match m\
+                  WHERE m.id_receiver = $6\
+                  AND m.like = true)",
               [
                 sexual_preference,
                 min_fame,
@@ -147,6 +160,7 @@ class UserModel {
           };
 
           const getMatchesOfAllSexes = () => {
+            console.log("get girls and boys");
             return db.query(
               "SELECT id, username, position, profile_picture, age, rate_fame, city, tags FROM users \
                 WHERE rate_fame BETWEEN $1 AND $2 AND age BETWEEN $3 AND $4 AND id != $5",
