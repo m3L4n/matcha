@@ -27,6 +27,7 @@ export default function BrowsingPage() {
     ageGap: "",
     locationGap: "",
     fameGap: "",
+    commongTags: "",
     sortBy: "",
     sortOption: "ascending"
   });
@@ -85,9 +86,9 @@ export default function BrowsingPage() {
       }
     } else if (filterParams.sortBy === "tags") {
       if (filterParams.sortOption === "ascending") {
-        toSort.sort((a, b) => a.common_tags - b.common_tags);
+        toSort.sort((a, b) => a.common_tags.length - b.common_tags.length);
       } else {
-        toSort.sort((a, b) => b.common_tags - a.common_tags);
+        toSort.sort((a, b) => b.common_tags.length - a.common_tags.length);
       }
     }
     return toSort;
@@ -126,6 +127,12 @@ export default function BrowsingPage() {
             locationGap
         );
       }
+      if (filterParams.commongTags !== "") {
+        const commonTags = Number(filterParams.commongTags);
+        toFilter = toFilter.filter(
+          user => user.common_tags.length >= commonTags
+        );
+      }
     }
     return toFilter;
   };
@@ -138,14 +145,16 @@ export default function BrowsingPage() {
 
   useEffect(() => {
     if (status === "success") {
-      const filterAndSort = users => sortMatches(filterMatches(users));
-      setMatches(
-        filterAndSort(
-          users?.result.filter(
-            user => [...new Set(user.common_tags)].length > 1
-          ) ?? []
-        )
-      );
+      const filterAndSort = users =>
+        sortMatches(filterMatches(users))
+          .map(user => ({
+            ...user,
+            common_tags: user.common_tags.filter(
+              (value, index) => user.common_tags.indexOf(value) === index
+            )
+          }))
+          .filter(match => match.common_tags.length > 1);
+      setMatches(filterAndSort(users?.result ?? []));
     }
   }, [status, users]);
 

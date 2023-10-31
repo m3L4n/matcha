@@ -1,7 +1,6 @@
 import "./FilterModal.scoped.css";
 import SelectOptionWrapper from "./SelectOptionWrapper/SelectOptionWrapper";
 import Slider from "../../../Global/FormInput/Slider/Slider";
-import Input from "../../../Global/FormInput/Input/Input";
 import Select from "src/components/Global/FormInput/Select/Select";
 import PropTypes from "prop-types";
 
@@ -19,6 +18,7 @@ const FilterModal = ({ setFilterParams }) => {
             ageGap: formData.get("ageGap") ?? "",
             locationGap: formData.get("location") ?? "",
             fameGap: formData.get("fame") ?? "",
+            commongTags: formData.get("commongTags") ?? "",
             sortBy: formData.get("sort") ?? "",
             sortOption: formData.get("sort-type") ?? "ascending"
           };
@@ -57,9 +57,12 @@ const FilterModal = ({ setFilterParams }) => {
                   />
                 )}
                 {option === "Tags" && (
-                  <Input
-                    name="tags"
-                    placeholder={"#tea, #coffee, #nature ..."}
+                  <Slider
+                    min={0}
+                    max={15}
+                    defaultValue={1}
+                    name="commongTags"
+                    mesureUnit="common tags"
                   />
                 )}
               </SelectOptionWrapper>
