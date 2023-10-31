@@ -15,12 +15,11 @@ const FilterModal = ({ setFilterParams }) => {
         onSubmit={e => {
           e.preventDefault();
           const formData = new FormData(e.target);
-          const sortBy = formData.get("sort");
           const filterParams = {
             ageGap: formData.get("ageGap") ?? "",
             locationGap: formData.get("location") ?? "",
             fameGap: formData.get("fame") ?? "",
-            sortBy: sortBy,
+            sortBy: formData.get("sort") ?? "",
             sortOption: formData.get("sort-type") ?? "ascending"
           };
           setFilterParams(filterParams);

@@ -83,6 +83,12 @@ export default function BrowsingPage() {
       } else {
         toSort.sort((a, b) => b.rate_fame - a.rate_fame);
       }
+    } else if (filterParams.sortBy === "tags") {
+      if (filterParams.sortOption === "ascending") {
+        toSort.sort((a, b) => a.common_tags - b.common_tags);
+      } else {
+        toSort.sort((a, b) => b.common_tags - a.common_tags);
+      }
     }
     return toSort;
   };

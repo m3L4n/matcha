@@ -132,7 +132,7 @@ class UserModel {
 
           const getMatchesBySexualPreferences = () => {
             return db.query(
-              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city,\
+              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city, u.tags\
               array_cat(u.tags, $7) common_tags\
               FROM users u\
                 WHERE u.gender = $1\
