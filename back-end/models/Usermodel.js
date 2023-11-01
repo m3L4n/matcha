@@ -7,9 +7,16 @@ class UserModel {
   static createUser = async (userData) => {
     try {
       const { id, username, firstName, lastName, email, password, valided } = userData;
-      const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7)";
+      const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (username, email) DO NOTHING RETURNING *;";
       const values = [id, username, firstName, lastName, email, password, valided];
       const newUser = await db.query(query, values);
+      console.log(newUser);
+      if (newUser.rowCount == 0) {
+        const error = new Error();
+        error.status = 400;
+        error.msg = "same key in the db , please change username or email, or reconnecte you ";
+        throw error;
+      }
       return newUser;
     } catch (error) {
       throw error;
@@ -25,10 +32,35 @@ class UserModel {
       }
       return user.rows[0];
     } catch (error) {
+      console.log("CC");
       throw error;
     }
   };
 
+  static findUniqueKey = async (param, value) => {
+    try {
+      const query = `SELECT *  FROM users WHERE ${param} = $1`;
+      const user = await db.query(query, [value]);
+      if (user.rowCount == 0) {
+        throw "no user";
+      }
+      return user.rows[0];
+    } catch (err) {
+      throw error;
+    }
+  };
+  static FindUniqueEmailNotOur = async (id, email) => {
+    try {
+      const query = `SELECT email FROM users WHERE  email = $1 AND NOT id = $2`;
+      const emailData = await db.query(query, [email, id]);
+      if (emailData.rowCount == 0) {
+        throw "no email found";
+      }
+      return emailData.rows[0];
+    } catch (err) {
+      throw error;
+    }
+  };
   static findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
     try {
       const query = `SELECT id, username, email, firstName, lastName, gender, beverage, sexual_preference, description, rate_fame, position , profile_picture, pictures, valided, age FROM users WHERE ${paramToSearch} = $1`;

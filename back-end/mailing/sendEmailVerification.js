@@ -6,7 +6,6 @@ const { TokenModel } = require("../models/Tokenmodel");
 module.exports.sendingEmailVerification = async (username) => {
   try {
     const user = await UserModel.findbyId("username", username);
-    console.log("user in findid", user);
     if (user) {
       const userToken = await TokenModel.findToken(user.id);
       if (userToken != undefined) {

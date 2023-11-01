@@ -14,7 +14,17 @@ import "./UserProfile.scoped.css";
 import UserInformation from "./UserInformation/UserInformation";
 import FormButton from "src/components/Global/FormButton/FormButton";
 export default function UserProfile({ allTags, userInformation, ourProfile, relationship }) {
-  const mutationUpdateInfo = useMutation(fetchUpdateInfo);
+  // const mutationUpdateInfo = useMutation(fetchUpdateInfo);
+  const mutationUpdateInfo = useMutation({
+    mutationFn: fetchUpdateInfo,
+    onSuccess: () => {
+      notify("success", " account modfy");
+    },
+    onError: (error) => {
+      console.log(error);
+      notify("error", " account modfy");
+    },
+  });
   const mutationUploadPP = useMutation(fetchUploadprofilPicture);
   const mutationUploadPD = useMutation(fetchUploadPictureDescription);
   const mutationReportFakeAccount = useMutation(fetchReportFakeAccount);
@@ -28,7 +38,6 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   const [pictureDescription, setPicturesDescription] = useState([]);
   const [profilPicture, setProfilPicture] = useState("");
   const [infoProfile, setInfoProfil] = useState({});
-  // const [userId, setUserId] = useState("");
   const [locationInput, setLocationInput] = useState({ longitude: 0, latitude: 0 });
 
   useEffect(() => {
@@ -193,8 +202,24 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     console.log(infoProfileWithoutPicture);
     mutationUploadPD.mutate(pictureDescription);
     mutationUpdateInfo.mutate(infoProfileWithoutPicture);
-    notify("success", " account modfy");
   }
+  // useEffect(() => {
+  //   if (mutationUpdateInfo.isSuccess) {
+  //     notify("success", " account modfy");
+  //     return;
+  //   }
+  //   if (mutationUpdateInfo.isError) {
+  //     notify("error", "email must be unique");
+  //     return;
+  //   }
+  // }, [mutationUpdateInfo.isSuccess]);
+  // useEffect(() => {
+  //   console.log(mutationUpdateInfo.error);
+  //   if (mutationUpdateInfo.isError) {
+  //     notify("error", "email must be unique");
+  //     return;
+  //   }
+  // }, [mutationUpdateInfo.isError]);
   const updateLocationInput = async (event) => {
     event.preventDefault();
     if (event.target.name == "longitude" || event.target.name == "latitude") {

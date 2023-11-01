@@ -37,7 +37,7 @@ export default function SignIn() {
         if (response.status == 201) {
           notify("success", "login success");
           setTriggerReload(true);
-          navigate("/match");
+          // navigate("/match");
         }
         return response.json();
       })
@@ -45,10 +45,10 @@ export default function SignIn() {
         if (data.status == 201) {
           socket.emit("login", { userId: data.userId });
         }
-        console.log("data request :", data);
-        if (data.msg == "Authentication failed") {
-          notify("warning", "please sign up , we cant match username and password");
-        } else if (data.msg === "user not verified") {
+        if (data.status == 403) {
+          notify("warning", data.msg);
+          return;
+        } else if (data.status == 401) {
           notify("warning", "please verify your email  we send you a mail to verify your email");
           navigate("/reset", { state: { datae: user.username } });
           return;

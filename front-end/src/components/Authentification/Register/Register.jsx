@@ -90,13 +90,18 @@ export default function Register() {
         return response.json();
       })
       .then((data) => {
-        if (data.msg == "token not created") {
-          notify("error", "please retry later, a error appear and we are on this work");
-        } else if (data.msg == 'Details are not correct"') {
-          notify("error", "email or username are already token , please retry with another ");
+        if (data.status == 404) {
+          notify("error", data.msg);
+          return;
+        } else if (data.status == 400) {
+          notify("error", data.msg);
+          return;
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        notify("error", error.msg);
+        return;
+      });
   }
   return (
     <div className="container">

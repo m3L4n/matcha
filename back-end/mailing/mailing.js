@@ -11,7 +11,7 @@ module.exports.sendingMail = async ({ from, to, subject, text }) => {
     //asign createTransport method in nodemailer to a variable
     //service: to determine which email platform to use
     //auth contains the senders email and password which are all saved in the .env
-    console.log("user", process.env.email, process.env.emailpassword);
+    // console.log("user", process.env.email, process.env.emailpassword);
     const Transporter = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",

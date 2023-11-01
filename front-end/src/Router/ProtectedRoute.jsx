@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "src/Context/AuthContext";
 import { socket } from "src/socket/socket";
 export function PrivateRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { user, loading, userAskDisconnect, setUserAskDisconnect } = useAuth();
   const navigate = useNavigate();
   const location = useLocation().pathname;
 
@@ -16,6 +16,16 @@ export function PrivateRoute({ children }) {
   }, []);
 
   useEffect(() => {
+    console.log("herrrre", userAskDisconnect);
+    // if (userAskDisconnect) {
+    //   navigate("/");
+    // }
+  }, [userAskDisconnect]);
+  useEffect(() => {
+    if (userAskDisconnect) {
+      navigate("/");
+      setUserAskDisconnect(false);
+    }
     if (!loading && Object.keys(user).length == 0) {
       navigate("/");
     }
@@ -24,12 +34,10 @@ export function PrivateRoute({ children }) {
       if (!user.gender || !user.beverage || !user.sexual_preference) {
         navigate(`/profile/${user.id}`);
       }
-      // else{
-
-      // }
     }
-    return () => {};
-  }, [loading, user, location]);
+    console.log(user, loading, location);
+    // return () => {};
+  }, [loading, location, user, userAskDisconnect]);
 
   useEffect(() => {}, []);
 

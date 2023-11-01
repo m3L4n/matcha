@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import "./Navbar.scoped.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { socket } from "src/socket/socket";
-import { disconnect } from "components/Authentification/disconnect/disconnect";
+import disconnect from "components/Authentification/disconnect/disconnect";
 import { useAuth } from "src/Context/AuthContext";
 
 export default function Navbar() {
-  const { setTriggerReload, user } = useAuth();
-  const navigate = useNavigate();
+  const { setTriggerReload, user, setUserAskDisconnect } = useAuth();
+  // const navigate = useNavigate();
   let pages = ["match", "profile", "message", "notifications", "view history"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
@@ -34,10 +34,11 @@ export default function Navbar() {
 
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
-    disconnect();
-    setTriggerReload(true);
     socket.emit("listener-button-deconnection", { userId: user.id });
-    navigate("/");
+    await disconnect();
+    setTriggerReload(true);
+    setUserAskDisconnect(true);
+    // navigate("/");
   };
 
   return (
