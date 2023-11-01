@@ -29,4 +29,4 @@ function searchValidation(searchParams) {
 
 module.exports = {
   searchValidation,
-}
+};

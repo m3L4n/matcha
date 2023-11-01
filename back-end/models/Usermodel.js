@@ -1,7 +1,6 @@
 const db = require("../db/db");
 const { distanceBetweenTwoPoints } = require("../modules/distance");
 const { searchValidation } = require("../modules/formValidation");
-const { error } = require("../modules/response");
 
 class UserModel {
   static createUser = async (userData) => {
@@ -99,6 +98,7 @@ class UserModel {
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
           let max_age = age + AGE_DIFFERENCE;
           let max_distance = 200;
+          let tagsRequired = tags;
 
           const validatedSearchCriteria = searchValidation(searchParams);
           if (validatedSearchCriteria !== "ok") {
@@ -127,6 +127,13 @@ class UserModel {
             } else {
               min_fame = 0;
               max_fame = 42000;
+            }
+            if (searchParams.tags !== "") {
+              tagsRequired = searchParams.tags.split(",");
+              console.log(
+                `tagsRequired: ${tagsRequired} | ${typeof tagsRequired}`
+              );
+              console.log(`tags: ${tags} | ${typeof tags}`);
             }
           }
 
@@ -161,11 +168,12 @@ class UserModel {
           };
 
           const getMatchesOfAllSexes = () => {
-            return db.query(
-              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city,\
+            console.log("pass through search engine");
+            let query =
+              "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city, u.tags,\
               array_cat(u.tags, $6) common_tags\
               FROM users u\
-                AND u.rate_fame BETWEEN $1 AND $2\
+                WHERE u.rate_fame BETWEEN $1 AND $2\
                 AND u.age BETWEEN $3 AND $4\
                 AND u.id != $5\
                 AND u.id NOT IN (\
@@ -176,9 +184,17 @@ class UserModel {
                   SELECT m.id_requester\
                   FROM match m\
                   WHERE m.id_receiver = $5\
-                  AND m.like = true)",
-              [min_fame, max_fame, min_age, max_age, currentUserId, tags]
-            );
+                  AND m.like = true)\
+                  AND $7::text[] <@ $6::text[]";
+            return db.query(query, [
+              min_fame,
+              max_fame,
+              min_age,
+              max_age,
+              currentUserId,
+              tags,
+              tagsRequired,
+            ]);
           };
 
           const getOnlyClosePeople = (users) => {

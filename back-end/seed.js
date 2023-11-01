@@ -107,7 +107,7 @@ function generateSetOfUsers() {
     let gps_position = gps[Math.floor(Math.random() * gps.length)];
     let position = `(${gps_position.x}, ${gps_position.y})`;
     const city = faker.location.city();
-    const tag = ["Gastronomy", "Cinephile", "Travel", "Cook"];
+    const tag = ["gastronomy", "cinephile", "travel", "cook"];
     const params = [
       uuidv4(),
       username,
@@ -148,7 +148,7 @@ function generateSetOfUsers() {
   const valided = true;
   let gps_position = gps[Math.floor(Math.random() * gps.length)];
   let position = `(${gps_position.x}, ${gps_position.y})`;
-  const tag = ["Gastronomy", "Cinephile", "Travel", "Cook"];
+  const tag = ["gastronomy", "cinephile", "travel", "cook"];
   const params = [
     firstUserUuid,
     username,
@@ -193,7 +193,7 @@ const adminParams = [
   true,
   24,
   "Paris",
-  ["Cinephile", "Travel", "Cook", "Piercing"],
+  ["gastronomy", "cinephile", "travel", "piercing"],
 ];
 
 const userParams = [
@@ -213,7 +213,7 @@ const userParams = [
   true,
   22,
   "Paris",
-  ["Cinephile", "Travel", "Cook", "Piercing"],
+  ["gastronomy", "cinephile", "travel", "piercing"],
 ];
 
 const generateConversation = async (params) => {
