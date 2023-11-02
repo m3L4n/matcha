@@ -4,10 +4,20 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchViewHistory } from "./fetch/fetchViewHistory";
 import { useNavigate } from "react-router-dom";
 import GlobalLoading from "../Global/GLoading/GlobalLoading";
+import { checkErrorFetch } from "../Global/checkErrorFetch";
+import { useAuth } from "src/Context/AuthContext";
 
 export default function ViewHistory() {
-  const { data: historyData, isLoading: historyLoading } = useQuery(["history"], fetchViewHistory);
-  const historyUser = historyLoading ? [] : historyData.result;
+  const { setTriggerReload } = useAuth();
+  const { data: historyData, isLoading: historyLoading } = useQuery(["history"], fetchViewHistory, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+  const historyUser = historyLoading ? [] : historyData.result ? historyData.result : [];
   const navigate = useNavigate();
   return (
     <>

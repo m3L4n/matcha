@@ -6,21 +6,31 @@ import GlobalLoading from "../Global/GLoading/GlobalLoading";
 import { useNavigate } from "react-router-dom";
 import { socket } from "src/socket/socket";
 import { useAuth } from "src/Context/AuthContext";
+import { checkErrorFetch } from "../Global/checkErrorFetch";
 
 export default function Notification() {
   const types = ["messages", "view", "like", "all"];
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, setTriggerReload } = useAuth();
   const [viewType, setViewType] = useState(types[3]);
-  const { data: notificationsData, isLoading: notificationsLoading, refetch: refetchNotif } = useQuery(["notifications"], fetchNotifUser);
+  const { data: notificationsData, isLoading: notificationsLoading, refetch: refetchNotif } = useQuery(["notifications"], fetchNotifUser, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
 
-  const allNotifications = notificationsLoading ? [] : notificationsData.result.data;
-
+  const allNotifications = notificationsLoading ? [] : notificationsData.result?.data ? notificationsData.result?.data : [];
   const getArrayAllNotif = () => {
-    return allNotifications;
+    return allNotifications ? allNotifications : [];
   };
   const getArrayFiltered = (typeFilter) => {
-    return allNotifications.filter(({ type }) => type == typeFilter);
+    if (allNotifications.length > 0) {
+      return allNotifications.filter(({ type }) => type == typeFilter);
+    }
+    return [];
   };
 
   useEffect(() => {
@@ -41,6 +51,7 @@ export default function Notification() {
       notificationToShow = getArrayAllNotif();
     } else {
       notificationToShow = getArrayFiltered(viewType);
+      console.log(notificationToShow);
     }
     return (
       <div className="container-render-notif">

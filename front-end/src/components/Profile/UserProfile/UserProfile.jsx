@@ -13,24 +13,87 @@ import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
 import "./UserProfile.scoped.css";
 import UserInformation from "./UserInformation/UserInformation";
 import FormButton from "src/components/Global/FormButton/FormButton";
+import { checkErrorFetch } from "src/components/Global/checkErrorFetch";
+import { useAuth } from "src/Context/AuthContext";
 export default function UserProfile({ allTags, userInformation, ourProfile, relationship }) {
-  // const mutationUpdateInfo = useMutation(fetchUpdateInfo);
+  const { setTriggerReload } = useAuth();
   const mutationUpdateInfo = useMutation({
     mutationFn: fetchUpdateInfo,
-    onSuccess: () => {
+    onSuccess: (response) => {
+      if (response?.error) {
+        if (response.status == 401) {
+          notify("warning", response.msg);
+          setTriggerReload(true);
+          return;
+        }
+        notify("error", response.msg);
+        return;
+      }
       notify("success", " account modfy");
     },
-    onError: (error) => {
-      console.log(error);
-      notify("error", " account modfy");
+  });
+  const mutationUploadPP = useMutation(fetchUploadprofilPicture, {
+    onSuccess: (response) => {
+      if (response?.error) {
+        if (response.status == 401) {
+          notify("warning", response.msg);
+          setTriggerReload(true);
+          return;
+        }
+        notify("error", response.msg);
+        return;
+      }
     },
   });
-  const mutationUploadPP = useMutation(fetchUploadprofilPicture);
-  const mutationUploadPD = useMutation(fetchUploadPictureDescription);
-  const mutationReportFakeAccount = useMutation(fetchReportFakeAccount);
-  const mutationLocalisation = useMutation(fetchLocalisation);
-  const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow);
-  const mutationBlockUser = useMutation(fetchBlockUser);
+  const mutationUploadPD = useMutation(fetchUploadPictureDescription, {
+    onSuccess: (response) => {
+      if (response?.error) {
+        if (response.status == 401) {
+          notify("warning", response.msg);
+          setTriggerReload(true);
+          return;
+        }
+        notify("error", response.msg);
+        return;
+      }
+    },
+  });
+  const mutationReportFakeAccount = useMutation(fetchReportFakeAccount, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+  const mutationLocalisation = useMutation(fetchLocalisation, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+  const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+  const mutationBlockUser = useMutation(fetchBlockUser, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
 
   const coords = mutationLocalisation.isLoading ? {} : mutationLocalisation.data;
   const coordKnowNone = mutationLocalisationNoneKnow.isLoading ? {} : mutationLocalisationNoneKnow.data;
@@ -238,7 +301,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   const blockUser = (id, block) => {
     mutationBlockUser.mutate({ id, block });
   };
-  const reportAsFakeAccount = (id) => {
+  const reportAsFakeAccount = () => {
+    const id = infoProfile.id;
+
     mutationReportFakeAccount.mutate({ id });
   };
   return (

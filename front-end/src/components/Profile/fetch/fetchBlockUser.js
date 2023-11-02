@@ -1,22 +1,9 @@
-async function fetchBlockUser({ id, block }) {
-  console.log(block, typeof block);
-  const test = { block };
-  console.log(test);
-  const url = `${import.meta.env.VITE_BACKEND_API_URL}/match/block/${id}`;
-  const options = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: JSON.stringify({ block })
-  };
-  const res = await fetch(url, options);
+import { fetcherWrapper } from "src/components/Global/fetcherWrapper";
 
-  if (!res.ok) {
-    throw new Error(`cant block this user`);
-  }
-  return res.json();
+async function fetchBlockUser({ id, block }) {
+  return fetcherWrapper("PUT", `match/block/${id}`, "cant block this user", {
+    block
+  });
 }
 
 export default fetchBlockUser;

@@ -104,7 +104,7 @@ class UserController {
           const verified = user.valided;
           if (verified) {
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
-              expiresIn: 1 * 24 * 60 * 60 * 1000,
+              expiresIn: 1 * 24 * 60 * 60 * 100,
             });
             return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ status: 201, userId: user.id });
           } else {
@@ -318,7 +318,8 @@ class UserController {
   /** REPORT AS FAKE ACCOUNT */
 
   static reportAsFakeAccount = async (req, res) => {
-    const idReceiver = req.params.id;
+    const idReceiver = req.body.id;
+    console.log(idReceiver);
     const resultat = await UserModel.reportAsFakeAccount(idReceiver);
     res.json(checkAndChange(resultat));
   };

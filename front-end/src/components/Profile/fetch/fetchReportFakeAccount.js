@@ -1,20 +1,12 @@
-async function fetchReportFakeAccount({ id }) {
-  const url = `${
-    import.meta.env.VITE_BACKEND_API_URL
-  }/users/reportFakeAccount/${id}`;
-  const options = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include"
-  };
-  const res = await fetch(url, options);
+import { fetcherWrapper } from "src/components/Global/fetcherWrapper";
 
-  if (!res.ok) {
-    throw new Error(`cant report this user`);
-  }
-  return res.json();
+async function fetchReportFakeAccount(id) {
+  return fetcherWrapper(
+    "PUT",
+    "/users/reportFakeAccount",
+    "cant report this user",
+    id
+  );
 }
 
 export default fetchReportFakeAccount;

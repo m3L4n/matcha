@@ -101,10 +101,12 @@ export default function UserInformation({
           {!ourProfile && <InformationNotOurProfile />}
         </div>
       </header>
-      <span>
-        <button onClick={blockUser}> block</button>
-        <button onClick={reportAsFakeAccount}> report as fake account</button>
-      </span>
+      {!ourProfile && (
+        <span>
+          <button onClick={blockUser}> block</button>
+          <button onClick={reportAsFakeAccount}> report as fake account</button>
+        </span>
+      )}
       <span>
         <p className="body">last connexion : {d2}</p>
         <p className="body">reported as fake account : {userInformation.fake_account} times</p>

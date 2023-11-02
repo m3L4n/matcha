@@ -17,6 +17,7 @@ router.get("/matches", isAuth, UserController.index);
 router.get("/:id", isAuth, UserController.show);
 
 router.put("/changePassword", UserController.changePassword);
+router.put("/reportFakeAccount", isAuth, UserController.reportAsFakeAccount);
 router.delete("/disconnect", isAuth, UserController.disconnectUser);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);
 router.post("/uploadProfilePicture", isAuth, upload.single("profilePicture"), UserController.updateProfilPicture);

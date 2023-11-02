@@ -8,7 +8,7 @@ import "./index.css";
 import { router } from "./Router/Router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 600000,

@@ -89,9 +89,8 @@ export default function ResetPassword() {
         return response.json();
       })
       .then((data) => console.log(data))
-      .catch((error) => {
+      .catch(() => {
         notify("error", "email doesnt match");
-        console.log(error);
       });
   }
 

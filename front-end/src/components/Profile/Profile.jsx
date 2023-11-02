@@ -14,18 +14,45 @@ import GlobalLoading from "../Global/GLoading/GlobalLoading";
 import { useMutation } from "@tanstack/react-query";
 import fetchRelationships from "./fetch/fetchRelationship";
 import { fetchCreateProfilViewHistory } from "./fetch/fetchCreateProfilViewHistory";
+import { checkErrorFetch } from "../Global/checkErrorFetch";
 export default function Profile() {
   const paramId = useParams().id;
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, setTriggerReload } = useAuth();
   const [connected, setConnected] = useState(false);
   const [ourProfile, setOurProfil] = useState(false);
+
   const mutationCreateProfilView = useMutation(fetchCreateProfilViewHistory);
-  const { data: allTagsData, isLoading: allTagsLoading } = useQuery(["tags"], fetchTags);
+  const { data: allTagsData, isLoading: allTagsLoading } = useQuery(["tags"], fetchTags, {
+    useErrorBoundary: false,
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
   const { data: userInformationData, isLoading: userLoading } = useQuery(["id", paramId], fetchUser, {
     staleTime: 10000,
+    cacheTime: 1000,
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
   });
-  const { data: relationShipData, isLoading: relationShipLoading } = useQuery(["relation", paramId], fetchRelationships);
+  const { data: relationShipData, isLoading: relationShipLoading } = useQuery(["relation", paramId], fetchRelationships, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+
   const allTags = allTagsLoading ? [] : allTagsData.result;
   const relationship = relationShipLoading ? {} : relationShipData.result;
   const userInformation = userLoading ? {} : userInformationData.result;
@@ -35,6 +62,11 @@ export default function Profile() {
       return notify("warning", "you cant access user profile like this");
     }
   }, []);
+  // window.addEventListener("unhandledrejection", (event) => {
+  //   // Empêchez la propagation de l'erreur dans la console.
+  //   event.preventDefault();
+  //   console.error("Erreur de promesse non gérée :", event.reason);
+  // });
 
   useEffect(() => {
     if (user.id != paramId) {
