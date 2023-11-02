@@ -1,6 +1,8 @@
 const { sendingMail } = require("../../mailing/mailing");
 const { checkAndChange } = require("../../modules/response.js");
-const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
+const {
+  sendingEmailVerification,
+} = require("../../mailing/sendEmailVerification");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -51,10 +53,22 @@ class UserController {
         if (isSame) {
           const verified = user.valided;
           if (verified) {
-            const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
-              expiresIn: 1 * 24 * 60 * 60 * 1000,
-            });
-            return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ access_token: token });
+            const token = jwt.sign(
+              { id: user.id, username: user.username },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: 1 * 24 * 60 * 60 * 1000,
+              }
+            );
+            return res
+              .cookie("jwt", token, {
+                httpOnly: true,
+                secure: false,
+                maxAge: 3600000,
+                sameSite: true,
+              })
+              .status(201)
+              .send({ access_token: token });
           } else {
             return res.status(401).send({ msg: "user not verified" });
           }
@@ -116,7 +130,9 @@ class UserController {
           if (!updated) {
             return res.status(404).send({ msg: err.message });
           } else {
-            return res.status(200).send("Your account has been successfully verified");
+            return res
+              .status(200)
+              .send("Your account has been successfully verified");
           }
         }
       }
@@ -224,7 +240,11 @@ class UserController {
       const buffer = Buffer.from(file.buffer);
       const base64String = buffer.toString("base64");
       const dataURL = `data:image/jpeg;base64,${base64String}`;
-      return res.json(checkAndChange(await UserModel.uploadImageInDB("profile_picture", dataURL, id)));
+      return res.json(
+        checkAndChange(
+          await UserModel.uploadImageInDB("profile_picture", dataURL, id)
+        )
+      );
     }
     return res.status(204).json({ msg: "profil picture unchanged, no change" });
   };
@@ -244,7 +264,11 @@ class UserController {
         picturesArray.push(file);
       }
     }
-    res.json(checkAndChange(await UserModel.uploadImageInDB("pictures", picturesArray, id)));
+    res.json(
+      checkAndChange(
+        await UserModel.uploadImageInDB("pictures", picturesArray, id)
+      )
+    );
   };
 
   /**  GET INFO PROFIL FOR USER PROFIL */
@@ -259,7 +283,10 @@ class UserController {
   static getAllInfoUser = async (req, res) => {
     const { id } = req.authUser;
     const idReceiver = req.params.id;
-    const infomartionsUser = await UserModel.getAllInformationUser(id, idReceiver);
+    const infomartionsUser = await UserModel.getAllInformationUser(
+      id,
+      idReceiver
+    );
     res.json(checkAndChange(infomartionsUser));
   };
   /** REPORT AS FAKE ACCOUNT */

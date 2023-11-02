@@ -136,7 +136,8 @@ class MatchModel {
     return new Promise((next) => {
       db.query(
         'SELECT "like" FROM match \
-        WHERE id_requester = $1 AND id_receiver = $2',
+        WHERE id_requester = $1 AND id_receiver = $2\
+        OR id_requester = $2 AND id_receiver = $1',
         [requesterId, receiverId]
       )
         .then((result) => {

@@ -135,29 +135,29 @@ async function createTableTags(client) {
 
 async function insertTags(client) {
   const arrayTags = [
-    "Gastronomy",
-    "Cinephile",
-    "Travel",
-    "Cook",
-    "Piercing",
-    "Tattoo",
-    "SQL lover",
-    "Vegan",
-    "Wine lover",
-    "Cat lover",
-    "Dog lover",
-    "Chicken lover",
-    "Romantic feelings",
-    "Flavors of love",
-    "Refined meetings",
-    "Drinks and conversations",
-    "In search of authentic love",
-    "Open to new experiences",
+    "gastronomy",
+    "cinephile",
+    "travel",
+    "cook",
+    "piercing",
+    "tattoo",
+    "sql lover",
+    "vegan",
+    "wine lover",
+    "cat lover",
+    "dog lover",
+    "chicken lover",
+    "romantic feelings",
+    "flavors of love",
+    "refined meetings",
+    "drinks and conversations",
+    "in search of authentic love",
+    "open to new experiences",
   ];
   for (const tag of arrayTags) {
     await client.query(
       `INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`,
-      [tag],
+      [tag]
     );
   }
 }
