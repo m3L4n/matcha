@@ -41,9 +41,13 @@ export default function Profile() {
       if (isError.authorized == false) {
         setTriggerReload(true);
       }
+      // if (data.status == "success") {
+      // }
     },
   });
   const { data: relationShipData, isLoading: relationShipLoading } = useQuery(["relation", paramId], fetchRelationships, {
+    staleTime: 10000,
+    cacheTime: 1000,
     onSuccess: (data) => {
       const isError = checkErrorFetch(data);
 
@@ -55,6 +59,7 @@ export default function Profile() {
 
   const allTags = allTagsLoading ? [] : allTagsData.result;
   const relationship = relationShipLoading ? {} : relationShipData.result;
+  console.log(relationShipData);
   const userInformation = userLoading ? {} : userInformationData.result;
   useEffect(() => {
     if (!paramId) {
@@ -62,11 +67,6 @@ export default function Profile() {
       return notify("warning", "you cant access user profile like this");
     }
   }, []);
-  // window.addEventListener("unhandledrejection", (event) => {
-  //   // Empêchez la propagation de l'erreur dans la console.
-  //   event.preventDefault();
-  //   console.error("Erreur de promesse non gérée :", event.reason);
-  // });
 
   useEffect(() => {
     if (user.id != paramId) {
@@ -102,8 +102,8 @@ export default function Profile() {
 
   return (
     <>
-      {(allTagsLoading || relationShipLoading || userLoading) && <GlobalLoading />}
-      {!allTagsLoading && !relationShipLoading && !userLoading && (
+      {(allTagsLoading || userLoading || relationShipLoading) && <GlobalLoading />}
+      {!allTagsLoading && !userLoading && !relationShipLoading && (
         <UserProfile allTags={allTags} userInformation={userInformation} ourProfile={ourProfile} relationship={relationship} connected={connected} />
       )}
     </>

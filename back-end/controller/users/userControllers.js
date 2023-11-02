@@ -104,9 +104,17 @@ class UserController {
           const verified = user.valided;
           if (verified) {
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
-              expiresIn: 1 * 24 * 60 * 60 * 100,
+              expiresIn: 1 * 24 * 60 * 60 * 1000,
             });
-            return res.cookie("jwt", token, { httpOnly: true, secure: false, maxAge: 3600000, sameSite: true }).status(201).send({ status: 201, userId: user.id });
+            return res
+              .cookie("jwt", token, {
+                httpOnly: true,
+                secure: false,
+                maxAge: 3600000,
+                sameSite: true,
+              })
+              .status(201)
+              .send({ access_token: token });
           } else {
             return res.status(401).json({ status: 401, msg: "user not verified" });
           }
@@ -164,7 +172,7 @@ class UserController {
           if (!updated) {
             return res.status(404).json({ status: 404, msg: "email cant be verified now, please retry later" });
           } else {
-            return res.status(200).json({ status: 200, msg: "Your account has been successfully verified" });
+            return res.status(200).send("Your account has been successfully verified");
           }
         }
       }

@@ -25,7 +25,7 @@ class MatchController {
   static getRelationShip = async (req, res) => {
     const requesterId = req.authUser.id;
     const receiverId = req.params.id;
-    const match = await MatchModel.getRelationship(requesterId, receiverId);
+    const match = await MatchModel.getRelationShipv2(requesterId, receiverId);
     res.json(checkAndChange(match));
   };
 }

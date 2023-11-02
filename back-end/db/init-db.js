@@ -135,30 +135,27 @@ async function createTableTags(client) {
 
 async function insertTags(client) {
   const arrayTags = [
-    "Gastronomy",
-    "Cinephile",
-    "Travel",
-    "Cook",
-    "Piercing",
-    "Tattoo",
-    "SQL lover",
-    "Vegan",
-    "Wine lover",
-    "Cat lover",
-    "Dog lover",
-    "Chicken lover",
-    "Romantic feelings",
-    "Flavors of love",
-    "Refined meetings",
-    "Drinks and conversations",
-    "In search of authentic love",
-    "Open to new experiences",
+    "gastronomy",
+    "cinephile",
+    "travel",
+    "cook",
+    "piercing",
+    "tattoo",
+    "sql lover",
+    "vegan",
+    "wine lover",
+    "cat lover",
+    "dog lover",
+    "chicken lover",
+    "romantic feelings",
+    "flavors of love",
+    "refined meetings",
+    "drinks and conversations",
+    "in search of authentic love",
+    "open to new experiences",
   ];
   for (const tag of arrayTags) {
-    await client.query(
-      `INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`,
-      [tag],
-    );
+    await client.query(`INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`, [tag]);
   }
 }
 async function createTableNotifications(client) {
@@ -227,6 +224,15 @@ async function createTableSocket(client) {
     PRIMARY KEY (id)
   )`);
 }
+async function createTableBlock(client) {
+  await client.query(`CREATE TABLE IF NOT EXISTS block(
+    id UUID DEFAULT uuid_generate_v4(),
+    id_receiver UUID REFERENCES users ON DELETE CASCADE,
+    id_requester UUID REFERENCES users ON DELETE CASCADE ,
+    "blocked" BOOLEAN,
+    PRIMARY KEY (id)
+  )`);
+}
 async function createTable() {
   const client = await pool.connect();
   try {
@@ -243,6 +249,7 @@ async function createTable() {
     await createTableNotifications(client);
     await createTableToken(client);
     await createTableSocket(client);
+    await createTableBlock(client);
     console.log('Table "users" created with success.');
     client.release();
   } catch (error) {

@@ -96,6 +96,39 @@ class MatchModel {
     });
   };
 
+  static getRelationShipv2 = (requesterId, receiverId) => {
+    return new Promise((next) => {
+      // on cherche a savoir si ya un like + si dans la table block avec le requester id = requested _id
+      db.query(
+        'SELECT  block."blocked", match.id_requester, match."like" FROM match FULL JOIN block  ON match.id_requester = block.id_requester  WHERE match.id_requester = $1 AND match.id_receiver= $2 ',
+        [requesterId, receiverId]
+      )
+        .then((data) => {
+          if (data.rowCount == 1) {
+            const obj = data.rows[0];
+            if (!data.rows[0].like) {
+              obj.like = true;
+            }
+            return next(obj);
+          } else {
+            db.query(
+              'SELECT  block."blocked", match.id_requester, match."like" FROM match FULL JOIN block  ON match.id_requester = block.id_requester  WHERE match.id_requester = $2 AND match.id_receiver= $1 ',
+              [requesterId, receiverId]
+            )
+              .then((data) => {
+                console.log(data._prebuiltEmptyResultObject);
+                if (data.rowCount == 0) {
+                  return next(data._prebuiltEmptyResultObject);
+                }
+                return next(data.rows[0]);
+              })
+              .catch((error) => next(error));
+          }
+        })
+        .catch((error) => next(error));
+    });
+  };
+
   static getRelationship = (requesterId, receiverId) => {
     return new Promise((next) => {
       db.query(`SELECT "like", "block" FROM match WHERE id_requester = $1 AND id_receiver= $2 `, [requesterId, receiverId])
@@ -106,7 +139,6 @@ class MatchModel {
             if (!data.rows[0].block) {
               relationShipData.like = true;
             }
-            console.log(relationShipData);
             return next(relationShipData);
           } else {
             db.query(`SELECT "like", "block" FROM match WHERE id_requester = $2 AND id_receiver= $1 `, [requesterId, receiverId])
@@ -116,12 +148,14 @@ class MatchModel {
                   if (!data.rows[0].block) {
                     relationShipData.like = data.rows[0].like;
                   }
+                  console.log(relationShipData);
                   return next(relationShipData);
                 }
               })
               .catch((error) => next(error));
           }
-          return next({});
+          // console.log("cc");
+          // return next({});
         })
         .catch((error) => next(error));
     });
@@ -175,7 +209,8 @@ class MatchModel {
     return new Promise((next) => {
       db.query(
         'SELECT "like" FROM match \
-        WHERE id_requester = $1 AND id_receiver = $2',
+        WHERE id_requester = $1 AND id_receiver = $2\
+        OR id_requester = $2 AND id_receiver = $1',
         [requesterId, receiverId]
       )
         .then((result) => {

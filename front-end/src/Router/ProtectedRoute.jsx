@@ -16,12 +16,6 @@ export function PrivateRoute({ children }) {
   }, []);
 
   useEffect(() => {
-    console.log("herrrre", userAskDisconnect);
-    // if (userAskDisconnect) {
-    //   navigate("/");
-    // }
-  }, [userAskDisconnect]);
-  useEffect(() => {
     if (userAskDisconnect) {
       navigate("/");
       setUserAskDisconnect(false);
@@ -35,7 +29,6 @@ export function PrivateRoute({ children }) {
         navigate(`/profile/${user.id}`);
       }
     }
-    console.log(user, loading, location);
     // return () => {};
   }, [loading, location, user, userAskDisconnect]);
 

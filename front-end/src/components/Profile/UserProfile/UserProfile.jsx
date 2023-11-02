@@ -11,6 +11,7 @@ import anonymous from "assets/_.jpeg";
 import fetchBlockUser from "../fetch/fetchBlockUser";
 import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
 import "./UserProfile.scoped.css";
+import { queryClient } from "src/main";
 import UserInformation from "./UserInformation/UserInformation";
 import FormButton from "src/components/Global/FormButton/FormButton";
 import { checkErrorFetch } from "src/components/Global/checkErrorFetch";
@@ -65,6 +66,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       if (isError.authorized == false) {
         setTriggerReload(true);
       }
+      queryClient.invalidateQueries({ queryKey: ["id"] });
     },
   });
   const mutationLocalisation = useMutation(fetchLocalisation, {
@@ -92,6 +94,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       if (isError.authorized == false) {
         setTriggerReload(true);
       }
+      queryClient.invalidateQueries({ queryKey: ["relation"] });
     },
   });
 
@@ -181,7 +184,6 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
           infoProfileTmp[info] = parameter;
         }
       }
-      // setUserId(infoProfileTmp["id"]);
       setInfoProfil(infoProfileTmp);
     }
   };
@@ -266,23 +268,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     mutationUploadPD.mutate(pictureDescription);
     mutationUpdateInfo.mutate(infoProfileWithoutPicture);
   }
-  // useEffect(() => {
-  //   if (mutationUpdateInfo.isSuccess) {
-  //     notify("success", " account modfy");
-  //     return;
-  //   }
-  //   if (mutationUpdateInfo.isError) {
-  //     notify("error", "email must be unique");
-  //     return;
-  //   }
-  // }, [mutationUpdateInfo.isSuccess]);
-  // useEffect(() => {
-  //   console.log(mutationUpdateInfo.error);
-  //   if (mutationUpdateInfo.isError) {
-  //     notify("error", "email must be unique");
-  //     return;
-  //   }
-  // }, [mutationUpdateInfo.isError]);
+
   const updateLocationInput = async (event) => {
     event.preventDefault();
     if (event.target.name == "longitude" || event.target.name == "latitude") {
@@ -298,12 +284,13 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     setInfoProfil({ ...infoProfile, ["city"]: result.locality, ["position"]: { x: result.latitude, y: result.longitude } });
   };
 
-  const blockUser = (id, block) => {
+  const blockUser = (block) => {
+    const id = infoProfile.id;
     mutationBlockUser.mutate({ id, block });
   };
+
   const reportAsFakeAccount = () => {
     const id = infoProfile.id;
-
     mutationReportFakeAccount.mutate({ id });
   };
   return (

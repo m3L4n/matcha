@@ -59,9 +59,9 @@ export default function UserInformation({
             <input type="file" id="file-ip-1" name="profil_picture" className="input-file" accept="image/*" onChange={HandleChangeProfilePicture} disabled={ourProfile ? false : true} />
           </>
         ) : (
-          !relationship.block && (
+          !relationship.blocked && (
             <div className="profile-picture__like">
-              <LikeButton id={userInformation.id} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like} />
+              <LikeButton id={userInformation.id} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like ? true : false} />
             </div>
           )
         )}
@@ -70,23 +70,46 @@ export default function UserInformation({
   };
   const InformationNotOurProfile = () => {
     return (
-      <>
-        <p className="body">
-          {userInformation.firstname} {userInformation.lastname}, {userInformation.age}
+      <div className="container-information-not-profile">
+        <p className="body-highlight">
+          {userInformation.firstname} {userInformation.lastname}, {userInformation.age} years
         </p>
-        <p className="body"> {userInformation.gender}</p>
-        <span className="information-line-row">
-          <p className="body"> sexual preference : {userInformation.sexual_preference}</p>
-          <p className="body"> favorite beverage : {userInformation.beverage}</p>
+        <div className="information-line-row">
+          <span className="row-information">
+            <p className="body-highlight">gender : </p> <span className="body"> {userInformation.gender}</span>
+          </span>
+          <span className="row-information">
+            <p className="body-highlight">preference : </p> <span className="body"> {userInformation.sexual_preference}</span>
+          </span>
+          <span className="row-information">
+            <p className="body-highlight">favorite beverage : </p> <span className="body"> {userInformation.beverage}</span>
+          </span>
+        </div>
+        <div>
+          <p className="body-highlight">tags : </p>
+          <span>
+            {userInformation.tags?.map((elem, index) => {
+              return <div key={index}> {elem}</div>;
+            })}
+          </span>
+        </div>
+        <span className="container-button-action">
+          {!relationship.blocked ? (
+            <button onClick={() => blockUser(true)} className="button-action-user body">
+              {" "}
+              block this user
+            </button>
+          ) : (
+            <button onClick={() => blockUser(false)} className="button-action-user body">
+              unblock this user
+            </button>
+          )}
+          <button className="button-action-user body" onClick={reportAsFakeAccount}>
+            {" "}
+            report as fake account
+          </button>
         </span>
-        <span>
-          {" "}
-          tags{" "}
-          {userInformation.tags?.map((elem) => {
-            console.log(elem);
-          })}
-        </span>
-      </>
+      </div>
     );
   };
   return (
@@ -96,20 +119,14 @@ export default function UserInformation({
         <div className="container-user-information-text">
           <h2 className="title-1"> @{userInformation.username}</h2>
           <p className="body-highlight"> {userInformation.city}</p>
-          <p className="body-highlight"> {ourProfile ? "en ligne " : userInformation.connected ? "en ligne" : "deconnecte"}</p>
-          <p className="body-highlight"> {userInformation.rate_fame} points</p>
-          {!ourProfile && <InformationNotOurProfile />}
+          <p className="body"> {ourProfile ? "en ligne " : userInformation.connected ? "en ligne" : "deconnecte"}</p>
         </div>
       </header>
-      {!ourProfile && (
-        <span>
-          <button onClick={blockUser}> block</button>
-          <button onClick={reportAsFakeAccount}> report as fake account</button>
-        </span>
-      )}
+      {!ourProfile && <InformationNotOurProfile />}
       <span>
         <p className="body">last connexion : {d2}</p>
         <p className="body">reported as fake account : {userInformation.fake_account} times</p>
+        <p className="body"> {userInformation.rate_fame} points</p>
       </span>
       <div className="container-user-information-body">
         {ourProfile && (
