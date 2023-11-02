@@ -1,3 +1,5 @@
+import { notify } from "src/components/Global/toast-notify";
+
 async function getChatPartner({ queryKey }) {
   const id = queryKey[1];
   const url = `${import.meta.env.VITE_BACKEND_API_URL}/users/${id}`;
@@ -12,7 +14,9 @@ async function getChatPartner({ queryKey }) {
   const response = await fetch(url, options);
 
   if (!response) {
-    throw new Error("Can't get current chat partner");
+    const errorMsg = "Can't get current chat partner";
+    notify(errorMsg);
+    throw new Error(errorMsg);
   }
 
   return response.json();

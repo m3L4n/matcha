@@ -1,3 +1,5 @@
+import { notify } from "../Global/toast-notify";
+
 async function getMatches({ queryKey }) {
   const { action, age, location, fame, tags } = queryKey[1];
   const url = `${
@@ -14,9 +16,9 @@ async function getMatches({ queryKey }) {
   const response = await fetch(url, options);
 
   if (!response) {
-    throw new Error(
-      `Can't get match: ${action}, ${age}, ${location}, ${fame}, ${tags}`
-    );
+    const errorMsg = `Can't get match: ${action}, ${age}, ${location}, ${fame}, ${tags}`;
+    notify("error", errorMsg);
+    throw new Error(errorMsg);
   }
 
   return response.json();

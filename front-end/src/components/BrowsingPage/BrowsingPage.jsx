@@ -95,12 +95,18 @@ export default function BrowsingPage() {
   };
 
   const filterMatches = toFilter => {
-    if (isNotEmptyButNaN(filterParams.ageGap)) {
-      notify("Error: invalid age gap filter parameters");
-    } else if (isNotEmptyButNaN(filterParams.fameGap)) {
-      notify("Error: invalid fame gap filter parameters");
-    } else if (isNotEmptyButNaN(filterParams.locationGap)) {
-      notify("Error: invalid location gap filter parameters");
+    if (isNotEmptyButNaN(filterParams.ageGap) || filterMatches.ageGap < 0) {
+      notify("error", "invalid age gap filter parameters");
+    } else if (
+      isNotEmptyButNaN(filterParams.fameGap) ||
+      filterMatches.fameGap < 0
+    ) {
+      notify("error", "invalid fame gap filter parameters");
+    } else if (
+      isNotEmptyButNaN(filterParams.locationGap) ||
+      filterParams.locationGap < 0
+    ) {
+      notify("error", "invalid location gap filter parameters");
     } else {
       if (filterParams.ageGap !== "") {
         const ageGap = Number(filterParams.ageGap);
@@ -158,11 +164,21 @@ export default function BrowsingPage() {
     }
   }, [status, users]);
 
-  if (error) {
+  if (error || matches.length === 0) {
     return (
-      <div className="matchesError">
-        <h2>Cannot find any matches for you ... 💔</h2>
-      </div>
+      <>
+        <header className="title">
+          <h1 className="header-title header">Matcha</h1>
+        </header>
+        <SearchBar
+          requestParams={requestParams}
+          setRequestParams={setRequestParams}
+          setFilterParams={setFilterParams}
+        />
+        <div className="matchesError">
+          <h2>No matches. Love is hiding, maybe!</h2>
+        </div>
+      </>
     );
   }
 

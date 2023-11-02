@@ -1,3 +1,5 @@
+import { notify } from "../Global/toast-notify";
+
 async function getConversations() {
   const url = `${import.meta.env.VITE_BACKEND_API_URL}/conversation`;
   const options = {
@@ -11,7 +13,9 @@ async function getConversations() {
   const response = await fetch(url, options);
 
   if (!response) {
-    throw new Error("Can't get conversations");
+    const errorMsg = "Can't get conversations";
+    notify(errorMsg);
+    throw new Error(errorMsg);
   }
 
   return response.json();

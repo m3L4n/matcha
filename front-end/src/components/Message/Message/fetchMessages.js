@@ -1,3 +1,5 @@
+import { notify } from "src/components/Global/toast-notify";
+
 async function getMessages({ queryKey }) {
   const conversationId = queryKey[1];
   const url = `${
@@ -14,7 +16,9 @@ async function getMessages({ queryKey }) {
   const response = await fetch(url, options);
 
   if (!response) {
-    throw new Error("Can't get any messages from this conversation");
+    const errorMsg = "Can't get any messages from this conversation";
+    notify(errorMsg);
+    throw new Error(errorMsg);
   }
 
   return response.json();
