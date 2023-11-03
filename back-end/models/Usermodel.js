@@ -147,9 +147,7 @@ class UserModel {
               max_fame = 42000;
             }
             if (searchParams.tags !== "") {
-              tagsRequired = searchParams.tags.split(",");
-              console.log(`tagsRequired: ${tagsRequired} | ${typeof tagsRequired}`);
-              console.log(`tags: ${tags} | ${typeof tags}`);
+              tagsRequired = searchParams.tags.split(",").filter((tag) => tag.length > 0);
             }
           }
 

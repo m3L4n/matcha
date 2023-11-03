@@ -89,12 +89,14 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   });
   const mutationBlockUser = useMutation(fetchBlockUser, {
     onSuccess: (data) => {
+      console.log(data);
       const isError = checkErrorFetch(data);
 
       if (isError.authorized == false) {
         setTriggerReload(true);
       }
       queryClient.invalidateQueries({ queryKey: ["relation"] });
+      queryClient.invalidateQueries({ queryKey: ["id"] });
     },
   });
 
@@ -286,7 +288,12 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
   const blockUser = (block) => {
     const id = infoProfile.id;
-    mutationBlockUser.mutate({ id, block });
+    console.log("in block", id, block);
+    const body = {
+      id,
+      block,
+    };
+    mutationBlockUser.mutate(body);
   };
 
   const reportAsFakeAccount = () => {

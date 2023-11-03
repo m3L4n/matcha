@@ -59,7 +59,7 @@ export default function UserInformation({
             <input type="file" id="file-ip-1" name="profil_picture" className="input-file" accept="image/*" onChange={HandleChangeProfilePicture} disabled={ourProfile ? false : true} />
           </>
         ) : (
-          !relationship.blocked && (
+          (!relationship.blocked || relationship.blocked == null) && (
             <div className="profile-picture__like">
               <LikeButton id={userInformation.id} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like ? true : false} />
             </div>

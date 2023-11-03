@@ -59,7 +59,6 @@ export default function Profile() {
 
   const allTags = allTagsLoading ? [] : allTagsData.result;
   const relationship = relationShipLoading ? {} : relationShipData.result;
-  console.log(relationShipData);
   const userInformation = userLoading ? {} : userInformationData.result;
   useEffect(() => {
     if (!paramId) {

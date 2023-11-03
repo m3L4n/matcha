@@ -10,7 +10,7 @@ class notificationsController {
     return res.json(checkAndChange(resultat));
   };
   static createNotification = async (id_requester, id_receiver, action, type, currentLike) => {
-    const relationship = await MatchModel.getRelationship(id_requester, id_receiver);
+    const relationship = await MatchModel.getRelationShip(id_requester, id_receiver);
     if (relationship.block == true) {
       return {};
     }
