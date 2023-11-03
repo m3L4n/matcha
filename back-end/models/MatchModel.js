@@ -182,6 +182,7 @@ class MatchModel {
                   db.query(
                     "DELETE FROM match\
                     WHERE id_requester = $1 AND id_receiver = $2\
+                    OR id_receiver = $1 AND id_requester = $2\
                     RETURNING *",
                     [requesterId, receiverId]
                   )
