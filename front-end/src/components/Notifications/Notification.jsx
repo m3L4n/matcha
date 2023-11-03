@@ -65,7 +65,7 @@ export default function Notification() {
             </button>
           );
         })}
-        {notificationToShow.length == 0 && <h3> 0 notificatons of {viewType}</h3>}
+        {notificationToShow.length == 0 && <h3 className="body"> 0 notificatons of {viewType}</h3>}
       </div>
     );
   };
@@ -80,9 +80,9 @@ export default function Notification() {
             <h3 className="title-1 "> Our notification</h3>
           </header>
           <div className="container-notification__body">
-            <div className="notificatio__body-button">
+            <div className="notification__body-button">
               {types.map((type, index) => (
-                <button key={index} value={type} className="button-notif" onClick={() => setViewType(type)}>
+                <button key={index} value={type} className={(viewType == type ? " button-notif  active" : " button-notif ") + " body-highlight"} onClick={() => setViewType(type)}>
                   {type}
                 </button>
               ))}

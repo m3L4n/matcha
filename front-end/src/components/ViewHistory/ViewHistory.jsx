@@ -31,7 +31,7 @@ export default function ViewHistory() {
           </header>
           <div className="container-render-history">
             {historyUser.length == 0 ? (
-              <h3>go watch profil, this is empty here </h3>
+              <h3 className="body">go watch profil, this is empty here </h3>
             ) : (
               historyUser.map((elem, index) => {
                 return (

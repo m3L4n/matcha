@@ -22,7 +22,7 @@
   gap: 1rem;
   margin: 1rem;
 }
-.notificatio__body-button {
+.notification__body-button {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -30,6 +30,15 @@
 }
 .button-notif {
   flex: 1;
+  background-color: white;
+  border: 2px solid black;
+  transition: all ease 0.3s;
+}
+.button-notif:hover {
+  background-color: var(--green);
+}
+.active {
+  background-color: var(--green);
 }
 .container-render-notif {
   display: flex;

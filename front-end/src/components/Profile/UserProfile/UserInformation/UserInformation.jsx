@@ -85,11 +85,16 @@ export default function UserInformation({
             <p className="body-highlight">favorite beverage : </p> <span className="body"> {userInformation.beverage}</span>
           </span>
         </div>
-        <div>
-          <p className="body-highlight">tags : </p>
-          <span>
+        <div className="container-user-tags">
+          <p className="body-highlight label-tags">tags : </p>
+          <span className="container-tags">
             {userInformation.tags?.map((elem, index) => {
-              return <div key={index}> {elem}</div>;
+              return (
+                <div key={index} className="tags-selected body">
+                  {" "}
+                  {elem}
+                </div>
+              );
             })}
           </span>
         </div>
@@ -128,6 +133,7 @@ export default function UserInformation({
         <p className="body">reported as fake account : {userInformation.fake_account} times</p>
         <p className="body"> {userInformation.rate_fame} points</p>
       </span>
+
       <div className="container-user-information-body">
         {ourProfile && (
           <>
