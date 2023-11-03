@@ -97,11 +97,18 @@ class MatchModel {
    **/
   static createLike = (requesterId, receiverId) => {
     return new Promise((next) => {
-      db.query('SELECT "like" FROM match WHERE id_requester = $1', [receiverId])
+      console.log(`RequesterId: ${requesterId}`);
+      db.query(
+        'select "like", id_requester, id_receiver from match \
+        where id_requester = $1 and id_receiver = $2\
+        OR id_requester = $2 AND id_receiver = $1',
+        [requesterId, receiverId]
+      )
         .then((result) => {
           this.#updateElo(receiverId, requesterId, 1)
             .then(() => {
-              if (!result.rows.length) {
+              if (!result.rowCount) {
+                console.log("On trouve pas frr");
                 db.query(
                   'INSERT INTO match("like", block, id_requester, id_receiver)  \
                 VALUES(false, false, $1, $2)',
@@ -110,9 +117,11 @@ class MatchModel {
                   .then((result) => next(result))
                   .catch((error) => next(error));
               } else {
+                console.log("On trouve frrr");
                 db.query(
                   'UPDATE match SET "like" = true \
-                WHERE id_requester = $1 AND id_receiver = $2',
+                WHERE id_requester = $1 AND id_receiver = $2\
+                OR id_requester = $2 AND id_receiver = $1',
                   [receiverId, requesterId]
                 )
                   .then((result) => next(result))
@@ -135,8 +144,8 @@ class MatchModel {
   static removeLike = (requesterId, receiverId) => {
     return new Promise((next) => {
       db.query(
-        'SELECT "like" FROM match \
-        WHERE id_requester = $1 AND id_receiver = $2\
+        'select "like", id_requester, id_receiver from match \
+        where id_requester = $1 and id_receiver = $2\
         OR id_requester = $2 AND id_receiver = $1',
         [requesterId, receiverId]
       )
@@ -145,14 +154,30 @@ class MatchModel {
             .then(() => {
               if (result.rowCount > 0) {
                 if (result.rows[0].like) {
-                  db.query(
-                    'UPDATE match SET "like" = false \
-                  WHERE id_requester = $1 AND id_receiver = $2\
-                  RETURNING *',
-                    [requesterId, receiverId]
-                  )
-                    .then((result) => next(result))
-                    .catch((error) => next(error));
+                  const { id_requester, id_receiver } = result.rows[0];
+                  if (
+                    id_requester == receiverId &&
+                    id_receiver == requesterId
+                  ) {
+                    db.query(
+                      'UPDATE match\
+                        SET "like" = false,\
+                        id_receiver = $1,\
+                        id_requester = $2',
+                      [receiverId, requesterId]
+                    )
+                      .then((result) => next(result))
+                      .catch((error) => next(error));
+                  } else {
+                    db.query(
+                      'UPDATE match SET "like" = false \
+                    WHERE id_requester = $1 AND id_receiver = $2\
+                    RETURNING *',
+                      [requesterId, receiverId]
+                    )
+                      .then((result) => next(result))
+                      .catch((error) => next(error));
+                  }
                 } else {
                   db.query(
                     "DELETE FROM match\
