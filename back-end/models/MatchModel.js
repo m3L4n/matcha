@@ -97,13 +97,19 @@ class MatchModel {
   };
 
   static getRelationShip = async (requesterId, receiverId) => {
+    // console.log(requesterId, receiverId);
     try {
       const responseRequester = await db.query(
         'SELECT  block."blocked", match.id_requester, match."like" FROM match FULL JOIN block  ON match.id_requester = block.id_requester  WHERE match.id_requester = $1 AND match.id_receiver= $2 ',
         [requesterId, receiverId]
       );
+      // console.log("current user is requester", responseRequester.rows);
       if (responseRequester.rowCount > 0) {
-        const obj = responseRequester.rows[0];
+        const obj = JSON.parse(JSON.stringify(responseRequester.rows[0]));
+
+        if (responseRequester.rows[0].like) {
+          obj.match = true;
+        }
         if (!responseRequester.rows[0].like) {
           obj.like = true;
         }
@@ -113,15 +119,21 @@ class MatchModel {
           'SELECT  block."blocked", match.id_requester, match."like" FROM match FULL JOIN block  ON match.id_requester = block.id_requester  WHERE match.id_requester = $2 AND match.id_receiver= $1 ',
           [requesterId, receiverId]
         );
+        // console.log("current user is receiver", responseReceiver.rows);
         if (responseReceiver.rowCount == 1) {
-          return responseReceiver.rows[0];
+          const obj = JSON.parse(JSON.stringify(responseReceiver.rows[0]));
+          if (responseReceiver.rows[0].like) {
+            obj.match = true;
+          } else {
+            obj.userLike = true;
+          }
+          return obj;
         } else {
           const blockRequester = await db.query(`SELECT "blocked" FROM block WHERE id_requester = $1 AND id_receiver = $2`, [requesterId, receiverId]);
           if (blockRequester.rowCount == 0) {
             return { like: false, blocked: false };
-          } else {
-            return { like: false, blocked: blockRequester.rows[0].blocked };
           }
+          return { like: false, blocked: blockRequester.rows[0].blocked };
         }
       }
     } catch (error) {

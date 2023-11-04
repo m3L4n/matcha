@@ -5,6 +5,7 @@ const { socketModel } = require("../socketModel/socketModel");
 class socketController {
   static login = async (idUser, idSocket) => {
     try {
+      console.log("here");
       const result = await socketModel.create(idSocket, idUser);
       await UserModel.handleConnected(idUser, "true");
       console.log("connexion etablished");

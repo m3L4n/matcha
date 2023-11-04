@@ -1,6 +1,7 @@
 const { notificationsController } = require("../controller/notificationsController");
 const { socketController } = require("./socketController/socketController");
 const { MessageModel } = require("../models/MessageModel");
+const { MatchModel } = require("../models/MatchModel");
 function socket_broadcast(io) {
   io.on("connect", (socket) => {
     socket.on("login", async function (data) {
@@ -27,7 +28,8 @@ function socket_broadcast(io) {
     socket.on("userLike", async (msg) => {
       const like = msg.like ? true : false;
       socket.broadcast.emit("alert-new-notif", { userReciver: msg.userId });
-      await notificationsController.createNotification(msg.userId, msg.currentUserId, like, "like", msg.currentLike);
+
+      await notificationsController.createNotification(msg.userId, msg.currentUserId, `${like ? "like" : "unlike"}  your profile`, "like", msg.like);
     });
     // the notificatins not seen
     socket.on("notifications", async function (data) {

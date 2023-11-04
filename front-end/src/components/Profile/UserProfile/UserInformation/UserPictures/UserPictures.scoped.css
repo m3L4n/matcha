@@ -33,6 +33,7 @@
   top: 0;
   border: none;
   color: white;
+  mix-blend-mode: difference;
   background-color: transparent;
   right: 0;
   transition: opacity ease 0.3s;

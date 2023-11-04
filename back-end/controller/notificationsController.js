@@ -14,13 +14,18 @@ class notificationsController {
     if (relationship.block == true) {
       return {};
     }
-    // if (type == "like") {
-    //   // if like == true
-    //   return;
-    // }
-
-    const resultat = await NotificationsModel.create(id_requester, id_receiver, action, type);
-    return resultat;
+    if (relationship.match && type == "like" && currentLike) {
+      await NotificationsModel.create(id_requester, id_receiver, "its a match", type);
+      await NotificationsModel.create(id_receiver, id_requester, "its a match", type);
+    }
+    if (relationship.userLike && type == "like" && !currentLike) {
+      await NotificationsModel.create(id_requester, id_receiver, "a match unlike you ", type);
+    }
+    if (currentLike || type != "like") {
+      const result = await NotificationsModel.create(id_requester, id_receiver, action, type);
+      return result;
+    }
+    return;
   };
 
   static findNotifidById = async (req, res) => {};
