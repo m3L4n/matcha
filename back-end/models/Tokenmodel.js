@@ -18,7 +18,7 @@ class TokenModel {
   static verifyToken = async (dataToken) => {
     try {
       const { id, token } = dataToken;
-      console.log(id, token);
+      // console.log(id, token);
       const query = "SELECT * FROM token WHERE id = $1 AND token = $2";
       const values = [id, token];
       const response = await db.query(query, values);

@@ -155,10 +155,7 @@ async function insertTags(client) {
     "open to new experiences",
   ];
   for (const tag of arrayTags) {
-    await client.query(
-      `INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`,
-      [tag]
-    );
+    await client.query(`INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`, [tag]);
   }
 }
 async function createTableNotifications(client) {
@@ -201,9 +198,10 @@ async function createTableMessages(client) {
 async function createTableprofilViewer(client) {
   await client.query(`
   CREATE TABLE IF NOT EXISTS profilViewer (
-    id UUID PRIMARY KEY,
+     id UUID DEFAULT uuid_generate_v4(),
     id_watcher UUID REFERENCES users ON DELETE SET NULL,
-    id_watched UUID REFERENCES users ON DELETE SET NULL
+    id_watched UUID REFERENCES users ON DELETE SET NULL,
+    PRIMARY KEY (id)
      );
      `);
 }
@@ -226,6 +224,15 @@ async function createTableSocket(client) {
     PRIMARY KEY (id)
   )`);
 }
+async function createTableBlock(client) {
+  await client.query(`CREATE TABLE IF NOT EXISTS block(
+    id UUID DEFAULT uuid_generate_v4(),
+    id_receiver UUID REFERENCES users ON DELETE CASCADE,
+    id_requester UUID REFERENCES users ON DELETE CASCADE ,
+    "blocked" BOOLEAN,
+    PRIMARY KEY (id)
+  )`);
+}
 async function createTable() {
   const client = await pool.connect();
   try {
@@ -242,6 +249,7 @@ async function createTable() {
     await createTableNotifications(client);
     await createTableToken(client);
     await createTableSocket(client);
+    await createTableBlock(client);
     console.log('Table "users" created with success.');
     client.release();
   } catch (error) {

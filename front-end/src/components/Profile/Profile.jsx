@@ -10,30 +10,56 @@ import fetchTags from "./fetch/fetchTags";
 import fetchUser from "./fetch/fetchUser";
 import { socket } from "src/socket/socket";
 import GlobalLoading from "../Global/GLoading/GlobalLoading";
+// import fetchLocalisationiWithoutKnow from "./fetch/fetchLocalisationWithoutKnow";
+import { useMutation } from "@tanstack/react-query";
 import fetchRelationships from "./fetch/fetchRelationship";
+import { fetchCreateProfilViewHistory } from "./fetch/fetchCreateProfilViewHistory";
+import { checkErrorFetch } from "../Global/checkErrorFetch";
 export default function Profile() {
   const paramId = useParams().id;
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, setTriggerReload } = useAuth();
   const [connected, setConnected] = useState(false);
   const [ourProfile, setOurProfil] = useState(false);
 
-  const { data: allTagsData, isLoading: allTagsLoading } = useQuery(
-    ["tags"],
-    fetchTags
-  );
-  const { data: userInformationData, isLoading: userLoading } = useQuery(
-    ["id", paramId],
-    fetchUser
-  );
-  const { data: relationShipData, isLoading: relationShipLoading } = useQuery(
-    ["relation", paramId],
-    fetchRelationships
-  );
+  const mutationCreateProfilView = useMutation(fetchCreateProfilViewHistory);
+  const { data: allTagsData, isLoading: allTagsLoading } = useQuery(["tags"], fetchTags, {
+    useErrorBoundary: false,
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+  const { data: userInformationData, isLoading: userLoading } = useQuery(["id", paramId], fetchUser, {
+    staleTime: 10000,
+    cacheTime: 1000,
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+      // if (data.status == "success") {
+      // }
+    },
+  });
+  const { data: relationShipData, isLoading: relationShipLoading } = useQuery(["relation", paramId], fetchRelationships, {
+    staleTime: 10000,
+    cacheTime: 1000,
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+
   const allTags = allTagsLoading ? [] : allTagsData.result;
   const relationship = relationShipLoading ? {} : relationShipData.result;
   const userInformation = userLoading ? {} : userInformationData.result;
-
   useEffect(() => {
     if (!paramId) {
       navigate("/match");
@@ -41,48 +67,43 @@ export default function Profile() {
     }
   }, []);
 
-  const isUserIsConnected = async () => {
-    socket.emit("response_connected", { userId: paramId });
-    socket.on("isConnect", msg => {
-      setConnected(msg.connected);
-    });
-  };
   useEffect(() => {
-    socket.emit("user_profile", {
-      userId: paramId,
-      currentUserId: user.id,
-      ourProfile: user.id == paramId
-    });
-    const intervalId = setInterval(isUserIsConnected, 2000);
+    if (user.id != paramId) {
+      socket.on("alert-disconnect", (msg) => {
+        if (msg.userId == paramId) {
+          setConnected(false);
+        }
+      });
+      socket.on("alert-connect", (msg) => {
+        if (msg.userId == paramId) {
+          setConnected(true);
+        }
+      });
+    }
+    socket.emit("user_profile", { userId: paramId, currentUserId: user.id, ourProfile: user.id == paramId });
 
     return () => {
       setConnected(false);
       setOurProfil(false);
-      clearInterval(intervalId);
       socket.off("user_profile", () => {});
-      socket.off("isConnect", () => {});
+      socket.off("alert-disconnect", () => {});
+      socket.off("alert-connect", () => {});
     };
   }, [paramId]);
 
   useEffect(() => {
     if (paramId === user.id) {
       setOurProfil(true);
+    } else {
+      mutationCreateProfilView.mutate({ paramId });
     }
   }, [paramId, user.id]);
 
   return (
     <>
-      {(allTagsLoading || relationShipLoading || userLoading) && (
-        <GlobalLoading />
-      )}
-      {!allTagsLoading && (
-        <UserProfile
-          allTags={allTags}
-          userInformation={userInformation}
-          ourProfile={ourProfile}
-          relationship={relationship}
-          connected={connected}
-        />
+      {(allTagsLoading || userLoading || relationShipLoading) && <GlobalLoading />}
+      {!allTagsLoading && !userLoading && !relationShipLoading && (
+        <UserProfile allTags={allTags} userInformation={userInformation} ourProfile={ourProfile} relationship={relationship} connected={connected} />
       )}
     </>
   );

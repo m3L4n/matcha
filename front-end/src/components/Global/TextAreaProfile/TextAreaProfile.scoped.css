@@ -1,0 +1,24 @@
+.Lcontainer-userDescription-text {
+  width: 100%;
+  min-width: 100%;
+  height: 10rem;
+  resize: none;
+  background-color: transparent;
+  min-height: 100%;
+  text-decoration: none;
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  outline: none;
+  text-decoration: none;
+}
+@media (min-width: 880px) {
+  .Lcontainer-userDescription-text {
+    text-align: left;
+  }
+}

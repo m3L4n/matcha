@@ -1,4 +1,4 @@
-.container{
+.container {
   background-color: var(--cream);
   width: 100vw;
   min-height: 100vh;
@@ -9,7 +9,7 @@
   /* justify-content: center; */
 }
 
-.container-auth{
+.container-auth {
   width: 80%;
   display: flex;
   gap: 1em;
@@ -19,8 +19,8 @@
   justify-content: center;
 }
 
-.header{
-  width: 100%; 
+.header {
+  width: 100%;
   margin: 0;
   display: flex;
   flex-flow: column;
@@ -29,7 +29,7 @@
   margin-right: auto;
   text-align: center;
 }
-.button-discord{
+.button-discord {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -44,7 +44,7 @@
   padding: 2%;
   height: 3.563rem;
 }
-.hr{
+.hr {
   border: none;
   border-top: 1px solid var(--green);
   color: #333;
@@ -54,18 +54,17 @@
   width: 80%;
   margin: 1.2em auto 0.4em auto;
 }
-.hr::after{
+.hr::after {
   background: var(--cream);
-  content: 'or';
+  content: "or";
   width: 100px;
   font-family: Montserrat;
   color: var(--green);
   padding: 2px 10px;
   position: relative;
   top: -13px;
-  
 }
-.container-form{
+.container-form {
   display: flex;
   flex-flow: column;
   width: 80%;
@@ -73,7 +72,7 @@
   margin-right: auto;
   gap: 0.8em;
 }
-.input{
+.input {
   border: none;
   outline: none;
   background-color: transparent;
@@ -85,11 +84,12 @@
   text-align: left;
   text-indent: 1ch;
   line-height: 1.5em;
+  transition: all ease 0.3s;
 }
-.label{
+.label {
   color: var(--green);
 }
-.button-submit{
+.button-submit {
   display: flex;
   flex-flow: row;
   background-color: var(--green);
@@ -103,14 +103,14 @@
   margin: 1em auto 0em auto;
 }
 
-.login{
+.login {
   background-color: transparent;
   border: none;
   width: fit-content;
-  margin-right: auto;  
+  margin-right: auto;
   margin-left: auto;
 }
-.container-img{
+.container-img {
   /* width: 40vw; */
   width: 500px;
   height: 100vh;
@@ -121,17 +121,16 @@
   /* top: 50%; */
   /* transform: translateY(-50%);  */
 }
-.img-right{
+.img-right {
   /* width: 570px; */
   width: 400px;
   position: absolute;
   height: 90%;
   right: 2%;
   top: 50%;
-  flex-shrink: 190px;
   transform: translateY(-50%);
   margin-right: 10vw;
-  background:center/ cover no-repeat  url("../../../assets/coffee-love.jpeg");
+  background: center/ cover no-repeat url("../../../assets/coffee-love.jpeg");
 }
 /* @media screen and (max-width: 1100px) {
 
@@ -140,15 +139,15 @@
   }
 } */
 @media screen and (min-width: 980px) {
-  .container{
+  .container {
     padding-left: 10vw;
   }
-  .container-img{
+  .container-img {
     /* background-color: red; */
     display: flex;
     flex: 1;
   }
-  .container-auth{
+  .container-auth {
     flex: 1;
     /* width: 60%; */
     padding-top: 2em;
@@ -157,7 +156,7 @@
     max-width: 500px;
     margin-right: auto;
   }
-  .header{
+  .header {
     text-align: left;
     justify-content: left;
     margin-left: auto;
@@ -169,24 +168,26 @@
     margin-right: auto;
     /* background-color: black; */
   }
-  .button-discord{
+  .button-discord {
     margin-top: 0.5em;
     padding: 1%;
     width: 100%;
   }
-  .hr{
+  .hr {
     width: 70%;
     max-width: 500px;
   }
-  .img-right{
+  .img-right {
     width: 400px;
     margin-right: 5vw;
   }
-
-  
+}
+.input-error {
+  border: 1px solid red;
+  /* background-color: red; */
 }
 @media screen and (min-width: 1200px) {
-  .img-right{
+  .img-right {
     width: 500px;
     margin-right: 8vw;
   }

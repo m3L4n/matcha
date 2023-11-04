@@ -1,18 +1,11 @@
-async function fetchRelationships({ queryKey }) {
-  const url = `${import.meta.env.VITE_BACKEND_API_URL}/match/${queryKey[1]}`;
-  const options = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include"
-  };
-  const res = await fetch(url, options);
+import { fetcherWrapper } from "src/components/Global/fetcherWrapper";
 
-  if (!res.ok) {
-    throw new Error(`cant block this user`);
-  }
-  return res.json();
+async function fetchRelationships({ queryKey }) {
+  return fetcherWrapper(
+    "GET",
+    `/match/${queryKey[1]}`,
+    "cant get relation with user"
+  );
 }
 
 export default fetchRelationships;

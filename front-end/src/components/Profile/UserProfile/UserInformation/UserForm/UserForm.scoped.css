@@ -1,0 +1,12 @@
+.container-form {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  gap: 0.75rem;
+}
+.form-information-row {
+  width: 90%;
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 1rem;
+}

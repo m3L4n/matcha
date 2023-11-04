@@ -1,0 +1,17 @@
+.container-user-description {
+  display: flex;
+  flex-flow: column;
+}
+
+.container-text-area {
+  margin: auto;
+  width: 80%;
+  margin-top: 2rem;
+}
+
+@media (min-width: 880px) {
+  .container-text-area {
+    min-width: 750px;
+    width: 65%;
+  }
+}

@@ -3,28 +3,15 @@ import { notify } from "components/Global/toast-notify";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./ResetPassword.scoped.css";
+import checkPassword from "../Global/checkPassword";
 function ComponentsResendEmailPassword({ email, handleChange, handleReset }) {
   return (
     <div className="container-resetEmail">
       <h1 className="header header-matcha"> MATCHA</h1>
-      <p className="body">
-        Enter the email address associated with your account and we’ll send you
-        a link to reset your password.
-      </p>
+      <p className="body">Enter the email address associated with your account and we’ll send you a link to reset your password.</p>
       <form className="form">
-        <input
-          type={"email"}
-          value={email}
-          placeholder="email"
-          onInput={handleChange}
-          className="input"
-        />
-        <input
-          type={"submit"}
-          onClick={handleReset}
-          value="send email"
-          className="input-submit body-highlight"
-        />
+        <input type={"email"} value={email} placeholder="email" onInput={handleChange} className="input" />
+        <input type={"submit"} onClick={handleReset} value="send email" className="input-submit body-highlight" />
       </form>
       <Link to="/login" className="link body">
         {" "}
@@ -34,39 +21,15 @@ function ComponentsResendEmailPassword({ email, handleChange, handleReset }) {
   );
 }
 
-function ComponentsresetPassword({
-  password,
-  confirmPassword,
-  handleChange,
-  handleResetPassWord
-}) {
+function ComponentsresetPassword({ password, confirmPassword, handleChange, handleResetPassWord }) {
   return (
     <div className="container-resetEmail">
       <h1 className="header header-matcha"> MATCHA</h1>
       <p className="body">Enter your new password.</p>
       <form className="form">
-        <input
-          type={"password"}
-          name={"password"}
-          value={password}
-          placeholder="password"
-          onChange={handleChange}
-          className="input"
-        />
-        <input
-          type={"password"}
-          name={"confirmPassword"}
-          value={confirmPassword}
-          placeholder="confirm you password"
-          onChange={handleChange}
-          className="input"
-        />
-        <input
-          type={"submit"}
-          onClick={handleResetPassWord}
-          value="send email"
-          className="input-submit body-highlight"
-        />
+        <input type={"password"} name={"password"} value={password} placeholder="password" onChange={handleChange} className="input" />
+        <input type={"password"} name={"confirmPassword"} value={confirmPassword} placeholder="confirm you password" onChange={handleChange} className="input" />
+        <input type={"submit"} onClick={handleResetPassWord} value="send email" className="input-submit body-highlight" />
       </form>
       <Link to="/login" className="link body">
         {" "}
@@ -81,7 +44,7 @@ export default function ResetPassword() {
   const [sendEmail, setSendEmail] = useState(1); // 1 = send email reste password // 0 = change password
   const [password, setPassword] = useState({
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const res = useParams();
 
@@ -109,13 +72,13 @@ export default function ResetPassword() {
     const options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json;charset=utf-8"
+        "Content-Type": "application/json;charset=utf-8",
       },
       credentials: "include",
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ email: email }),
     };
     fetch("http://localhost:4000/users/send-password-reset", options)
-      .then(response => {
+      .then((response) => {
         if (response.status == 401) {
           notify("error", "email doesnt match");
           return response.json();
@@ -125,57 +88,51 @@ export default function ResetPassword() {
         }
         return response.json();
       })
-      .then(data => console.log(data))
-      .catch(error => {
+      .then((data) => console.log(data))
+      .catch(() => {
         notify("error", "email doesnt match");
-        console.log(error);
       });
   }
 
   function handleResetPassword(event) {
     event.preventDefault();
     if (password.password.length == 0 || password.confirmPassword.length == 0) {
-      notify(
-        "error",
-        "you cant submit this, you have to fill the passwords input"
-      );
+      notify("error", "you cant submit this, you have to fill the passwords input");
       return;
     }
     if (password.password != password.confirmPassword) {
-      notify(
-        "error",
-        "password are different, please re fille the input with same password"
-      );
+      notify("error", "password are different, please re fille the input with same password");
+      return;
+    }
+    if (!checkPassword(password.password) || !checkPassword(password.confirmPassword)) {
+      notify("error", "password doesn't respect the password security");
       return;
     }
     const options = {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id: res.id,
-        password: password.password
-      })
+        password: password.password,
+      }),
     };
     fetch("http://localhost:4000/users/changePassword", options)
-      .then(response => {
+      .then((response) => {
         if (response.status == 200) {
           notify("success", "your password are successfully changed");
           setPassword({
             password: "",
-            confirmPassword: ""
+            confirmPassword: "",
           });
         } else if (response.status == 500) {
-          notify(
-            "error",
-            "cant update password now, but you can contact us or retry later "
-          );
+          notify("error", "cant update password now, but you can contact us or retry later ");
         }
         return response.json();
       })
       .then(() => {})
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
@@ -183,20 +140,9 @@ export default function ResetPassword() {
   return (
     <div className="container">
       {!sendEmail && (
-        <ComponentsresetPassword
-          password={password.password}
-          confirmPassword={password.confirmPassword}
-          handleChange={handleChangePassWord}
-          handleResetPassWord={handleResetPassword}
-        />
+        <ComponentsresetPassword password={password.password} confirmPassword={password.confirmPassword} handleChange={handleChangePassWord} handleResetPassWord={handleResetPassword} />
       )}
-      {sendEmail && (
-        <ComponentsResendEmailPassword
-          email={email}
-          handleChange={handleChange}
-          handleReset={handleReset}
-        />
-      )}
+      {sendEmail && <ComponentsResendEmailPassword email={email} handleChange={handleChange} handleReset={handleReset} />}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 async function fetchUpdateInfo(infoProfile) {
-  const url = "http://localhost:4000/users/updateInfoProfile";
+  const url = `${import.meta.env.VITE_BACKEND_API_URL}/users/updateInfoProfile`;
   const options = {
     method: "PUT",
     headers: {
@@ -8,11 +8,26 @@ async function fetchUpdateInfo(infoProfile) {
     credentials: "include",
     body: JSON.stringify(infoProfile)
   };
-  const res = await fetch(url, options);
-  if (!res.ok) {
-    throw new Error(`cant change information`);
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) {
+      if (res.status == 400) {
+        throw { status: 400, msg: "email must be unique" };
+      } else if (res.status == 404) {
+        throw { status: 404, msg: " something want wrong, please retry" };
+      } else if (res.status == 401) {
+        throw { status: 401, msg: "you need to be connected" };
+      }
+    }
+    return res.json();
+  } catch (error) {
+    const returnError = {
+      status: error.status,
+      msg: error.msg,
+      error: true
+    };
+    return returnError;
   }
-  return res.json();
 }
 
 export default fetchUpdateInfo;

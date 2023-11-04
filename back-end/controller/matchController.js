@@ -18,15 +18,17 @@ class MatchController {
   static block = async (req, res) => {
     let requesterId = req.authUser.id;
     const receiverId = req.params.id;
-    const block = req.body.block;
-    let match = await MatchModel.blockUser(requesterId, receiverId, block);
+    let match = await MatchModel.blockUser(requesterId, receiverId);
     res.json(checkAndChange(match));
   };
 
   static getRelationShip = async (req, res) => {
     const requesterId = req.authUser.id;
     const receiverId = req.params.id;
-    const match = await MatchModel.getRelationship(requesterId, receiverId);
+    try {
+      const match = await MatchModel.getRelationShip(requesterId, receiverId);
+      return res.status(200).json({ status: 200, result: { ...match } });
+    } catch (error) {}
     res.json(checkAndChange(match));
   };
 }

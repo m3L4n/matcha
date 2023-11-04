@@ -1,0 +1,48 @@
+.container-multiple-button {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+}
+.multiple-button {
+  display: flex;
+  margin-top: 0.5rem;
+  flex-flow: row;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.userInfo-form_label {
+  width: 100%;
+  text-align: center;
+  color: var(--dark-green);
+}
+.button-select {
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  border: 1px solid gray;
+  width: fit-content;
+  height: 1.25rem;
+  padding: 0.8rem;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  transition: all ease-in-out 0.3s;
+}
+.button-select:hover {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+.active {
+  background-color: var(--green);
+  border: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+@media (min-width: 880px) {
+  .userInfo-form_label {
+    text-align: left;
+  }
+  .multiple-button {
+    justify-content: start;
+  }
+}

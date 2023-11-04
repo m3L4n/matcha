@@ -1,5 +1,7 @@
+import React, { useEffect, useState } from "react";
 import "./LayoutUserProfile.scoped.css";
 import { CiEdit } from "react-icons/ci";
+import anonymous from "assets/_.jpeg";
 import { IoMaleFemaleSharp, IoFemale, IoMaleSharp } from "react-icons/io5";
 import { MdQuestionMark } from "react-icons/md";
 import { FaFemale, FaMale } from "react-icons/fa";
@@ -23,6 +25,7 @@ export default function LayoutUserProfile({
   sexual_preference,
   description,
   rate_fame,
+  position,
   city,
   ourProfile,
   allTags,
@@ -32,7 +35,7 @@ export default function LayoutUserProfile({
   saveProfile,
   blockUser,
   relationship,
-  reportAsFakeAccount
+  reportAsFakeAccount,
 }) {
   console.log(connected);
   function showPreview(event) {
@@ -55,7 +58,7 @@ export default function LayoutUserProfile({
     }
   }
 
-  const deleteImage = event => {
+  const deleteImage = (event) => {
     let value = event.target.value;
     let name = event.target.name;
     if (value == undefined) {
@@ -77,11 +80,7 @@ export default function LayoutUserProfile({
     return (
       <div className="container-picture__picture">
         {ourProfile && (
-          <button
-            className="picture-delete title-1"
-            onClick={deleteImage}
-            value={index}
-          >
+          <button className="picture-delete title-1" onClick={deleteImage} value={index}>
             X
           </button>
         )}
@@ -89,20 +88,12 @@ export default function LayoutUserProfile({
       </div>
     );
   };
-  const ShowPreviewImage = elem => {
+  const ShowPreviewImage = (elem) => {
     let preview = elem;
     if (elem instanceof File) {
       preview = URL.createObjectURL(elem);
     }
-    return (
-      <img
-        alt="user avatar"
-        name="profile_picture"
-        id="profile-picture"
-        src={preview}
-        className="info-user_profile-picture"
-      />
-    );
+    return <img alt="profile-picture" name="profile_picture" id="profile-picture" src={preview} className="info-user_profile-picture" />;
   };
   const triggerControlInput = (event, needAdd) => {
     const name = event.target.name;
@@ -115,7 +106,7 @@ export default function LayoutUserProfile({
       }
     }
   };
-  const handleEmail = event => {
+  const handleEmail = (event) => {
     const divControlled = document.querySelector(`#controlled_input_email`);
     if (divControlled) {
       if (isValidEmail(event.target.value)) {
@@ -128,7 +119,7 @@ export default function LayoutUserProfile({
     }
   };
 
-  const handleAge = event => {
+  const handleAge = (event) => {
     const number = Number(event.target.value);
     const divControlled = document.querySelector(`#controlled_input_age`);
     if (divControlled) {
@@ -148,33 +139,21 @@ export default function LayoutUserProfile({
         <div className="Lcontainer_userInfo">
           {!ourProfile &&
             (!relationship.block ? (
-              <button
-                className="Lcontainer_userInfo-block"
-                onClick={() => blockUser(id, true)}
-              >
+              <button className="Lcontainer_userInfo-block" onClick={() => blockUser(id, true)}>
                 blocker
               </button>
             ) : (
-              <button
-                className="Lcontainer_userInfo-block"
-                onClick={() => blockUser(id, false)}
-              >
+              <button className="Lcontainer_userInfo-block" onClick={() => blockUser(id, false)}>
                 deblocker
               </button>
             ))}
           {!ourProfile && (
-            <button
-              onClick={() => reportAsFakeAccount(id)}
-              className="Lcontainer_userInfo-fakeAccount "
-            >
+            <button onClick={() => reportAsFakeAccount(id)} className="Lcontainer_userInfo-fakeAccount ">
               {" "}
               report as fake account
             </button>
           )}
-          <h3 className="Lcontainer_userInfo-connected">
-            {" "}
-            {ourProfile ? "en ligne " : connected ? "en ligne" : "deconnecte"}
-          </h3>
+          <h3 className="Lcontainer_userInfo-connected"> {ourProfile ? "en ligne " : connected ? "en ligne" : "deconnecte"}</h3>
           <div className="Lcontainer_userInfo__header">
             <div className="containerInfo-user__profile-img">
               {ShowPreviewImage(profile_picture)}
@@ -185,31 +164,15 @@ export default function LayoutUserProfile({
               ) : (
                 !relationship.block && (
                   <div className="profile-image__like">
-                    <LikeButton
-                      id={id}
-                      width={"3rem"}
-                      height={"3rem"}
-                      sizeIcon={16}
-                      like={relationship.like}
-                    />
+                    <LikeButton id={id} width={"3rem"} height={"3rem"} sizeIcon={16} like={relationship.like} />
                   </div>
                 )
               )}
-              <input
-                type="file"
-                id="file-ip-1"
-                name="profil_picture"
-                accept="image/*"
-                onChange={showPreview}
-                disabled={ourProfile ? false : true}
-              />
+              <input type="file" id="file-ip-1" name="profil_picture" accept="image/*" onChange={showPreview} disabled={ourProfile ? false : true} />
             </div>
             {/* <div className="userInfo__header-identity"> */}
             <h1 className="title-1 Lcontainer_userInfo__header-title">{`@${username}`}</h1>
-            <p className="title-1 Lcontainer_userInfo__header-title">
-              {" "}
-              {rate_fame} Points
-            </p>
+            <p className="title-1 Lcontainer_userInfo__header-title"> {rate_fame} Points</p>
             <p className="title-1 Lcontainer_userInfo__header-title">{city}</p>
             {/* </div> */}
             {ourProfile && (
@@ -228,13 +191,10 @@ export default function LayoutUserProfile({
                   onChange={handleChange}
                   name="firstname"
                   disabled={ourProfile ? false : true}
-                  onFocus={event => triggerControlInput(event, true)}
-                  onBlur={event => triggerControlInput(event, false)}
+                  onFocus={(event) => triggerControlInput(event, true)}
+                  onBlur={(event) => triggerControlInput(event, false)}
                 />
-                <div
-                  className="controlled__input"
-                  id="controlled_input_firstname"
-                />
+                <div className="controlled__input" id="controlled_input_firstname" />
               </label>
               <label>
                 <p className="userInfo-form_label title-1">lastname</p>
@@ -243,14 +203,11 @@ export default function LayoutUserProfile({
                   name="lastname"
                   value={lastname}
                   onChange={handleChange}
-                  onFocus={event => triggerControlInput(event, true)}
+                  onFocus={(event) => triggerControlInput(event, true)}
                   disabled={ourProfile ? false : true}
-                  onBlur={event => triggerControlInput(event, false)}
+                  onBlur={(event) => triggerControlInput(event, false)}
                 />
-                <div
-                  className="controlled__input"
-                  id="controlled_input_lastname"
-                />
+                <div className="controlled__input" id="controlled_input_lastname" />
               </label>
             </span>
             <span className="userInfo-form__span">
@@ -263,8 +220,8 @@ export default function LayoutUserProfile({
                   value={age}
                   onChange={handleAge}
                   disabled={ourProfile ? false : true}
-                  onFocus={event => triggerControlInput(event, true)}
-                  onBlur={event => triggerControlInput(event, false)}
+                  onFocus={(event) => triggerControlInput(event, true)}
+                  onBlur={(event) => triggerControlInput(event, false)}
                 />
                 <div className="controlled__input" id="controlled_input_age" />
               </label>
@@ -276,14 +233,11 @@ export default function LayoutUserProfile({
                     name="email"
                     value={email}
                     onChange={handleEmail}
-                    onFocus={event => triggerControlInput(event, true)}
-                    onBlur={event => triggerControlInput(event, false)}
+                    onFocus={(event) => triggerControlInput(event, true)}
+                    onBlur={(event) => triggerControlInput(event, false)}
                     disabled={ourProfile ? false : true}
                   />
-                  <div
-                    className="controlled__input"
-                    id="controlled_input_email"
-                  />
+                  <div className="controlled__input" id="controlled_input_email" />
                 </label>
               )}
             </span>
@@ -294,11 +248,7 @@ export default function LayoutUserProfile({
                   <button
                     value={"female"}
                     name="sexual_preference"
-                    className={
-                      sexual_preference == "female"
-                        ? "button-select active"
-                        : "button-select"
-                    }
+                    className={sexual_preference == "female" ? "button-select active" : "button-select"}
                     onClick={handleChange}
                     disabled={ourProfile ? false : true}
                   >
@@ -307,11 +257,7 @@ export default function LayoutUserProfile({
                   <button
                     value={"male"}
                     name="sexual_preference"
-                    className={
-                      sexual_preference == "male"
-                        ? "button-select active"
-                        : "button-select"
-                    }
+                    className={sexual_preference == "male" ? "button-select active" : "button-select"}
                     onClick={handleChange}
                     disabled={ourProfile ? false : true}
                   >
@@ -320,11 +266,7 @@ export default function LayoutUserProfile({
                   <button
                     value={"both"}
                     name="sexual_preference"
-                    className={
-                      sexual_preference == "both"
-                        ? "button-select active"
-                        : "button-select"
-                    }
+                    className={sexual_preference == "both" ? "button-select active" : "button-select"}
                     onClick={handleChange}
                     disabled={ourProfile ? false : true}
                   >
@@ -335,61 +277,25 @@ export default function LayoutUserProfile({
               <span className="userInfo-form__span">
                 <p className="userInfo-form_label title-1"> your gender</p>
                 <div className="userInfo-form__container-button">
-                  <button
-                    value={"female"}
-                    name="gender"
-                    className={
-                      gender == "female"
-                        ? "button-select active"
-                        : "button-select"
-                    }
-                    onClick={handleChange}
-                    disabled={ourProfile ? false : true}
-                  >
+                  <button value={"female"} name="gender" className={gender == "female" ? "button-select active" : "button-select"} onClick={handleChange} disabled={ourProfile ? false : true}>
                     <FaFemale />
                   </button>
-                  <button
-                    value={"male"}
-                    name="gender"
-                    className={
-                      gender == "male"
-                        ? "button-select active"
-                        : "button-select"
-                    }
-                    onClick={handleChange}
-                    disabled={ourProfile ? false : true}
-                  >
+                  <button value={"male"} name="gender" className={gender == "male" ? "button-select active" : "button-select"} onClick={handleChange} disabled={ourProfile ? false : true}>
                     <FaMale />
                   </button>
-                  <button
-                    value={"other"}
-                    name="gender"
-                    className={
-                      gender == "other"
-                        ? "button-select active"
-                        : "button-select"
-                    }
-                    onClick={handleChange}
-                    disabled={ourProfile ? false : true}
-                  >
+                  <button value={"other"} name="gender" className={gender == "other" ? "button-select active" : "button-select"} onClick={handleChange} disabled={ourProfile ? false : true}>
                     <MdQuestionMark />
                   </button>
                 </div>
               </span>
             </span>
             <span className="userInfo-form__span">
-              <p className="userInfo-form_label title-1">
-                {" "}
-                your favorite beverage
-              </p>
+              <label></label>
+              <p className="userInfo-form_label title-1"> your favorite beverage</p>
               <button
                 value={"coffee"}
                 name="beverage"
-                className={
-                  beverage == "coffee"
-                    ? "button-select active body "
-                    : "button-select body"
-                }
+                className={beverage == "coffee" ? "button-select active body " : "button-select body"}
                 onClick={handleChange}
                 disabled={ourProfile ? false : true}
               >
@@ -398,11 +304,7 @@ export default function LayoutUserProfile({
               <button
                 value={"matcha"}
                 name="beverage"
-                className={
-                  beverage == "matcha"
-                    ? "button-select active body"
-                    : "button-select body"
-                }
+                className={beverage == "matcha" ? "button-select active body" : "button-select body"}
                 onClick={handleChange}
                 disabled={ourProfile ? false : true}
               >
@@ -420,11 +322,7 @@ export default function LayoutUserProfile({
                   key={index}
                   value={elem.tag_name}
                   name="tags"
-                  className={
-                    tags?.findIndex(tag => tag == elem.tag_name) > -1
-                      ? "button-select active body"
-                      : "button-select body"
-                  }
+                  className={tags?.findIndex((tag) => tag == elem.tag_name) > -1 ? "button-select active body" : "button-select body"}
                   onClick={handleChange}
                   disabled={ourProfile ? false : true}
                 >
@@ -451,14 +349,7 @@ export default function LayoutUserProfile({
               <label htmlFor="image-description" className="title-1">
                 upload your photo
               </label>
-              <input
-                type="file"
-                id="image-description"
-                accept="image/*"
-                multiple
-                disabled={ourProfile ? false : true}
-                onChange={handleMultipleFile}
-              />
+              <input type="file" id="image-description" accept="image/*" multiple disabled={ourProfile ? false : true} onChange={handleMultipleFile} />
             </>
           )}
           <div id="body-picture-list" className="container-picture">

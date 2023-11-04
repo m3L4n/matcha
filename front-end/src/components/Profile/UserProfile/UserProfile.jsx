@@ -8,37 +8,105 @@ import fetchUploadPictureDescription from "../fetch/fetchUploadPictureDescriptio
 import { isValidEmail } from "src/components/Global/check-email";
 import fetchLocalisationiWithoutKnow from "components/Profile/fetch/fetchLocalisationWithoutKnow";
 import anonymous from "assets/_.jpeg";
-import LayoutUserProfile from "../layoutUserProfil/LayoutUserProfile";
 import fetchBlockUser from "../fetch/fetchBlockUser";
 import fetchReportFakeAccount from "../fetch/fetchReportFakeAccount";
-export default function UserProfile({
-  allTags,
-  userInformation,
-  ourProfile,
-  relationship,
-  connected
-}) {
-  const mutationUpdateInfo = useMutation(fetchUpdateInfo);
-  const mutationUploadPP = useMutation(fetchUploadprofilPicture);
-  const mutationUploadPD = useMutation(fetchUploadPictureDescription);
-  const mutationReportFakeAccount = useMutation(fetchReportFakeAccount);
-  const mutationLocalisation = useMutation(fetchLocalisation);
-  const mutationLocalisationNoneKnow = useMutation(
-    fetchLocalisationiWithoutKnow
-  );
-  const mutationBlockUser = useMutation(fetchBlockUser);
+import "./UserProfile.scoped.css";
+import { queryClient } from "src/main";
+import UserInformation from "./UserInformation/UserInformation";
+import FormButton from "src/components/Global/FormButton/FormButton";
+import { checkErrorFetch } from "src/components/Global/checkErrorFetch";
+import { useAuth } from "src/Context/AuthContext";
+export default function UserProfile({ allTags, userInformation, ourProfile, relationship }) {
+  const { setTriggerReload } = useAuth();
+  const mutationUpdateInfo = useMutation({
+    mutationFn: fetchUpdateInfo,
+    onSuccess: (response) => {
+      if (response?.error) {
+        if (response.status == 401) {
+          notify("warning", response.msg);
+          setTriggerReload(true);
+          return;
+        }
+        notify("error", response.msg);
+        return;
+      }
+      notify("success", " account modfy");
+    },
+  });
+  const mutationUploadPP = useMutation(fetchUploadprofilPicture, {
+    onSuccess: (response) => {
+      if (response?.error) {
+        if (response.status == 401) {
+          notify("warning", response.msg);
+          setTriggerReload(true);
+          return;
+        }
+        notify("error", response.msg);
+        return;
+      }
+    },
+  });
+  const mutationUploadPD = useMutation(fetchUploadPictureDescription, {
+    onSuccess: (response) => {
+      if (response?.error) {
+        if (response.status == 401) {
+          notify("warning", response.msg);
+          setTriggerReload(true);
+          return;
+        }
+        notify("error", response.msg);
+        return;
+      }
+    },
+  });
+  const mutationReportFakeAccount = useMutation(fetchReportFakeAccount, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
 
-  const coords = mutationLocalisation.isLoading
-    ? {}
-    : mutationLocalisation.data;
-  const coordKnowNone = mutationLocalisationNoneKnow.isLoading
-    ? {}
-    : mutationLocalisationNoneKnow.data;
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+      queryClient.invalidateQueries({ queryKey: ["id"] });
+    },
+  });
+  const mutationLocalisation = useMutation(fetchLocalisation, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+  const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow, {
+    onSuccess: (data) => {
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+    },
+  });
+  const mutationBlockUser = useMutation(fetchBlockUser, {
+    onSuccess: (data) => {
+      console.log(data);
+      const isError = checkErrorFetch(data);
+
+      if (isError.authorized == false) {
+        setTriggerReload(true);
+      }
+      queryClient.invalidateQueries({ queryKey: ["relation"] });
+      queryClient.invalidateQueries({ queryKey: ["id"] });
+    },
+  });
+
+  const coords = mutationLocalisation.isLoading ? {} : mutationLocalisation.data;
+  const coordKnowNone = mutationLocalisationNoneKnow.isLoading ? {} : mutationLocalisationNoneKnow.data;
 
   const [pictureDescription, setPicturesDescription] = useState([]);
   const [profilPicture, setProfilPicture] = useState("");
   const [infoProfile, setInfoProfil] = useState({});
-  const [userId, setUserId] = useState("");
+  const [locationInput, setLocationInput] = useState({ longitude: 0, latitude: 0 });
 
   useEffect(() => {
     if (userInformation) {
@@ -52,11 +120,8 @@ export default function UserProfile({
     if (!mutationLocalisation.isLoading) {
       if (coords) {
         if (Object.keys(coords).length > 0) {
-          setInfoProfil({
-            ...infoProfile,
-            ["city"]: coords.city,
-            ["position"]: { x: coords.latitude, y: coords.longitude }
-          });
+          setLocationInput({ ...locationInput, ["latitude"]: coords.latitude, ["longitude"]: coords.longitude });
+          setInfoProfil({ ...infoProfile, ["city"]: coords.city, ["position"]: { x: coords.latitude, y: coords.longitude } });
         }
       }
     }
@@ -66,20 +131,14 @@ export default function UserProfile({
     if (!mutationLocalisationNoneKnow.isLoading) {
       if (coordKnowNone) {
         if (Object.keys(coordKnowNone).length > 0) {
-          setInfoProfil({
-            ...infoProfile,
-            ["city"]: coordKnowNone.city,
-            ["position"]: {
-              x: coordKnowNone.latitude,
-              y: coordKnowNone.longitude
-            }
-          });
+          setLocationInput({ ...locationInput, ["latitude"]: coordKnowNone.latitude, ["longitude"]: coordKnowNone.longitude });
+          setInfoProfil({ ...infoProfile, ["city"]: coordKnowNone.city, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
         }
       }
     }
   }, [coordKnowNone]);
 
-  const fillInfoProfile = infoUser => {
+  const fillInfoProfile = (infoUser) => {
     if (Object.keys(infoUser).length > 0) {
       let infoProfileTmp = structuredClone(infoUser);
       for (const info in infoProfileTmp) {
@@ -117,21 +176,26 @@ export default function UserProfile({
           setProfilPicture(infoProfileTmp[info]);
         } else if (info == "pictures") {
           setPicturesDescription(infoProfileTmp[info]);
+        } else if (info == "position") {
+          setLocationInput({
+            longitude: infoProfileTmp[info].y,
+            latitude: infoProfileTmp[info].x,
+          });
         }
         if (info != "profile_picture" && info != "pictures") {
           infoProfileTmp[info] = parameter;
         }
       }
-      setUserId(infoProfileTmp["id"]);
       setInfoProfil(infoProfileTmp);
     }
   };
   const getLocation = async () => {
-    const geoSuccess = async position => {
-      await mutationLocalisation.mutate(position.coords);
+    const geoSuccess = async (position) => {
+      mutationLocalisation.mutate(position.coords);
     };
+
     const geoError = async () => {
-      await mutationLocalisationNoneKnow.mutate("localisation");
+      mutationLocalisationNoneKnow.mutate("localisation");
     };
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
   };
@@ -151,7 +215,7 @@ export default function UserProfile({
       return;
     } else if (name == "tags") {
       let tmpTags = JSON.parse(JSON.stringify(infoProfile.tags));
-      const index = tmpTags.findIndex(elem => elem == value);
+      const index = tmpTags.findIndex((elem) => elem == value);
       if (index == -1) {
         tmpTags.push(value);
       } else {
@@ -160,19 +224,16 @@ export default function UserProfile({
       setInfoProfil({ ...infoProfile, [name]: tmpTags });
       return;
     }
-
     setInfoProfil({ ...infoProfile, [name]: value });
   }
 
-  const updatePictures = arrayPicture => {
+  const updatePictures = (arrayPicture) => {
     setPicturesDescription(arrayPicture);
   };
+
   function saveProfile() {
     if (pictureDescription.length > 4 || pictureDescription.length < 4) {
-      notify(
-        "error",
-        "you dont the right number of picture description, the number is 4"
-      );
+      notify("error", "you dont the right number of picture description, the number is 4");
       return;
     } else if (profilPicture.length <= 0 || profilPicture == anonymous) {
       notify("error", "you must have profile picture");
@@ -195,10 +256,7 @@ export default function UserProfile({
       !infoProfile.position ||
       infoProfile.rate_fame < 0
     ) {
-      notify(
-        "error",
-        "you cant save you profile you need to fill all the input"
-      );
+      notify("error", "you cant save you profile you need to fill all the input");
       return;
     }
 
@@ -206,38 +264,67 @@ export default function UserProfile({
       mutationUploadPP.mutate(profilPicture);
     }
     let infoProfileWithoutPicture = { ...infoProfile };
-    delete infoProfileWithoutPicture["profile_pictures"];
+    delete infoProfileWithoutPicture["profile_picture"];
     delete infoProfileWithoutPicture["pictures"];
-
+    console.log(infoProfileWithoutPicture);
     mutationUploadPD.mutate(pictureDescription);
     mutationUpdateInfo.mutate(infoProfileWithoutPicture);
-    notify("success", " account modfy");
   }
 
-  const blockUser = (id, block) => {
-    mutationBlockUser.mutate({ id, block });
+  const updateLocationInput = async (event) => {
+    event.preventDefault();
+    if (event.target.name == "longitude" || event.target.name == "latitude") {
+      setLocationInput({ ...locationInput, [event.target.name]: event.target.valueAsNumber });
+      return;
+    }
+    let result = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${locationInput.latitude}&longitude=${locationInput.longitude}`);
+    result = await result.json();
+    if (result.status == 401) {
+      notify("error", result.description);
+      return;
+    }
+    setInfoProfil({ ...infoProfile, ["city"]: result.locality, ["position"]: { x: result.latitude, y: result.longitude } });
   };
-  const reportAsFakeAccount = id => {
+
+  const blockUser = (block) => {
+    const id = infoProfile.id;
+    console.log("in block", id, block);
+    const body = {
+      id,
+      block,
+    };
+    mutationBlockUser.mutate(body);
+  };
+
+  const reportAsFakeAccount = () => {
+    const id = infoProfile.id;
     mutationReportFakeAccount.mutate({ id });
   };
   return (
-    <div>
-      <LayoutUserProfile
-        {...infoProfile}
-        id={userId}
-        pictures={pictureDescription}
-        profile_picture={profilPicture}
+    <div className="container-user-profile">
+      <header className="container__header">
+        <h1 className="header">PROFILE</h1>
+      </header>
+      <UserInformation
+        userInformation={infoProfile}
         ourProfile={ourProfile}
-        allTags={allTags}
         handleChange={handleChange}
-        getLocation={getLocation}
+        allTags={allTags}
+        pictureDescription={pictureDescription}
+        profilPicture={profilPicture}
         updatePictures={updatePictures}
-        saveProfile={saveProfile}
-        blockUser={blockUser}
         relationship={relationship}
+        locationInput={locationInput}
+        updateLocationInput={updateLocationInput}
+        getLocation={getLocation}
+        blockUser={blockUser}
         reportAsFakeAccount={reportAsFakeAccount}
-        connected={connected}
       />
+      {ourProfile && (
+        <span className="container-save">
+          <FormButton label={"save"} handleChange={saveProfile} />
+        </span>
+      )}
     </div>
   );
 }
