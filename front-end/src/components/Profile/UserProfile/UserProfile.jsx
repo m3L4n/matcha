@@ -16,7 +16,7 @@ import UserInformation from "./UserInformation/UserInformation";
 import FormButton from "src/components/Global/FormButton/FormButton";
 import { checkErrorFetch } from "src/components/Global/checkErrorFetch";
 import { useAuth } from "src/Context/AuthContext";
-export default function UserProfile({ allTags, userInformation, ourProfile, relationship }) {
+export default function UserProfile({ allTags, userInformation, ourProfile, relationship, connected }) {
   const { setTriggerReload } = useAuth();
   const mutationUpdateInfo = useMutation({
     mutationFn: fetchUpdateInfo,
@@ -315,6 +315,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
         updatePictures={updatePictures}
         relationship={relationship}
         locationInput={locationInput}
+        connected={connected}
         updateLocationInput={updateLocationInput}
         getLocation={getLocation}
         blockUser={blockUser}

@@ -114,7 +114,7 @@ class UserController {
                 sameSite: true,
               })
               .status(201)
-              .send({ access_token: token });
+              .send({ status: 201, userId: user.id, access_token: token });
           } else {
             return res.status(401).json({ status: 401, msg: "user not verified" });
           }

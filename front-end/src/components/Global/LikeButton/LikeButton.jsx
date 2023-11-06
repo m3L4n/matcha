@@ -4,6 +4,7 @@ import "./LikeButton.scoped.css";
 import { useEffect, useState } from "react";
 import { socket } from "src/socket/socket";
 import { useAuth } from "src/Context/AuthContext";
+import { queryClient } from "src/main";
 
 const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = false }) => {
   const [like, setLike] = useState(false);
@@ -40,6 +41,8 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = fals
       options.method = "PUT";
       await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/match/update`, options);
     }
+    queryClient.invalidateQueries({ queryKey: ["relation"] });
+    // queryClient.invalidateQueries({ queryKey: ["id"] });
     socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like, currentLike: like });
     setLike(!like);
   };

@@ -25,6 +25,7 @@ export default function UserInformation({
   getLocation,
   locationInput,
   blockUser,
+  connected,
   reportAsFakeAccount,
 }) {
   dayjs.extend(utc);
@@ -48,6 +49,7 @@ export default function UserInformation({
       return <img alt="main" name="profile_picture" id="profile-picture" src={preview} className="profile-picture" />;
     };
 
+    // console.log(relationship);
     return (
       <div className="container__profile-picture">
         {ShowPreviewImage(profilPicture)}
@@ -74,6 +76,8 @@ export default function UserInformation({
         <p className="body-highlight">
           {userInformation.firstname} {userInformation.lastname}, {userInformation.age} years
         </p>
+        <p>{relationship.match && " there is a match <3"}</p>
+        <p>{relationship.userLike && "user like you"}</p>
         <div className="information-line-row">
           <span className="row-information">
             <p className="body-highlight">gender : </p> <span className="body"> {userInformation.gender}</span>
@@ -124,7 +128,7 @@ export default function UserInformation({
         <div className="container-user-information-text">
           <h2 className="title-1"> @{userInformation.username}</h2>
           <p className="body-highlight"> {userInformation.city}</p>
-          <p className="body"> {ourProfile ? "en ligne " : userInformation.connected ? "en ligne" : "deconnecte"}</p>
+          <p className="body"> {ourProfile ? "en ligne " : connected ? "en ligne" : "deconnecte"}</p>
         </div>
       </header>
       {!ourProfile && <InformationNotOurProfile />}
