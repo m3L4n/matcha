@@ -6,8 +6,17 @@ import { useNavigate } from "react-router-dom";
 import GlobalLoading from "../Global/GLoading/GlobalLoading";
 import { checkErrorFetch } from "../Global/checkErrorFetch";
 import { useAuth } from "src/Context/AuthContext";
+import utc from "dayjs/plugin/utc";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
 
 export default function ViewHistory() {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  dayjs.extend(localizedFormat);
+  dayjs.tz.guess();
+  // const d2 = dayjs(userInformation.latest_connection).format("llll");
   const { setTriggerReload } = useAuth();
   const { data: historyData, isLoading: historyLoading } = useQuery(["history"], fetchViewHistory, {
     onSuccess: (data) => {
@@ -37,7 +46,10 @@ export default function ViewHistory() {
                 return (
                   <button key={index} className="container-view" onClick={() => navigate(`/profile/${elem.id_watched}`)}>
                     <img alt="profil_picture" src={elem.profile_picture} />
-                    <p className="body-highlight">{elem.username}</p>
+                    <span>
+                      <p className="body-highlight">{elem.username}</p>
+                      <p> {dayjs(elem.created_at).format("llll")}</p>
+                    </span>
                   </button>
                 );
               })

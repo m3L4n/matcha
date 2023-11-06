@@ -8,7 +8,7 @@ import { useAuth } from "src/Context/AuthContext";
 export default function Navbar() {
   const { setTriggerReload, user, setUserAskDisconnect } = useAuth();
   // const navigate = useNavigate();
-  let pages = ["match", "profile", "message", "notifications", "view history"];
+  let pages = ["match", "profile", "message", "notifications", "view history", "horoscope"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
 

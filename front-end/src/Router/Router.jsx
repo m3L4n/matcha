@@ -12,6 +12,7 @@ import ConversationPicker from "src/components/Message/ConversationPicker";
 import Profile from "components/Profile/Profile";
 import Notification from "components/Notifications/Notification";
 import ViewHistory from "src/components/ViewHistory/ViewHistory";
+import Horoscope from "src/components/Horoscope/Horoscope";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +26,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <LandingPage />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/match",
@@ -33,7 +34,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <BrowsingPage />
           </PrivateRoute>
-        )
+        ),
       },
       {
         path: "/profile/:id",
@@ -41,7 +42,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
-        )
+        ),
       },
       {
         path: "/message",
@@ -49,7 +50,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <ConversationPicker />
           </PrivateRoute>
-        )
+        ),
       },
       {
         path: "/notifications",
@@ -57,7 +58,7 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <Notification />
           </PrivateRoute>
-        )
+        ),
       },
       {
         path: "/HistoryView",
@@ -68,12 +69,20 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/horoscope",
+        element: (
+          <PrivateRoute>
+            <Horoscope />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "/register",
         element: (
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/login",
@@ -81,15 +90,15 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <Authentification />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/reset",
-        element: <HomeNoneVerified />
+        element: <HomeNoneVerified />,
       },
       {
         path: "/reset",
-        element: <HomeNoneVerified />
+        element: <HomeNoneVerified />,
       },
       {
         path: "/reset-password",
@@ -97,7 +106,7 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
-        )
+        ),
       },
       {
         path: "/reset-password/:id",
@@ -105,8 +114,8 @@ export const router = createBrowserRouter([
           <NoneConnectedRoute>
             <ResetPassword />
           </NoneConnectedRoute>
-        )
-      }
-    ]
-  }
+        ),
+      },
+    ],
+  },
 ]);

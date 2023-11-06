@@ -12,7 +12,10 @@ class ProfilViewerModel {
   };
   static getAll = (id_requester) => {
     return new Promise((next) => {
-      db.query("SELECT username, profile_picture, id_watched FROM profilViewer INNER JOIN users ON profilViewer.id_watched = users.id WHERE id_watcher = $1 ", [id_requester])
+      db.query(
+        "SELECT username, profile_picture, id_watched, profilViewer.created_at FROM profilViewer INNER JOIN users ON profilViewer.id_watched = users.id WHERE id_watcher = $1 ORDER BY profilViewer.created_at DESC ",
+        [id_requester]
+      )
         .then((data) => {
           return next(data.rows);
         })
