@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Horoscope.scoped.css";
-import allDataHoroscope from "./img-data/data-horoscope.json";
+import allDataHoroscope from "./data-horoscope.json";
 import { notify } from "../Global/toast-notify";
 export default function Horoscope() {
   const [dataHorsocope, setDataHoroscope] = useState({});

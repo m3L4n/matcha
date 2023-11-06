@@ -110,7 +110,13 @@ export default function Register() {
           {" "}
           SIGN UP
           <p className="title-1"> And start dating !</p>
-          <button className="button-discord title-1">
+          <button
+            className="button-discord title-1"
+            onClick={() =>
+              (window.location.href =
+                "https://discord.com/api/oauth2/authorize?client_id=1171188969640296508&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fauth%2Fdiscord&response_type=code&scope=identify%20email")
+            }
+          >
             {" "}
             <span>Connect with discord</span>
             <FaDiscord />

@@ -83,7 +83,7 @@ const generateUser = async (params) => {
   const query =
     "INSERT INTO \
   users(id, username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city, tags) \
-  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)";
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) ON CONFLICT (username, email) DO NOTHING";
   return db.query(query, params);
 };
 
@@ -108,25 +108,7 @@ function generateSetOfUsers() {
     let position = `(${gps_position.x}, ${gps_position.y})`;
     const city = faker.location.city();
     const tag = ["gastronomy", "cinephile", "travel", "cook"];
-    const params = [
-      uuidv4(),
-      username,
-      email,
-      firstName,
-      gender,
-      beverage,
-      sexual_preference,
-      lastName,
-      password,
-      description,
-      rate_fame,
-      position,
-      profile_picture,
-      valided,
-      age,
-      city,
-      tag,
-    ];
+    const params = [uuidv4(), username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city, tag];
     generateUser(params)
       .then(() => console.log(`fake user ${i} inserted ✅`))
       .catch((error) => console.error(error));
@@ -149,25 +131,7 @@ function generateSetOfUsers() {
   let gps_position = gps[Math.floor(Math.random() * gps.length)];
   let position = `(${gps_position.x}, ${gps_position.y})`;
   const tag = ["gastronomy", "cinephile", "travel", "cook"];
-  const params = [
-    firstUserUuid,
-    username,
-    email,
-    firstName,
-    gender,
-    beverage,
-    sexual_preference,
-    lastName,
-    password,
-    description,
-    rate_fame,
-    position,
-    profile_picture,
-    valided,
-    age,
-    city,
-    tag,
-  ];
+  const params = [firstUserUuid, username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city, tag];
   return generateUser(params);
 }
 // generate a test account

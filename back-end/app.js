@@ -15,6 +15,7 @@ const NotificationsRouter = require("./routes/notifications");
 const ProfilViewRouter = require("./routes/profilViewer");
 const swaggerDocument = require("./swagger.json");
 const BlockRouter = require("./routes/block");
+const AuthRouter = require("./routes/auth");
 app.use(express.json());
 
 app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
@@ -30,6 +31,7 @@ app.use("/tags", tagsRouter);
 app.use("/views", ProfilViewRouter);
 app.use("/notifications", NotificationsRouter);
 app.use("/block", BlockRouter);
+app.use("/auth", AuthRouter);
 app.use(function (_, res, next) {
   res.header("content-type", "application/json;charset=utf-8");
   res.header("access-control-allow-credentials", true);
