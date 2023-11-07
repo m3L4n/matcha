@@ -90,6 +90,7 @@ button[type="submit"]:hover {
   flex-flow: row wrap;
   width: 80%;
   max-width: 856px;
+  min-height: 69vh;
   justify-content: center;
   align-items: self-start;
   gap: 50px;
