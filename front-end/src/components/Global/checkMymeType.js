@@ -1,6 +1,6 @@
 import { notify } from "components/Global/toast-notify";
 export const checkMymeType = file => {
-  const maxSize = 100000;
+  const maxSize = 40000;
   const validExt = ["gif", "png", "jpg", "jpeg"];
   const extn = file.type.split("/")[1];
   if (validExt.findIndex(elem => elem == extn) == -1) {

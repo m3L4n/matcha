@@ -51,9 +51,6 @@ function socket_broadcast(io) {
       socket.broadcast.emit("alert-disconnect", { userId: data.userId });
     });
     socket.on("disconnect", async (reason) => {});
-    // event pour savoir quand on like / unlike
-    // event pour savoir quand on voit
-    // event pour savoir le rate frame qui s'actualiser ?
 
     socket.on("message_sended", async (message) => {
       try {
