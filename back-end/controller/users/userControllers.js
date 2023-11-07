@@ -11,7 +11,6 @@ class UserController {
   static #checkEMail = async (email) => {
     const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!pattern.test(email)) {
-      // if email doesnt match with patern return false
       return false;
     }
     return true;

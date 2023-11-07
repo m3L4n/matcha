@@ -31,7 +31,7 @@ class authContrroller {
       const userDataResponse = await fetch("https://discord.com/api/users/@me", options1);
       const userDataResponseJSON = await userDataResponse.json();
       console.log("Data: ", userDataResponseJSON);
-      return res.status(200).json({ status: 200, result: userDataResponseJSON });
+      return res.status(200).redirect("http://localhost:3000/login");
     } catch (error) {
       return res.status(404).json({ status: 404, msg: "cant connect with discord" });
     }
