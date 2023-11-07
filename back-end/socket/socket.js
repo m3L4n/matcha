@@ -1,4 +1,6 @@
-const { notificationsController } = require("../controller/notificationsController");
+const {
+  notificationsController,
+} = require("../controller/notificationsController");
 const { socketController } = require("./socketController/socketController");
 const { MessageModel } = require("../models/MessageModel");
 const { MatchModel } = require("../models/MatchModel");
@@ -13,8 +15,15 @@ function socket_broadcast(io) {
     socket.on("user_profile", async function (data) {
       if (data.userId != null && data.currentUserId != null) {
         if (!data.ourProfile) {
-          await notificationsController.createNotification(data.userId, data.currentUserId, "view", "view");
-          socket.broadcast.emit("alert-new-notif", { userReciver: data.userId });
+          await notificationsController.createNotification(
+            data.userId,
+            data.currentUserId,
+            "view",
+            "view",
+          );
+          socket.broadcast.emit("alert-new-notif", {
+            userReciver: data.userId,
+          });
         }
       }
     });
@@ -29,12 +38,23 @@ function socket_broadcast(io) {
       const like = msg.like ? true : false;
       socket.broadcast.emit("alert-new-notif", { userReciver: msg.userId });
 
-      await notificationsController.createNotification(msg.userId, msg.currentUserId, `${like ? "like" : "unlike"}  your profile`, "like", msg.like);
+      await notificationsController.createNotification(
+        msg.userId,
+        msg.currentUserId,
+        `${like ? "like" : "unlike"}  your profile`,
+        "like",
+        msg.like,
+      );
     });
     // the notificatins not seen
     socket.on("notifications", async function (data) {
-      const notif = await notificationsController.findNotifByNoneView(data.userId);
-      socket.emit("number-notif-not-seen", { data: notif.data, number: notif.number });
+      const notif = await notificationsController.findNotifByNoneView(
+        data.userId,
+      );
+      socket.emit("number-notif-not-seen", {
+        data: notif.data,
+        number: notif.number,
+      });
     });
 
     // socket.on("view-notif", (msg) => {
@@ -42,7 +62,9 @@ function socket_broadcast(io) {
     // });
     // user view his notifications
     socket.on("user-view-notif", async (msg) => {
-      const result = await notificationsController.updateNotification(msg.userId);
+      const result = await notificationsController.updateNotification(
+        msg.userId,
+      );
     });
 
     // user is deconnected so everybody need to be notice
@@ -57,8 +79,19 @@ function socket_broadcast(io) {
 
     socket.on("message_sended", async (message) => {
       try {
-        const response = await MessageModel.createMessage(message.idUserRequester, message.idUserReceiver, message.messageContent, message.conversationId);
+        const response = await MessageModel.createMessage(
+          message.idUserRequester,
+          message.idUserReceiver,
+          message.messageContent,
+          message.conversationId,
+        );
         io.emit("receive_message", response.rows[0]);
+        await notificationsController.createNotification(
+          message.idUserRequester,
+          message.idUserReceiver,
+          "You got a new message!",
+          "message",
+        );
         return response.rows;
       } catch (e) {
         return e.message;
