@@ -94,7 +94,6 @@ export default function Message({
         />
         <PiPaperPlaneRightFill
           className="search-from--send"
-          color="#A4B07E"
           size={24}
           onClick={() => sendMessage()}
         />

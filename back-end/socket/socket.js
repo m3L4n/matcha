@@ -90,7 +90,7 @@ function socket_broadcast(io) {
           message.idUserRequester,
           message.idUserReceiver,
           "You got a new message!",
-          "message",
+          "messages",
         );
         return response.rows;
       } catch (e) {

@@ -17,14 +17,16 @@
   --form-control-color: var(--green);
 }
 
-.theme-light {
-  --dark-green: #707c4f;
-  --green: #a4b07e;
+.light-theme {
+  --primary-light: var(--green);
+  --primary-dark: var(--dark-green);
+  --form-control-color: var(--green);
 }
 
-.theme-dark {
-  --dark-green: #6d4930;
-  --green: #b9a084;
+.dark-theme {
+  --primary-light: var(--brown);
+  --primary-dark: var(--dark-brown);
+  --form-control-color: var(--brown);
 }
 
 body {
@@ -134,11 +136,11 @@ button {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--green);
+  background: transparent;
   border-radius: 20px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--dark-green);
+  background: transparent;
 }

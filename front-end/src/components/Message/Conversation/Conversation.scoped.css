@@ -1,5 +1,5 @@
 .body-highlight {
-  color: var(--dark-green);
+  color: var(--primary-dark);
   margin-bottom: 1em;
   padding-left: 1em;
   padding-top: 0.8em;
@@ -8,7 +8,7 @@
 .body {
   padding-left: 1em;
   margin-bottom: 1em;
-  color: var(--green);
+  color: var(--primary-light);
   width: 55%;
   display: inline-block;
   text-overflow: ellipsis;
@@ -19,7 +19,7 @@
 .conversation {
   margin-bottom: 1em;
   border: none;
-  border-bottom: 4px solid var(--green);
+  border-bottom: 4px solid var(--primary-light);
   cursor: pointer;
   background-color: var(--cream);
   display: block;

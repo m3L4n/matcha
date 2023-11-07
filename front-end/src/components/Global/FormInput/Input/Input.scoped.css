@@ -1,5 +1,5 @@
 .inputcontainer {
-  color: var(--green);
+  color: var(--primary-light);
   margin-bottom: 1em;
   margin-left: 1em;
   display: flex;
@@ -9,23 +9,23 @@
 }
 
 .inputcontainer input {
-  border: 1px solid var(--green);
+  border: 1px solid var(--primary-light);
   border-radius: 20px;
   padding: .5em 1em;
   background-color: var(--cream);
 }
 
 .inputcontainer input:focus {
-  outline: 1px solid var(--green);
+  outline: 1px solid var(--primary-light);
 }
 
 .inputcontainer input::placeholder {
-  color: var(--green)
+  color: var(--primary-light)
 }
 input, select, textarea {
-    color: var(--green);
+    color: var(--primary-light);
 }
 
 textarea:focus, input:focus {
-    color: var(--green);
+    color: var(--primary-light);
 }

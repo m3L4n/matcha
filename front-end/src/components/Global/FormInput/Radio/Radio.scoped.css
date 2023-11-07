@@ -1,12 +1,12 @@
 h3 {
-  color: var(--green);
+  color: var(--primary-light);
   margin-bottom: 1em;
   margin-left: 1em;
 }
 
 .form-control {
   font-size: .9rem;
-  color: var(--green);
+  color: var(--primary-light);
   line-height: 1.1;
   display: grid;
   grid-template-columns: 1em auto;
@@ -15,7 +15,7 @@ h3 {
 }
 
 .form-control:focus-within {
-  color: var(--green);
+  color: var(--primary-light);
 }
 
 input[type="radio"] {
@@ -27,7 +27,7 @@ input[type="radio"] {
   color: currentColor;
   width: 1.15em;
   height: 1.15em;
-  border: 0.15em solid var(--green);
+  border: 0.15em solid var(--primary-light);
   border-radius: 50%;
   transform: translateY(-0.075em);
   display: grid;
@@ -42,7 +42,7 @@ input[type="radio"]::before {
   border-radius: 50%;
   transform: scale(0);
   transition: transform 120ms ease-in-out;
-  box-shadow: inset 1em 1em var(--green);
+  box-shadow: inset 1em 1em var(--primary-light);
   background-color: CanvaText;
 }
 

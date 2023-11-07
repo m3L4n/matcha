@@ -140,7 +140,8 @@ export default function BrowsingPage() {
   const { status, error, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
-    enabled: currentUser.valided
+    enabled: currentUser.valided,
+    retry: 10
   });
 
   useEffect(() => {
