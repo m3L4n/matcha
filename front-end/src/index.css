@@ -16,6 +16,17 @@
   --brown: #b9a084;
   --form-control-color: var(--green);
 }
+
+.theme-light {
+  --dark-green: #707c4f;
+  --green: #a4b07e;
+}
+
+.theme-dark {
+  --dark-green: #6d4930;
+  --green: #b9a084;
+}
+
 body {
   background-color: var(--cream);
   height: 100%;

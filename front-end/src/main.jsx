@@ -12,9 +12,9 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 600000,
-      cacheTime: 600000,
-    },
-  },
+      cacheTime: 600000
+    }
+  }
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
