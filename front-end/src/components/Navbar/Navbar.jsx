@@ -4,6 +4,8 @@ import { NavLink } from "react-router-dom";
 import { socket } from "src/socket/socket";
 import disconnect from "components/Authentification/disconnect/disconnect";
 import { useAuth } from "src/Context/AuthContext";
+import { ThemeContext } from "src/Context/Theme";
+import { useContext } from "react";
 
 export default function Navbar() {
   const { setTriggerReload, user, setUserAskDisconnect } = useAuth();
@@ -11,6 +13,7 @@ export default function Navbar() {
   let pages = ["match", "profile", "message", "notifications", "view history", "horoscope", "blockView"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   if (Object.keys(user)?.length == 0) {
     pages = ["login", "register"];
@@ -82,6 +85,13 @@ export default function Navbar() {
           {sidebar && Object.keys(user)?.length > 0 && (
             <button className="disconnect-button body" onClick={handleDisconnect}>
               Disconnect{" "}
+            </button>
+          )}
+        </li>
+        <li>
+          {sidebar && Object.keys(user)?.length > 0 && (
+            <button className="disconnect-button body" onClick={toggleTheme}>
+              Switch to {theme === "light-theme" ? "Coffee" : "Matcha"}
             </button>
           )}
         </li>

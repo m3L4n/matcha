@@ -1,7 +1,6 @@
 const { MatchModel } = require("../models/MatchModel");
 const { NotificationsModel } = require("../models/NotificationsModel");
 const { checkAndChange } = require("../modules/response");
-const { MatchController } = require("./matchController");
 
 class notificationsController {
   static createNotification = async (req, res) => {

@@ -1,4 +1,3 @@
-const { error } = require("../modules/response");
 const db = require("../db/db");
 
 class MatchModel {
@@ -18,9 +17,19 @@ class MatchModel {
               } else if (currentUserRating < opponentRating) {
                 expected_outcome = 1;
               }
-              let updatedRateFame = currentUserRating + K * (actual_outcome - expected_outcome);
-              db.query("UPDATE users SET rate_fame = $1 WHERE id = $2", [updatedRateFame, idPlayer])
-                .then((result) => next(result))
+              const updatedRateFame = currentUserRating + K * (actual_outcome - expected_outcome);
+              db.query(
+                "UPDATE users SET rate_fame = $1 WHERE id = $2 \
+                RETURNING *",
+                [updatedRateFame, idPlayer]
+              )
+                .then(() => {
+                  const fameCost = opponentRating + K * (0 - (expected_outcome === 1 ? 0 : 1));
+                  db.query("UPDATE users SET rate_fame = $1 WHERE id = $2 RETURNING *", [fameCost, idOpponent])
+                    .then((result) => next(result))
+                    .catch((error) => next(error));
+                })
+
                 .catch((error) => next(error));
             })
             .catch((error) => next(error));
@@ -162,7 +171,6 @@ class MatchModel {
 
   static createLike = (requesterId, receiverId) => {
     return new Promise((next) => {
-      console.log(`RequesterId: ${requesterId}`);
       db.query(
         'select "like", id_requester, id_receiver from match \
         where id_requester = $1 and id_receiver = $2\
@@ -173,7 +181,6 @@ class MatchModel {
           this.#updateElo(receiverId, requesterId, 1)
             .then(() => {
               if (!result.rowCount) {
-                console.log("On trouve pas frr");
                 db.query(
                   'INSERT INTO match("like", block, id_requester, id_receiver)  \
                 VALUES(false, false, $1, $2)',
@@ -182,7 +189,6 @@ class MatchModel {
                   .then((result) => next(result))
                   .catch((error) => next(error));
               } else {
-                console.log("On trouve frrr");
                 db.query(
                   'UPDATE match SET "like" = true \
                 WHERE id_requester = $1 AND id_receiver = $2\
@@ -220,13 +226,13 @@ class MatchModel {
               if (result.rowCount > 0) {
                 if (result.rows[0].like) {
                   const { id_requester, id_receiver } = result.rows[0];
-                  if (id_requester == receiverId && id_receiver == requesterId) {
+                  if (id_requester == requesterId && id_receiver == receiverId) {
                     db.query(
                       'UPDATE match\
                         SET "like" = false,\
                         id_receiver = $1,\
                         id_requester = $2',
-                      [receiverId, requesterId]
+                      [requesterId, receiverId]
                     )
                       .then((result) => next(result))
                       .catch((error) => next(error));

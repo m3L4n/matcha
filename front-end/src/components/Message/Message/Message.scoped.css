@@ -31,13 +31,13 @@
 }
 
 .message-received {
-  background-color: var(--green);
+  background-color: var(--primary-light);
 }
 
 .message-sended {
   text-align: right;
   margin-left: 2em;
-  background-color: var(--dark-green);
+  background-color: var(--primary-dark);
 }
 
 header {
@@ -46,7 +46,7 @@ header {
   justify-content: center;
   align-items: center;
   gap: 1em;
-  color: var(--dark-green);
+  color: var(--primary-dark);
   margin-right: 2em;
   margin-bottom: 20vh;
 }
@@ -64,13 +64,14 @@ header img {
   justify-content: center;
   align-items: center;
   gap: 1em;
+  color: var(--primary-light);
 }
 
 .search-form--input {
   width: 100%;
-  border: 1px solid var(--green);
+  border: 1px solid var(--primary-light);
   border-radius: 20px;
-  color: var(--green);
+  color: var(--primary-light);
   padding: 1em 1em;
 }
 

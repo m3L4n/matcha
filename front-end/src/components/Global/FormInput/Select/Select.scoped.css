@@ -1,14 +1,14 @@
 .sort-select-label {
-  color: var(--green);
+  color: var(--primary-light);
   margin: 1rem;
 }
 
 .sort-select {
-  border: 1px solid var(--green);
+  border: 1px solid var(--primary-light);
   border-radius: 20px;
   padding: 0.5em;
   background-color: transparent;
-  color: var(--green);
+  color: var(--primary-light);
   cursor: pointer;
 }
 

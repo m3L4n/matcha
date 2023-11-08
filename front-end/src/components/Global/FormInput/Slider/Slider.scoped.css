@@ -17,7 +17,7 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-color: var(--green);
+  background-color: var(--primary-light);
   border-radius: 20px;
   height: 10px;
 }
@@ -25,7 +25,7 @@
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background-color: var(--green);
+  background-color: var(--primary-light);
   border-radius: 50%;
   width: 1.5625em;
   height: 1.5625em;
@@ -38,5 +38,5 @@
 }
 
 label {
-  color: var(--green);
+  color: var(--primary-light);
 }

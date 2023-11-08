@@ -41,7 +41,6 @@ export default function SignIn() {
       })
       .then((data) => {
         if (data.status == 201) {
-          console.log("here", data);
           socket.emit("login", { userId: data.userId });
           socket.emit("login-reload", { userId: data.userId });
         }
@@ -49,7 +48,7 @@ export default function SignIn() {
           notify("warning", data.msg);
           return;
         } else if (data.status == 401) {
-          notify("warning", "please verify your email  we send you a mail to verify your email");
+          notify("warning", "please verify your email we send you a mail to verify your email");
           navigate("/reset", { state: { datae: user.username } });
           return;
         }

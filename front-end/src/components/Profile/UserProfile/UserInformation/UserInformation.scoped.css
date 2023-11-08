@@ -68,7 +68,7 @@
   color: black;
   cursor: pointer;
   background-color: white;
-  border: 2px solid var(--green);
+  border: 2px solid var(--primary-light);
   border-radius: 50%;
   opacity: 1;
   transition: opacity 0.35s;
@@ -129,9 +129,9 @@
   font-size: 0.7rem;
   background-color: transparent;
   /* border-radius: 20px; */
-  border-bottom: 3px solid var(--dark-green);
+  border-bottom: 3px solid var(--primary-dark);
   padding: 0.25rem;
-  color: var(--dark-green);
+  color: var(--primary-dark);
   transition: all ease 0.3s;
 }
 .button-action-user:hover {
@@ -140,7 +140,7 @@
   /* box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset; */
 }
 .tags-selected {
-  /* background-color: var(--green); */
+  /* background-color: var(--primary-light); */
   border: 1px solid black;
   font-size: 0.7rem;
   padding: 0.25rem 0.55rem 0.25rem 0.55rem;

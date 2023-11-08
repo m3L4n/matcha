@@ -16,7 +16,7 @@
   display: flex;
   margin: auto;
   border-radius: 10px;
-  border: 2px solid var(--dark-green);
+  border: 2px solid var(--primary-dark);
   transition: all ease 0.3s;
 }
 .button-update-location:hover,
@@ -24,12 +24,12 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 .button-submit-gps {
-  background-color: var(--green);
+  background-color: var(--primary-light);
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 20px;
   transition: all ease 0.3s;
-  border: 2px solid var(--dark-green);
+  border: 2px solid var(--primary-dark);
 }
 .container-input {
   width: 100%;
