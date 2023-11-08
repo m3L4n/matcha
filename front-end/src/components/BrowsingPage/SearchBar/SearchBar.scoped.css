@@ -16,7 +16,7 @@ form {
 
 .searchSelect {
   margin-top: 1.5em;
-  color: var(--green);
+  color: var(--primary-light);
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -30,12 +30,12 @@ form {
   width: 100%;
   display: flex;
   padding: 2px;
-  border: 1px solid var(--green);
+  border: 1px solid var(--primary-light);
   border-radius: 20px;
 }
 
 .searchbar {
-  color: var(--green);
+  color: var(--primary-light);
   padding: 0.7rem;
   width: 100%;
   background-color: var(--cream);
@@ -46,7 +46,7 @@ form {
 button[type="submit"] {
   overflow: hidden;
   background-color: var(--cream);
-  color: var(--green);
+  color: var(--primary-light);
   width: 40px;
   padding: 0;
   margin: 0;
@@ -58,13 +58,13 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   opacity: 1;
-  color: var(--dark-green);
+  color: var(--primary-dark);
   transition: all 0.5s ease;
   font-size: 24px;
 }
 
 .searchbar::placeholder {
-  color: var(--green);
+  color: var(--primary-light);
   opacity: 0.8;
   font-family: "Montserrat", sans-serif;
   font-size: 1rem;
@@ -77,11 +77,11 @@ button[type="submit"]:hover {
 }
 
 .searchbar:text {
-  color: var(--green);
+  color: var(--primary-light);
 }
 
 .filter {
-  color: var(--green);
+  color: var(--primary-light);
   background-color: var(--cream);
   border: none;
   font-size: 2rem;
@@ -92,5 +92,5 @@ button[type="submit"]:hover {
 }
 
 .filter:hover {
-  color: var(--dark-green);
+  color: var(--primary-dark);
 }

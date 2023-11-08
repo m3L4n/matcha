@@ -1,7 +1,7 @@
 h1 {
   margin: 1em 0;
   text-align: center;
-  color: var(--green);
+  color: var(--primary-light);
   text-transform: uppercase;
 }
 
@@ -24,7 +24,7 @@ h1 {
   .conversations {
     width: 20%;
     margin-left: 2.2%;
-    border-right: 3px solid var(--green);
+    border-right: 3px solid var(--primary-light);
     height: 100vh;
   }
 

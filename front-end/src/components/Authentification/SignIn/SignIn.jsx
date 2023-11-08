@@ -12,7 +12,7 @@ export default function SignIn() {
   const { setTriggerReload } = useAuth();
   const [user, setUser] = useState({
     username: "",
-    password: "",
+    password: ""
   });
 
   function handleChange(event) {
@@ -27,13 +27,13 @@ export default function SignIn() {
     const options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       credentials: "include",
-      body: JSON.stringify(user),
+      body: JSON.stringify(user)
     };
     fetch("http://localhost:4000/users/login", options)
-      .then((response) => {
+      .then(response => {
         if (response.status == 201) {
           notify("success", "login success");
           setTriggerReload(true);
@@ -41,7 +41,7 @@ export default function SignIn() {
         }
         return response.json();
       })
-      .then((data) => {
+      .then(data => {
         if (data.status == 201) {
           socket.emit("login", { userId: data.userId });
         }
@@ -49,12 +49,15 @@ export default function SignIn() {
           notify("warning", data.msg);
           return;
         } else if (data.status == 401) {
-          notify("warning", "please verify your email  we send you a mail to verify your email");
+          notify(
+            "warning",
+            "please verify your email we send you a mail to verify your email"
+          );
           navigate("/reset", { state: { datae: user.username } });
           return;
         }
       })
-      .catch((error) => notify("error", error));
+      .catch(error => notify("error", error));
   }
 
   return (
@@ -74,12 +77,26 @@ export default function SignIn() {
             {" "}
             Username
           </label>
-          <input className="input" name="username" id="username" type="text" value={user.username} onChange={handleChange} />
+          <input
+            className="input"
+            name="username"
+            id="username"
+            type="text"
+            value={user.username}
+            onChange={handleChange}
+          />
           <label className="label body" htmlFor="password">
             {" "}
             password
           </label>
-          <input className="input" name="password" id="password" type="password" value={user.password} onChange={handleChange} />
+          <input
+            className="input"
+            name="password"
+            id="password"
+            type="password"
+            value={user.password}
+            onChange={handleChange}
+          />
         </div>
         <button className="button-submit title-1" onClick={signIn}>
           {" "}

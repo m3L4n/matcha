@@ -3,7 +3,7 @@
   flex-flow: nowrap row;
   justify-content: space-between;
   margin-bottom: 1rem;
-  border: 1px solid var(--green);
+  border: 1px solid var(--primary-light);
   border-radius: 20px;
   padding: 1rem;
   cursor: pointer;
@@ -12,5 +12,5 @@
 }
 
 .filter-options .options p {
-  color: var(--green);
+  color: var(--primary-light);
 }
