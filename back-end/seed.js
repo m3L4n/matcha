@@ -99,7 +99,7 @@ function generateSetOfUsers() {
     const sexual_preference = random % 2 == 0 ? "male" : "female";
     const password = bcrypt.hashSync(faker.string.alphanumeric(), 10);
     const description = faker.string.alphanumeric(200);
-    const rate_fame = 1500;
+    const rate_fame = Math.floor(Math.random() * (1800 - 1200 + 1) + 1200);
     const age = Math.floor(Math.random() * (50 - 18) + 18);
     const profile_picture = faker.internet.avatar();
     const valided = true;
@@ -107,7 +107,25 @@ function generateSetOfUsers() {
     let position = `(${gps_position.x}, ${gps_position.y})`;
     const city = faker.location.city();
     const tag = ["gastronomy", "cinephile", "travel", "cook", "sql lover"];
-    const params = [uuidv4(), username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city, tag];
+    const params = [
+      uuidv4(),
+      username,
+      email,
+      firstName,
+      gender,
+      beverage,
+      sexual_preference,
+      lastName,
+      password,
+      description,
+      rate_fame,
+      position,
+      profile_picture,
+      valided,
+      age,
+      city,
+      tag,
+    ];
     generateUser(params)
       .then(() => console.log(`fake user ${i} inserted ✅`))
       .catch((error) => console.error(error));
