@@ -41,6 +41,7 @@ export default function Navbar() {
     await disconnect();
     setTriggerReload(true);
     setUserAskDisconnect(true);
+    localStorage.setItem('theme', "light-theme");
     // navigate("/");
   };
 

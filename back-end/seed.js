@@ -83,7 +83,7 @@ const generateUser = async (params) => {
   const query =
     "INSERT INTO \
   users(id, username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city, tags) \
-  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)";
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) ON CONFLICT (username, email) DO NOTHING";
   return db.query(query, params);
 };
 

@@ -14,6 +14,7 @@ export default function UserPictures({ pictureDescription, ourProfile, updatePic
         return;
       }
       clone.push(event.target.files[0]);
+      console.log(clone);
       updatePictures(clone);
       notify("success", "upload successfull");
       return;

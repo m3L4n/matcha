@@ -283,7 +283,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
   const updateLocationInput = async (event) => {
     event.preventDefault();
-    if (event.target.name == "longitude" || event.target.name == "latitude") {
+    if ((event.target.name == "longitude" || event.target.name == "latitude") && !isNaN(event.target.valueAsNumber) ) {
       setLocationInput({ ...locationInput, [event.target.name]: event.target.valueAsNumber });
       return;
     }
