@@ -42,7 +42,6 @@ export default function SignIn() {
         return response.json();
       })
       .then(data => {
-        console.log("here", data);
         if (data.status == 201) {
           socket.emit("login", { userId: data.userId });
         }

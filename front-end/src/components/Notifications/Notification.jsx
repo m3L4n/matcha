@@ -7,12 +7,20 @@ import { useNavigate } from "react-router-dom";
 import { socket } from "src/socket/socket";
 import { useAuth } from "src/Context/AuthContext";
 import { checkErrorFetch } from "../Global/checkErrorFetch";
+import utc from "dayjs/plugin/utc";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
 
 export default function Notification() {
   const types = ["messages", "view", "like", "all"];
   const navigate = useNavigate();
   const { user, setTriggerReload } = useAuth();
   const [viewType, setViewType] = useState(types[3]);
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  dayjs.extend(localizedFormat);
+  dayjs.tz.guess();
   const { data: notificationsData, isLoading: notificationsLoading, refetch: refetchNotif } = useQuery(["notifications"], fetchNotifUser, {
     onSuccess: (data) => {
       const isError = checkErrorFetch(data);
@@ -56,11 +64,14 @@ export default function Notification() {
     return (
       <div className="container-render-notif">
         {notificationToShow.map((elem, index) => {
+          console.log(elem);
           return (
             <button key={index} className="container-notif" onClick={() => navigate(`/profile/${elem.id_user_requester}`)}>
               <img alt="profile_picture" src={elem.profile_picture} />
-              <span className="body-highlight">
-                {elem.username} {elem.action}
+              <span className="container-info-notif">
+                <p className="title-1">{elem.action}</p>
+                <p className="body-highlight">{elem.username}</p>
+                <p className="body">{dayjs(elem.created_at).format("llll")}</p>
               </span>
             </button>
           );

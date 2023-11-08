@@ -166,6 +166,7 @@ async function createTableNotifications(client) {
     id_user_receiver UUID REFERENCES users ON DELETE CASCADE,
     action TEXT,
     type  notif_enum,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "viewed" BOOLEAN,
      PRIMARY KEY (id)
      );
@@ -201,6 +202,7 @@ async function createTableprofilViewer(client) {
      id UUID DEFAULT uuid_generate_v4(),
     id_watcher UUID REFERENCES users ON DELETE SET NULL,
     id_watched UUID REFERENCES users ON DELETE SET NULL,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
      );
      `);

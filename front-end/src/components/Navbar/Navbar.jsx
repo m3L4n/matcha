@@ -9,7 +9,7 @@ import { useContext } from "react";
 
 export default function Navbar() {
   const { setTriggerReload, user, setUserAskDisconnect } = useAuth();
-  let pages = ["match", "profile", "message", "notifications", "view history"];
+  let pages = ["match", "profile", "message", "notifications", "view history", "horoscope"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
   const { theme, toggleTheme } = useContext(ThemeContext);

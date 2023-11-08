@@ -43,7 +43,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = fals
     }
     queryClient.invalidateQueries({ queryKey: ["relation"] });
     // queryClient.invalidateQueries({ queryKey: ["id"] });
-    socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like, currentLike: like });
+    socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like, currentLike: like,  });
     setLike(!like);
   };
 

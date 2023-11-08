@@ -18,8 +18,8 @@ class NotificationsModel {
     });
   };
   static findByUserDetail = async (id_user, view = true) => {
-    let query = `SELECT username, profile_picture,id_user_requester, type, action FROM notifications INNER JOIN users
-        ON notifications.id_user_requester = users.id WHERE id_user_receiver = $1 `;
+    let query = `SELECT username, profile_picture,id_user_requester, type, notifications.created_at, action FROM notifications INNER JOIN users 
+        ON notifications.id_user_requester = users.id WHERE id_user_receiver = $1 ORDER BY notifications.created_at DESC`;
     let value = [id_user];
     return new Promise((next) => {
       db.query(query, value)
