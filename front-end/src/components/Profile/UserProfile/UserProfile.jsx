@@ -90,7 +90,6 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   });
   const mutationBlockUser = useMutation(fetchBlockUser, {
     onSuccess: (data) => {
-      console.log(data);
       const isError = checkErrorFetch(data);
 
       if (isError.authorized == false) {
@@ -278,7 +277,6 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     let infoProfileWithoutPicture = { ...infoProfile };
     delete infoProfileWithoutPicture["profile_picture"];
     delete infoProfileWithoutPicture["pictures"];
-    console.log(infoProfileWithoutPicture);
     mutationUploadPD.mutate(pictureDescription);
     mutationUpdateInfo.mutate(infoProfileWithoutPicture);
   }
@@ -300,7 +298,6 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
   const blockUser = (block) => {
     const id = infoProfile.id;
-    console.log("in block", id, block);
     const body = {
       id,
       block,

@@ -41,7 +41,6 @@ export default function Profile() {
       if (isError.authorized == false) {
         setTriggerReload(true);
       }
-      console.log(data);
       if (data.status == "success") {
         setConnected(data.result.connected);
       }
@@ -51,7 +50,6 @@ export default function Profile() {
     staleTime: 1000,
     cacheTime: 10000,
     onSuccess: (data) => {
-      console.log(data);
       const isError = checkErrorFetch(data);
 
       if (isError.authorized == false) {
@@ -73,14 +71,12 @@ export default function Profile() {
   useEffect(() => {
     if (user.id != paramId) {
       socket.on("alert-disconnect", (msg) => {
-        console.log("cc alter disconnect");
         if (msg.userId == paramId) {
           setConnected(false);
         }
       });
       socket.on("alert-connect", (msg) => {
         if (msg.userId == paramId) {
-          console.log("cc alter connect");
           setConnected(true);
         }
       });

@@ -56,8 +56,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         setTriggerReload(false);
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         setUser({});
         setLoading(false);
         setTriggerReload(false);

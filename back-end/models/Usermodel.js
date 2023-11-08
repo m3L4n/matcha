@@ -9,7 +9,6 @@ class UserModel {
       const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (username, email) DO NOTHING RETURNING *;";
       const values = [id, username, firstName, lastName, email, password, valided];
       const newUser = await db.query(query, values);
-      console.log(newUser);
       if (newUser.rowCount == 0) {
         const error = new Error();
         error.status = 400;
@@ -24,28 +23,27 @@ class UserModel {
 
   static findbyId = async (paramToSearch, valueToCompare) => {
     try {
-      const query = `SELECT *  FROM users WHERE ${paramToSearch} = $1`;
+      const query = `SELECT * FROM users WHERE ${paramToSearch} = $1`;
       const user = await db.query(query, [valueToCompare]);
       if (user.rowCount == 0) {
         throw new Error("users doesnt exist");
       }
       return user.rows[0];
     } catch (error) {
-      console.log("CC");
       throw error;
     }
   };
 
   static findUniqueKey = async (param, value) => {
     try {
-      const query = `SELECT *  FROM users WHERE ${param} = $1`;
+      const query = `SELECT * FROM users WHERE ${param} = $1`;
       const user = await db.query(query, [value]);
       if (user.rowCount == 0) {
         throw "no user";
       }
       return user.rows[0];
     } catch (err) {
-      throw error;
+      throw err;
     }
   };
   static FindUniqueEmailNotOur = async (id, email) => {
@@ -174,7 +172,6 @@ class UserModel {
           };
 
           const getMatchesOfAllSexes = () => {
-            console.log("pass through search engine");
             let query =
               "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city, u.tags,\
               array_cat(u.tags, $6) common_tags\

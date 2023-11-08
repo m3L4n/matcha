@@ -29,8 +29,7 @@ export default function Navbar() {
     const intervalId = setInterval(isUserReceiveNotif, 5000);
     return () => {
       clearInterval(intervalId);
-      socket.off("number-notif-not-seen", (reason) => {
-        console.log(reason);
+      socket.off("number-notif-not-seen", () => {
       });
     };
   }, [user]);
@@ -39,7 +38,6 @@ export default function Navbar() {
   const handleDisconnect = async () => {
     const id = user.id;
     socket.emit("listener-button-deconnection", { userId: id });
-    console.log("data", user.id);
     await disconnect();
     setTriggerReload(true);
     setUserAskDisconnect(true);

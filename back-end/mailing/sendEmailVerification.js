@@ -22,7 +22,6 @@ module.exports.sendingEmailVerification = async (username) => {
           clicking this link :
           http://localhost:4000/users/verify-email/${user.id}/${token} `,
         });
-        console.log("token", tokenCreated);
         return tokenCreated;
       }
     }

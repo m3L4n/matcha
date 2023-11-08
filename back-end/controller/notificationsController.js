@@ -1,5 +1,5 @@
 const { MatchModel } = require("../models/MatchModel");
-const { NotificationsModel } = require("../models/NotificationsModel");
+const { NotificationsModel } = require("../models/notificationsModel");
 const { checkAndChange } = require("../modules/response");
 
 class notificationsController {

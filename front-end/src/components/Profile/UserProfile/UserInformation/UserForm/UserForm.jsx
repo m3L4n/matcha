@@ -8,7 +8,6 @@ import InputProfile from "src/components/Global/InputProfile/InputProfile";
 import MultipleButtonProfile from "src/components/Global/MultipleButtonProfile/MultipleButtonProfile";
 import "./UserForm.scoped.css";
 export default function UserForm({ ourProfile, userInformation, handleChange }) {
-  console.log(userInformation);
   return (
     <div className="container-form">
       <span className="form-information-row">

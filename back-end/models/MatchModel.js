@@ -92,7 +92,6 @@ class MatchModel {
             )
               .then((dataInserted) => {
                 if (dataInserted.rowCount > 0) {
-                  console.log("create match ok with this arg : like :", like, "block:", block);
                   let elo = 0;
                   if (like == true || block == true) {
                     elo = 1;
@@ -126,8 +125,6 @@ class MatchModel {
       if (isblocked.rowCount > 0) {
         blocked = isblocked.rows[0].blocked;
       }
-      console.log("blocked", blocked);
-      console.log(" receiver block requester", responseReceiverBlockUser.rows[0]);
       const responseRequester = await db.query('SELECT  match.id_requester, match."like" FROM match  WHERE match.id_requester = $1 AND match.id_receiver= $2 ', [requesterId, receiverId]);
       if (responseRequester.rowCount > 0) {
         const obj = JSON.parse(JSON.stringify(responseRequester.rows[0]));

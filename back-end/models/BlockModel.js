@@ -2,7 +2,6 @@ const db = require("../db/db");
 
 class BlockModel {
   static update = async (id_receiver, id_requester, block) => {
-    console.log(id_receiver, id_requester, block);
     try {
       const isBlockRowExist = await db.query(`SELECt id, "blocked" from block WHERE id_requester = $1 AND id_receiver = $2`, [id_requester, id_receiver]);
       if (isBlockRowExist.rowCount > 0) {

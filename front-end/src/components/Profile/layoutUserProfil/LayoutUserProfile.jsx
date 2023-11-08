@@ -37,7 +37,6 @@ export default function LayoutUserProfile({
   relationship,
   reportAsFakeAccount,
 }) {
-  console.log(connected);
   function showPreview(event) {
     if (checkMymeType(event.target.files[0]) > 0) {
       handleChange(event);

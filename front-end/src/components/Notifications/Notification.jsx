@@ -59,12 +59,10 @@ export default function Notification() {
       notificationToShow = getArrayAllNotif();
     } else {
       notificationToShow = getArrayFiltered(viewType);
-      console.log(notificationToShow);
     }
     return (
       <div className="container-render-notif">
         {notificationToShow.map((elem, index) => {
-          console.log(elem);
           return (
             <button key={index} className="container-notif" onClick={() => navigate(`/profile/${elem.id_user_requester}`)}>
               <img alt="profile_picture" src={elem.profile_picture} />
