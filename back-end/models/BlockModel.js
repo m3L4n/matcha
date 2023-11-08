@@ -25,6 +25,17 @@ class BlockModel {
       return error;
     }
   };
+  static getAll = async (idUser) => {
+    try {
+      const block = await db.query(
+        `SELECT username, profile_picture, block.id_receiver ,blocked FROM block INNER JOIN users ON block.id_receiver = users.id WHERE id_requester = $1 AND "blocked" = $2`,
+        [idUser, true]
+      );
+      return block.rows;
+    } catch (error) {
+      return error.message;
+    }
+  };
 }
 module.exports = {
   BlockModel,

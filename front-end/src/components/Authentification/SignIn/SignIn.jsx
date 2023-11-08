@@ -1,6 +1,4 @@
-// import React from 'react'
 import { useState } from "react";
-import { FaDiscord } from "react-icons/fa6";
 import "./SignIn.scoped.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -45,6 +43,7 @@ export default function SignIn() {
         if (data.status == 201) {
           console.log("here", data);
           socket.emit("login", { userId: data.userId });
+          socket.emit("login-reload", { userId: data.userId });
         }
         if (data.status == 403) {
           notify("warning", data.msg);
@@ -64,10 +63,9 @@ export default function SignIn() {
         <header className="header header">
           SIGN IN
           <p className="title-1"> And start dating !</p>
-          <button className="button-discord title-1">
-            <span>Connect with discord</span>
-            <FaDiscord />
-          </button>
+          <div className="button-discord title-1">
+            <span>Find love</span>
+          </div>
         </header>
         <hr className="hr" />
         <div className="container-form">

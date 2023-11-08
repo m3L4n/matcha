@@ -16,6 +16,7 @@ import UserInformation from "./UserInformation/UserInformation";
 import FormButton from "src/components/Global/FormButton/FormButton";
 import { checkErrorFetch } from "src/components/Global/checkErrorFetch";
 import { useAuth } from "src/Context/AuthContext";
+import GlobalLoading from "src/components/Global/GLoading/GlobalLoading";
 export default function UserProfile({ allTags, userInformation, ourProfile, relationship, connected }) {
   const { setTriggerReload } = useAuth();
   const mutationUpdateInfo = useMutation({
@@ -107,6 +108,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   const [profilPicture, setProfilPicture] = useState("");
   const [infoProfile, setInfoProfil] = useState({});
   const [locationInput, setLocationInput] = useState({ longitude: 0, latitude: 0 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (userInformation) {
@@ -116,6 +118,16 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     }
   }, [userInformation]);
 
+  useEffect(() => {
+    if (Object.keys(infoProfile).length > 0) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+    return () => {
+      setLoading(true);
+    };
+  }, [infoProfile]);
   useEffect(() => {
     if (!mutationLocalisation.isLoading) {
       if (coords) {
@@ -305,22 +317,27 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       <header className="container__header">
         <h1 className="header">PROFILE</h1>
       </header>
-      <UserInformation
-        userInformation={infoProfile}
-        ourProfile={ourProfile}
-        handleChange={handleChange}
-        allTags={allTags}
-        pictureDescription={pictureDescription}
-        profilPicture={profilPicture}
-        updatePictures={updatePictures}
-        relationship={relationship}
-        locationInput={locationInput}
-        connected={connected}
-        updateLocationInput={updateLocationInput}
-        getLocation={getLocation}
-        blockUser={blockUser}
-        reportAsFakeAccount={reportAsFakeAccount}
-      />
+
+      {loading ? (
+        <GlobalLoading />
+      ) : (
+        <UserInformation
+          userInformation={infoProfile}
+          ourProfile={ourProfile}
+          handleChange={handleChange}
+          allTags={allTags}
+          pictureDescription={pictureDescription}
+          profilPicture={profilPicture}
+          updatePictures={updatePictures}
+          relationship={relationship}
+          locationInput={locationInput}
+          connected={connected}
+          updateLocationInput={updateLocationInput}
+          getLocation={getLocation}
+          blockUser={blockUser}
+          reportAsFakeAccount={reportAsFakeAccount}
+        />
+      )}
       {ourProfile && (
         <span className="container-save">
           <FormButton label={"save"} handleChange={saveProfile} />

@@ -15,6 +15,15 @@ class BlockController {
       return res.status(404).json({ status: 404, message: "error you cant block this user" });
     }
   };
+  static getAll = async (req, res) => {
+    const { id } = req.authUser;
+    try {
+      const block = await BlockModel.getAll(id);
+      return res.status(200).json({ status: 200, result: block });
+    } catch (err) {
+      return res.status(404).json({ status: 404, message: "error cant get all block by user " });
+    }
+  };
 }
 
 module.exports = {

@@ -10,40 +10,56 @@ class notificationsController {
     return res.json(checkAndChange(resultat));
   };
   static createNotification = async (id_requester, id_receiver, action, type, currentLike) => {
-    const relationship = await MatchModel.getRelationShip(id_requester, id_receiver);
-    if (relationship.block == true) {
-      return {};
+    try {
+      const relationship = await MatchModel.getRelationShip(id_requester, id_receiver);
+      if (relationship.block == true || relationship.isReceiverBlockRequester == true) {
+        return {};
+      }
+      if (relationship.match && type == "like" && currentLike) {
+        await NotificationsModel.create(id_requester, id_receiver, "its a match", type);
+        await NotificationsModel.create(id_receiver, id_requester, "its a match", type);
+      }
+      if (relationship.userLike && type == "like" && !currentLike) {
+        await NotificationsModel.create(id_requester, id_receiver, "a match unlike you ", type);
+      }
+      if (currentLike || type != "like") {
+        const result = await NotificationsModel.create(id_requester, id_receiver, action, type);
+        return result;
+      }
+      return;
+    } catch (err) {
+      return;
     }
-    if (relationship.match && type == "like" && currentLike) {
-      await NotificationsModel.create(id_requester, id_receiver, "its a match", type);
-      await NotificationsModel.create(id_receiver, id_requester, "its a match", type);
-    }
-    if (relationship.userLike && type == "like" && !currentLike) {
-      await NotificationsModel.create(id_requester, id_receiver, "a match unlike you ", type);
-    }
-    if (currentLike || type != "like") {
-      const result = await NotificationsModel.create(id_requester, id_receiver, action, type);
-      return result;
-    }
-    return;
   };
 
   static findNotifidById = async (req, res) => {};
 
   static findNotifByUser = async (req, res) => {
     const { id } = req.authUser;
-    const result = await NotificationsModel.findByUserDetail(id);
-    return res.json(checkAndChange(result));
+    try {
+      const result = await NotificationsModel.findByUserDetail(id);
+      return res.json(checkAndChange(result));
+    } catch (err) {
+      return res.status(404).json({ status: 404, msg: "its impossible to do that now, please retry later" });
+    }
   };
 
   static findNotifByNoneView = async (idUser) => {
-    const result = await NotificationsModel.findByUser(idUser, false);
-    return result;
+    try {
+      const result = await NotificationsModel.findByUser(idUser, false);
+      return result;
+    } catch (error) {
+      return 0;
+    }
   };
 
   static updateNotification = async (idUser) => {
-    const result = await NotificationsModel.updateById(idUser);
-    return result;
+    try {
+      const result = await NotificationsModel.updateById(idUser);
+      return result;
+    } catch (err) {
+      return;
+    }
   };
 }
 

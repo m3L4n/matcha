@@ -94,6 +94,7 @@ async function createTableUsers(client) {
     profile_picture TEXT,
     pictures TEXT[],
     "valided" BOOLEAN DEFAULT false,
+    "discord" BOOLEAN DEFAULT false,
     UNIQUE (username, email),
     PRIMARY KEY (id)  
   );
@@ -226,6 +227,19 @@ async function createTableSocket(client) {
     PRIMARY KEY (id)
   )`);
 }
+async function createTableAuthDiscord(client) {
+  await client.query(`CREATE TABLE IF NOT EXISTS authDiscor(
+    id UUID DEFAULT uuid_generate_v4(),
+    username VARCHAR(30) NOT NULL,
+    email TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    profile_picture TEXT,
+    "valided" BOOLEAN DEFAULT true,
+    UNIQUE (username, email),
+    PRIMARY KEY (id))`);
+}
 async function createTableBlock(client) {
   await client.query(`CREATE TABLE IF NOT EXISTS block(
     id UUID DEFAULT uuid_generate_v4(),
@@ -252,6 +266,7 @@ async function createTable() {
     await createTableToken(client);
     await createTableSocket(client);
     await createTableBlock(client);
+    await createTableAuthDiscord(client);
     console.log('Table "users" created with success.');
     client.release();
   } catch (error) {

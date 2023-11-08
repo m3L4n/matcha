@@ -8,6 +8,7 @@ import InputProfile from "src/components/Global/InputProfile/InputProfile";
 import MultipleButtonProfile from "src/components/Global/MultipleButtonProfile/MultipleButtonProfile";
 import "./UserForm.scoped.css";
 export default function UserForm({ ourProfile, userInformation, handleChange }) {
+  console.log(userInformation);
   return (
     <div className="container-form">
       <span className="form-information-row">
@@ -16,7 +17,7 @@ export default function UserForm({ ourProfile, userInformation, handleChange }) 
       </span>
       <span className="form-information-row">
         <InputProfile name="email" label={ourProfile ? "Your email" : "email"} type="text" value={userInformation.email} handleInput={handleChange} ourProfile={ourProfile} />
-        <InputProfile name="age" label={ourProfile ? "Your age" : "age"} type="number" value={userInformation.age} handleInput={handleChange} ourProfile={ourProfile} />
+        <InputProfile name="age" label={ourProfile ? "Your age" : "age"} type="number" value={userInformation.age ? userInformation.age : 0} handleInput={handleChange} ourProfile={ourProfile} />
       </span>
       <span className="form-information-row">
         <MultipleButtonProfile
@@ -28,7 +29,7 @@ export default function UserForm({ ourProfile, userInformation, handleChange }) 
           arrayObjectValue={[
             { value: "female", Icon: <IoFemale /> },
             { value: "male", Icon: <IoMaleSharp /> },
-            { value: '"both"', Icon: <IoMaleFemaleSharp /> },
+            { value: "both", Icon: <IoMaleFemaleSharp /> },
           ]}
         />
         <MultipleButtonProfile
@@ -40,7 +41,7 @@ export default function UserForm({ ourProfile, userInformation, handleChange }) 
           arrayObjectValue={[
             { value: "female", Icon: <FaFemale /> },
             { value: "male", Icon: <FaMale /> },
-            { value: '"other"', Icon: <MdQuestionMark /> },
+            { value: "other", Icon: <MdQuestionMark /> },
           ]}
         />
         <MultipleButtonProfile

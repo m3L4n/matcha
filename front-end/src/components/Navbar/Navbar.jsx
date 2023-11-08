@@ -8,7 +8,7 @@ import { useAuth } from "src/Context/AuthContext";
 export default function Navbar() {
   const { setTriggerReload, user, setUserAskDisconnect } = useAuth();
   // const navigate = useNavigate();
-  let pages = ["match", "profile", "message", "notifications", "view history", "horoscope"];
+  let pages = ["match", "profile", "message", "notifications", "view history", "horoscope", "blockView"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
 
@@ -34,7 +34,9 @@ export default function Navbar() {
 
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
-    socket.emit("listener-button-deconnection", { userId: user.id });
+    const id = user.id;
+    socket.emit("listener-button-deconnection", { userId: id });
+    console.log("data", user.id);
     await disconnect();
     setTriggerReload(true);
     setUserAskDisconnect(true);
