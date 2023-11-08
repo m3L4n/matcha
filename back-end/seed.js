@@ -87,6 +87,24 @@ const generateUser = async (params) => {
   return db.query(query, params);
 };
 
+let tagsList = [
+  "cook",
+  "piercing",
+  "tattoo",
+  "sql lover",
+  "vegan",
+  "wine lover",
+  "cat lover",
+  "dog lover",
+  "chicken lover",
+  "romantic feelings",
+  "flavors of love",
+  "refined meetings",
+  "drinks and conversations",
+  "in search of authentic love",
+  "open to new experiences",
+];
+
 function generateSetOfUsers() {
   for (let i = 0; i < 100; i++) {
     const random = Math.floor(Math.random() * 10);
@@ -106,7 +124,13 @@ function generateSetOfUsers() {
     let gps_position = gps[Math.floor(Math.random() * gps.length)];
     let position = `(${gps_position.x}, ${gps_position.y})`;
     const city = faker.location.city();
-    const tag = ["gastronomy", "cinephile", "travel", "cook", "sql lover"];
+    const tags = [
+      "gastronomy",
+      "cinephile",
+      "travel",
+      Math.random() * (tagsList.length - 1),
+      "sql lover",
+    ];
     const params = [
       uuidv4(),
       username,
@@ -124,7 +148,7 @@ function generateSetOfUsers() {
       valided,
       age,
       city,
-      tag,
+      tags,
     ];
     generateUser(params)
       .then(() => console.log(`fake user ${i} inserted ✅`))

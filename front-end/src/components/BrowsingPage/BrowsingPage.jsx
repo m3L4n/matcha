@@ -145,7 +145,6 @@ export default function BrowsingPage() {
   } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
-    enabled: currentUser.valided,
     retry: true,
     onSuccess: (response) => {
       if (response?.error) {
