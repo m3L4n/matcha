@@ -10,6 +10,12 @@ h1 {
   height: 100vh;
 }
 
+.no-conversations {
+  color: var(--primary-light);
+  width: 80%;
+  margin: 2rem auto;
+}
+
 @media (min-width: 768px) {
   .conversations {
     margin-left: 4%;

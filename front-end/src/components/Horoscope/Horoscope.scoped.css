@@ -11,7 +11,7 @@
   text-align: center;
 }
 .container-header h1 {
-  color: var(--green);
+  color: var(--primary-light);
 }
 .container-horoscope-body {
   display: flex;
@@ -24,16 +24,16 @@
   padding: 1rem;
   border: 3px solid black;
   border-radius: 5px;
-  background-color: var(--green);
+  background-color: var(--primary-light);
   transition: all ease 0.3s;
 }
 .button-future:hover {
-  background-color: var(--dark-green);
+  background-color: var(--primary-dark);
   color: white;
 }
 .container-horoscope-info {
   background-color: white;
-  border: 2px solid var(--dark-green);
+  border: 2px solid var(--primary-dark);
   padding: 2rem;
   display: flex;
   flex-flow: column;
