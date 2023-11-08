@@ -34,6 +34,7 @@ class MatchModel {
                     .then((result) => next(result))
                     .catch((error) => next(error));
                 })
+
                 .catch((error) => next(error));
             })
             .catch((error) => next(error));
@@ -177,7 +178,6 @@ class MatchModel {
 
   static createLike = (requesterId, receiverId) => {
     return new Promise((next) => {
-      console.log(`RequesterId: ${requesterId}`);
       db.query(
         'select "like", id_requester, id_receiver from match \
         where id_requester = $1 and id_receiver = $2\
@@ -188,7 +188,6 @@ class MatchModel {
           this.#updateElo(receiverId, requesterId, 1)
             .then(() => {
               if (!result.rowCount) {
-                console.log("On trouve pas frr");
                 db.query(
                   'INSERT INTO match("like", block, id_requester, id_receiver)  \
                 VALUES(false, false, $1, $2)',
@@ -197,7 +196,6 @@ class MatchModel {
                   .then((result) => next(result))
                   .catch((error) => next(error));
               } else {
-                console.log("On trouve frrr");
                 db.query(
                   'UPDATE match SET "like" = true \
                 WHERE id_requester = $1 AND id_receiver = $2\
@@ -236,15 +234,15 @@ class MatchModel {
                 if (result.rows[0].like) {
                   const { id_requester, id_receiver } = result.rows[0];
                   if (
-                    id_requester == receiverId &&
-                    id_receiver == requesterId
+                    id_requester == requesterId &&
+                    id_receiver == receiverId
                   ) {
                     db.query(
                       'UPDATE match\
                         SET "like" = false,\
                         id_receiver = $1,\
                         id_requester = $2',
-                      [receiverId, requesterId],
+                      [requesterId, receiverId],
                     )
                       .then((result) => next(result))
                       .catch((error) => next(error));
