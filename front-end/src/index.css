@@ -16,6 +16,19 @@
   --brown: #b9a084;
   --form-control-color: var(--green);
 }
+
+.light-theme {
+  --primary-light: var(--green);
+  --primary-dark: var(--dark-green);
+  --form-control-color: var(--green);
+}
+
+.dark-theme {
+  --primary-light: var(--brown);
+  --primary-dark: var(--dark-brown);
+  --form-control-color: var(--brown);
+}
+
 body {
   background-color: var(--cream);
   height: 100%;
@@ -123,11 +136,11 @@ button {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--green);
+  background: transparent;
   border-radius: 20px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--dark-green);
+  background: transparent;
 }

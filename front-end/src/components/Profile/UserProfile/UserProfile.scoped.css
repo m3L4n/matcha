@@ -7,7 +7,7 @@
 }
 .container__header {
   text-align: center;
-  color: var(--green);
+  color: var(--primary-light);
 }
 .container-save {
   /* width: 100%; */

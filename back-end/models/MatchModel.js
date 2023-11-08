@@ -1,4 +1,3 @@
-const { error } = require("../modules/response");
 const db = require("../db/db");
 
 class MatchModel {
@@ -18,13 +17,24 @@ class MatchModel {
               } else if (currentUserRating < opponentRating) {
                 expected_outcome = 1;
               }
-              let updatedRateFame =
+              const updatedRateFame =
                 currentUserRating + K * (actual_outcome - expected_outcome);
-              db.query("UPDATE users SET rate_fame = $1 WHERE id = $2", [
-                updatedRateFame,
-                idPlayer,
-              ])
-                .then((result) => next(result))
+              db.query(
+                "UPDATE users SET rate_fame = $1 WHERE id = $2 \
+                RETURNING *",
+                [updatedRateFame, idPlayer],
+              )
+                .then(() => {
+                  const fameCost =
+                    opponentRating + K * (0 - (expected_outcome === 1 ? 0 : 1));
+                  db.query(
+                    "UPDATE users SET rate_fame = $1 WHERE id = $2 RETURNING *",
+                    [fameCost, idOpponent],
+                  )
+                    .then((result) => next(result))
+                    .catch((error) => next(error));
+                })
+
                 .catch((error) => next(error));
             })
             .catch((error) => next(error));
@@ -224,8 +234,8 @@ class MatchModel {
                 if (result.rows[0].like) {
                   const { id_requester, id_receiver } = result.rows[0];
                   if (
-                    id_requester == id_requester &&
-                    id_receiver == id_receiver
+                    id_requester == requesterId &&
+                    id_receiver == receiverId
                   ) {
                     db.query(
                       'UPDATE match\

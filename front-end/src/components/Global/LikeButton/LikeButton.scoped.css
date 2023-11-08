@@ -1,8 +1,8 @@
 .like-button {
-  color: var(--green);
+  color: var(--primary-light);
   background-color: var(--cream);
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-  border: 1px solid var(--green);
+  border: 1px solid var(--primary-light);
   cursor: pointer;
   border-radius: 50%;
   width: 87px;
@@ -17,6 +17,6 @@
 }
 
 .like-button-active {
-  background-color: var(--green);
+  background-color: var(--primary-light);
   color: var(--cream);
 }
