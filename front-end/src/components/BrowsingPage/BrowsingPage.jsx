@@ -20,7 +20,7 @@ export default function BrowsingPage() {
     age: "",
     location: "",
     fame: "",
-    tags: "",
+    tags: ""
   });
 
   const [filterParams, setFilterParams] = useState({
@@ -29,7 +29,7 @@ export default function BrowsingPage() {
     fameGap: "",
     commongTags: "",
     sortBy: "",
-    sortOption: "ascending",
+    sortOption: "ascending"
   });
 
   const [matches, setMatches] = useState([]);
@@ -57,7 +57,7 @@ export default function BrowsingPage() {
     return c * EARTH_RADIUS * 1000;
   }
 
-  const sortMatches = (toSort) => {
+  const sortMatches = toSort => {
     if (filterParams.sortBy === "age") {
       if (filterParams.sortOption === "ascending") {
         toSort.sort((a, b) => a.age - b.age);
@@ -69,13 +69,13 @@ export default function BrowsingPage() {
         toSort.sort(
           (a, b) =>
             distanceBetweenTwoPoints(a.position, currentUser.position) -
-            distanceBetweenTwoPoints(b.position, currentUser.position),
+            distanceBetweenTwoPoints(b.position, currentUser.position)
         );
       } else {
         toSort.sort(
           (a, b) =>
             distanceBetweenTwoPoints(b.position, currentUser.position) -
-            distanceBetweenTwoPoints(a.position, currentUser.position),
+            distanceBetweenTwoPoints(a.position, currentUser.position)
         );
       }
     } else if (filterParams.sortBy === "fame") {
@@ -94,7 +94,7 @@ export default function BrowsingPage() {
     return toSort;
   };
 
-  const filterMatches = (toFilter) => {
+  const filterMatches = toFilter => {
     if (isNotEmptyButNaN(filterParams.ageGap)) {
       notify("Error: invalid age gap filter parameters");
     } else if (isNotEmptyButNaN(filterParams.fameGap)) {
@@ -109,72 +109,71 @@ export default function BrowsingPage() {
         minAge = minAge < 18 ? 18 : minAge;
         const maxAge = currentUserAge + ageGap;
         toFilter = toFilter.filter(
-          (user) => Number(user.age) >= minAge && Number(user.age) <= maxAge,
+          user => Number(user.age) >= minAge && Number(user.age) <= maxAge
         );
       }
       if (filterParams.fameGap !== "") {
         const minFame = currentUser.rate_fame - Number(filterParams.fameGap);
         const maxFame = currentUser.rate_fame + Number(filterParams.fameGap);
         toFilter = toFilter.filter(
-          (user) => user.rate_fame >= minFame && user.rate_fame <= maxFame,
+          user => user.rate_fame >= minFame && user.rate_fame <= maxFame
         );
-        console.log(toFilter.map((user) => console.log(user.rate_fame)));
+        console.log(toFilter.map(user => console.log(user.rate_fame)));
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
         toFilter = toFilter.filter(
-          (user) =>
+          user =>
             distanceBetweenTwoPoints(currentUser.position, user.position) <
-            locationGap,
+            locationGap
         );
       }
       if (filterParams.commongTags !== "") {
         const commonTags = Number(filterParams.commongTags);
         toFilter = toFilter.filter(
-          (user) => user.common_tags.length >= commonTags,
+          user => user.common_tags.length >= commonTags
         );
       }
     }
     return toFilter;
   };
 
-  const {
-    status,
-    error,
-    data: users,
-  } = useQuery({
+  const { status, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
     retry: true,
-    onSuccess: (response) => {
-      if (response?.error) {
-        if (response.status == 401) {
-          return;
+    onSuccess: response => {
+      if (response?.status === "error") {
+        if (response?.code === 400) {
+          notify("error", response?.message);
         }
-        return;
       }
-    },
+    }
   });
 
   useEffect(() => {
     if (status === "success") {
-      const filterAndSort = (users) =>
+      const filterAndSort = users =>
         sortMatches(filterMatches(users))
-          .map((user) => ({
+          .map(user => ({
             ...user,
             common_tags: user.common_tags.filter(
-              (value, index) => user.common_tags.indexOf(value) === index,
-            ),
+              (value, index) => user.common_tags.indexOf(value) === index
+            )
           }))
-          .filter((match) => match.common_tags.length > 1);
+          .filter(match => match.common_tags.length > 1);
       setMatches(filterAndSort(users?.result ?? []));
     }
   }, [status, users]);
 
-  if (error) {
+  if (users?.status === "error") {
     return (
       <div className="matchesError">
-        <h2>Cannot find any matches for you ... 💔</h2>
+        <h2>
+          Cannot find any matches for you 💔
+          <br />
+          (maybe try with a reFRESHING start...)
+        </h2>
       </div>
     );
   }
@@ -190,7 +189,7 @@ export default function BrowsingPage() {
         setFilterParams={setFilterParams}
       />
       <section className="matches">
-        {sortMatches(filterMatches(matches)).map((user) => {
+        {sortMatches(filterMatches(matches)).map(user => {
           return (
             <Card
               key={user.id}
