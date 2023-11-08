@@ -39,10 +39,10 @@ export default function Navbar() {
   const handleDisconnect = async () => {
     const id = user.id;
     socket.emit("listener-button-deconnection", { userId: id });
-    console.log("data", user.id);
     await disconnect();
     setTriggerReload(true);
     setUserAskDisconnect(true);
+    localStorage.setItem('theme', "light-theme");
     // navigate("/");
   };
 
