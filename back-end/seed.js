@@ -106,7 +106,7 @@ function generateSetOfUsers() {
     let gps_position = gps[Math.floor(Math.random() * gps.length)];
     let position = `(${gps_position.x}, ${gps_position.y})`;
     const city = faker.location.city();
-    const tag = ["gastronomy", "cinephile", "travel", "cook"];
+    const tag = ["gastronomy", "cinephile", "travel", "cook", "sql lover"];
     const params = [
       uuidv4(),
       username,
