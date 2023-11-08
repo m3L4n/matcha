@@ -153,7 +153,7 @@ const adminParams = [
   true,
   24,
   "Paris",
-  ["gastronomy", "cinephile", "travel", "piercing"],
+  ["gastronomy", "cinephile", "travel", "piercing", "sql lover"],
 ];
 
 generateSetOfUsers();
