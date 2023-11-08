@@ -4,8 +4,7 @@ const router = express.Router();
 const { UserController } = require("../../controller/users/userControllers");
 const { isAuth } = require("../../middlewares/userAuth");
 const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = require("../../middlewares/uploadMulter");
 
 router.post("/", UserController.signup);
 router.get("/verify-email/:id/:token", UserController.verifyEmail);

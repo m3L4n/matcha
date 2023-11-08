@@ -107,25 +107,7 @@ function generateSetOfUsers() {
     let position = `(${gps_position.x}, ${gps_position.y})`;
     const city = faker.location.city();
     const tag = ["gastronomy", "cinephile", "travel", "cook", "sql lover"];
-    const params = [
-      uuidv4(),
-      username,
-      email,
-      firstName,
-      gender,
-      beverage,
-      sexual_preference,
-      lastName,
-      password,
-      description,
-      rate_fame,
-      position,
-      profile_picture,
-      valided,
-      age,
-      city,
-      tag,
-    ];
+    const params = [uuidv4(), username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city, tag];
     generateUser(params)
       .then(() => console.log(`fake user ${i} inserted ✅`))
       .catch((error) => console.error(error));

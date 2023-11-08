@@ -86,7 +86,7 @@ class UserModel {
   };
   static uploadImageInDB = async (param, buffer, userId) => {
     return new Promise((next) => {
-      const query = `UPDATE users SET ${param} = $1 WHERE id = $2`;
+      const query = `UPDATE users SET ${param} = $1 WHERE id = $2 RETURNING *`;
       const values = [buffer, userId];
       db.query(query, values)
         .then((data) => {

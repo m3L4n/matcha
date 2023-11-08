@@ -17,20 +17,15 @@ class MatchModel {
               } else if (currentUserRating < opponentRating) {
                 expected_outcome = 1;
               }
-              const updatedRateFame =
-                currentUserRating + K * (actual_outcome - expected_outcome);
+              const updatedRateFame = currentUserRating + K * (actual_outcome - expected_outcome);
               db.query(
                 "UPDATE users SET rate_fame = $1 WHERE id = $2 \
                 RETURNING *",
-                [updatedRateFame, idPlayer],
+                [updatedRateFame, idPlayer]
               )
                 .then(() => {
-                  const fameCost =
-                    opponentRating + K * (0 - (expected_outcome === 1 ? 0 : 1));
-                  db.query(
-                    "UPDATE users SET rate_fame = $1 WHERE id = $2 RETURNING *",
-                    [fameCost, idOpponent],
-                  )
+                  const fameCost = opponentRating + K * (0 - (expected_outcome === 1 ? 0 : 1));
+                  db.query("UPDATE users SET rate_fame = $1 WHERE id = $2 RETURNING *", [fameCost, idOpponent])
                     .then((result) => next(result))
                     .catch((error) => next(error));
                 })
@@ -42,13 +37,23 @@ class MatchModel {
         .catch((error) => next(error));
     });
   }
-
+  static #deleteMatch = (id_requester, id_receiver) => {
+    return new Promise((next) => {
+      db.query("DELETE FROM match where id_requester = $1 AND id_receiver = $2 OR   id_requester = $2 AND id_receiver = $1", [id_requester, id_receiver])
+        .then((data) => {
+          return next(error);
+        })
+        .catch((error) => next(error));
+    });
+  };
   static update(id_requester, id_receiver, like, block) {
     return new Promise((next) => {
-      db.query(
-        `UPDATE match SET block = $1, like= $2 WHERE id_requester = $3 AND id_receiver = $4 OR id_requester = $4 AND id_receiver = $3 RETURNING * `,
-        [block, like, id_requester, id_receiver],
-      )
+      db.query(`UPDATE match SET block = $1, like= $2 WHERE id_requester = $3 AND id_receiver = $4 OR id_requester = $4 AND id_receiver = $3 RETURNING * `, [
+        block,
+        like,
+        id_requester,
+        id_receiver,
+      ])
         .then((data) => {
           next(data);
         })
@@ -63,17 +68,9 @@ class MatchModel {
    * @param {boolean} like //
    * @param {boolean} block
    */
-  static #createMatch = (
-    id_requester,
-    id_receiver,
-    like = false,
-    block = false,
-  ) => {
+  static #createMatch = (id_requester, id_receiver, like = false, block = false) => {
     return new Promise((next) => {
-      db.query(
-        `SELECT * FROM match WHERE id_requester = $1 AND id_receiver = $2 OR id_requester = $2 AND id_receiver = $1`,
-        [id_requester, id_receiver],
-      )
+      db.query(`SELECT * FROM match WHERE id_requester = $1 AND id_receiver = $2 OR id_requester = $2 AND id_receiver = $1`, [id_requester, id_receiver])
         .then((match) => {
           if (match.rowCount > 0) {
             this.update(id_requester, id_receiver, like, block)
@@ -91,16 +88,11 @@ class MatchModel {
             db.query(
               `INSERT INTO match (id_requester, id_receiver, "like", "block") \
       VALUES ($1, $2, $3, $4) RETURNING *`,
-              [id_requester, id_receiver, like, block],
+              [id_requester, id_receiver, like, block]
             )
               .then((dataInserted) => {
                 if (dataInserted.rowCount > 0) {
-                  console.log(
-                    "create match ok with this arg : like :",
-                    like,
-                    "block:",
-                    block,
-                  );
+                  console.log("create match ok with this arg : like :", like, "block:", block);
                   let elo = 0;
                   if (like == true || block == true) {
                     elo = 1;
@@ -122,13 +114,21 @@ class MatchModel {
   };
 
   static getRelationShip = async (requesterId, receiverId) => {
-    // console.log(requesterId, receiverId);
     try {
-      const responseRequester = await db.query(
-        'SELECT  block."blocked", match.id_requester, match."like" FROM match FULL JOIN block  ON match.id_requester = block.id_requester  WHERE match.id_requester = $1 AND match.id_receiver= $2 ',
-        [requesterId, receiverId],
-      );
-      // console.log("current user is requester", responseRequester.rows);
+      const responseReceiverBlockUser = await db.query(`SELECT "blocked" from block WHERE id_receiver = $2 AND id_requester = $1`, [receiverId, requesterId]);
+      let isUserblockedRequester = false;
+      if (responseReceiverBlockUser.rowCount > 0) {
+        isUserblockedRequester = responseReceiverBlockUser.rows[0].blocked;
+      }
+      const isblocked = await db.query(`SELECT "blocked" from block WHERE id_receiver = $1 AND id_requester = $2`, [receiverId, requesterId]);
+      // const
+      let blocked = false;
+      if (isblocked.rowCount > 0) {
+        blocked = isblocked.rows[0].blocked;
+      }
+      console.log("blocked", blocked);
+      console.log(" receiver block requester", responseReceiverBlockUser.rows[0]);
+      const responseRequester = await db.query('SELECT  match.id_requester, match."like" FROM match  WHERE match.id_requester = $1 AND match.id_receiver= $2 ', [requesterId, receiverId]);
       if (responseRequester.rowCount > 0) {
         const obj = JSON.parse(JSON.stringify(responseRequester.rows[0]));
 
@@ -138,13 +138,11 @@ class MatchModel {
         if (!responseRequester.rows[0].like) {
           obj.like = true;
         }
+        obj.blocked = blocked;
+        obj.isReceiverBlockRequester = isUserblockedRequester;
         return obj;
       } else {
-        const responseReceiver = await db.query(
-          'SELECT  block."blocked", match.id_requester, match."like" FROM match FULL JOIN block  ON match.id_requester = block.id_requester  WHERE match.id_requester = $2 AND match.id_receiver= $1 ',
-          [requesterId, receiverId],
-        );
-        // console.log("current user is receiver", responseReceiver.rows);
+        const responseReceiver = await db.query('SELECT  match.id_requester, match."like" FROM match  WHERE match.id_requester = $2 AND match.id_receiver= $1 ', [requesterId, receiverId]);
         if (responseReceiver.rowCount == 1) {
           const obj = JSON.parse(JSON.stringify(responseReceiver.rows[0]));
           if (responseReceiver.rows[0].like) {
@@ -152,16 +150,11 @@ class MatchModel {
           } else {
             obj.userLike = true;
           }
+          obj.blocked = blocked;
+          obj.isReceiverBlockRequester = isUserblockedRequester;
           return obj;
         } else {
-          const blockRequester = await db.query(
-            `SELECT "blocked" FROM block WHERE id_requester = $1 AND id_receiver = $2`,
-            [requesterId, receiverId],
-          );
-          if (blockRequester.rowCount == 0) {
-            return { like: false, blocked: false };
-          }
-          return { like: false, blocked: blockRequester.rows[0].blocked };
+          return { like: false, blocked: blocked, isReceiverBlockRequester: isUserblockedRequester };
         }
       }
     } catch (error) {
@@ -182,7 +175,7 @@ class MatchModel {
         'select "like", id_requester, id_receiver from match \
         where id_requester = $1 and id_receiver = $2\
         OR id_requester = $2 AND id_receiver = $1',
-        [requesterId, receiverId],
+        [requesterId, receiverId]
       )
         .then((result) => {
           this.#updateElo(receiverId, requesterId, 1)
@@ -191,7 +184,7 @@ class MatchModel {
                 db.query(
                   'INSERT INTO match("like", block, id_requester, id_receiver)  \
                 VALUES(false, false, $1, $2)',
-                  [requesterId, receiverId],
+                  [requesterId, receiverId]
                 )
                   .then((result) => next(result))
                   .catch((error) => next(error));
@@ -200,7 +193,7 @@ class MatchModel {
                   'UPDATE match SET "like" = true \
                 WHERE id_requester = $1 AND id_receiver = $2\
                 OR id_requester = $2 AND id_receiver = $1',
-                  [receiverId, requesterId],
+                  [receiverId, requesterId]
                 )
                   .then((result) => next(result))
                   .catch((error) => next(error));
@@ -225,7 +218,7 @@ class MatchModel {
         'select "like", id_requester, id_receiver from match \
         where id_requester = $1 and id_receiver = $2\
         OR id_requester = $2 AND id_receiver = $1',
-        [requesterId, receiverId],
+        [requesterId, receiverId]
       )
         .then((result) => {
           this.#updateElo(receiverId, requesterId, 0)
@@ -233,16 +226,13 @@ class MatchModel {
               if (result.rowCount > 0) {
                 if (result.rows[0].like) {
                   const { id_requester, id_receiver } = result.rows[0];
-                  if (
-                    id_requester == requesterId &&
-                    id_receiver == receiverId
-                  ) {
+                  if (id_requester == requesterId && id_receiver == receiverId) {
                     db.query(
                       'UPDATE match\
                         SET "like" = false,\
                         id_receiver = $1,\
                         id_requester = $2',
-                      [requesterId, receiverId],
+                      [requesterId, receiverId]
                     )
                       .then((result) => next(result))
                       .catch((error) => next(error));
@@ -251,7 +241,7 @@ class MatchModel {
                       'UPDATE match SET "like" = false \
                     WHERE id_requester = $1 AND id_receiver = $2\
                     RETURNING *',
-                      [requesterId, receiverId],
+                      [requesterId, receiverId]
                     )
                       .then((result) => next(result))
                       .catch((error) => next(error));
@@ -262,7 +252,7 @@ class MatchModel {
                     WHERE id_requester = $1 AND id_receiver = $2\
                     OR id_receiver = $1 AND id_requester = $2\
                     RETURNING *",
-                    [requesterId, receiverId],
+                    [requesterId, receiverId]
                   )
                     .then((result) => next(result))
                     .catch((error) => next(error));
@@ -286,6 +276,7 @@ class MatchModel {
   static blockUser = async (requesterId, receiverId, block = true) => {
     try {
       if (block) {
+        await this.#deleteMatch(requesterId, receiverId);
         return await this.#updateElo(receiverId, requesterId, 0);
       } else {
         return await this.#updateElo(receiverId, requesterId, 1);

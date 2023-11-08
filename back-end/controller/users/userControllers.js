@@ -11,7 +11,6 @@ class UserController {
   static #checkEMail = async (email) => {
     const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!pattern.test(email)) {
-      // if email doesnt match with patern return false
       return false;
     }
     return true;
@@ -109,9 +108,8 @@ class UserController {
             return res
               .cookie("jwt", token, {
                 httpOnly: true,
-                secure: false,
-                maxAge: 3600000,
                 sameSite: true,
+                maxAge: 3600000,
               })
               .status(201)
               .send({ status: 201, userId: user.id, access_token: token });
@@ -144,7 +142,14 @@ class UserController {
   };
 
   static disconnectUser = async (_, res) => {
-    res.clearCookie("jwt");
+    res
+      .clearCookie("jwt", {
+        maxAge: -1000,
+        httpOnly: true,
+        sameSite: true,
+      })
+      .status(200)
+      .json({ message: "Successfully logged out 😏 🍀" });
     res.end();
   };
 

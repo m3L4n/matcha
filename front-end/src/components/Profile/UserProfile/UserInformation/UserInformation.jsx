@@ -63,7 +63,7 @@ export default function UserInformation({
         ) : (
           (!relationship.blocked || relationship.blocked == null) && (
             <div className="profile-picture__like">
-              <LikeButton id={userInformation.id} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like ? true : false} />
+              <LikeButton id={userInformation.id ? userInformation.id : ""} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like ? true : false} />
             </div>
           )
         )}

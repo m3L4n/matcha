@@ -3,6 +3,7 @@ const { MatchModel } = require("../models/MatchModel");
 
 class MatchController {
   static create = async (req, res) => {
+    // to do empecher de liker si block
     const requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
     const match = await MatchModel.createLike(requesterId, receiverId);
@@ -10,6 +11,7 @@ class MatchController {
   };
 
   static update = async (req, res) => {
+    // to do empecher de liker si block
     const requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
     const matchToUpdate = await MatchModel.removeLike(requesterId, receiverId);

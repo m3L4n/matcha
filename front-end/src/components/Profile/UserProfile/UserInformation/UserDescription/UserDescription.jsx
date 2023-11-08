@@ -6,7 +6,7 @@ export default function UserDescription({ userInformation, handleChange, ourProf
     <div className="container-user-description">
       <h3 className="body-highlight"> Description </h3>
       <div className="container-text-area">
-        <TextAreaProfile description={userInformation.description} handleChange={handleChange} ourProfile={ourProfile} />
+        <TextAreaProfile description={userInformation.description ? userInformation.description : ""} handleChange={handleChange} ourProfile={ourProfile} />
       </div>
     </div>
   );

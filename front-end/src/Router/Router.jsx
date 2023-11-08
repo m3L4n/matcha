@@ -13,6 +13,7 @@ import Profile from "components/Profile/Profile";
 import Notification from "components/Notifications/Notification";
 import ViewHistory from "src/components/ViewHistory/ViewHistory";
 import Horoscope from "src/components/Horoscope/Horoscope";
+import BlockView from "src/components/BlockView/BlockView";
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ConversationPicker />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/blockView",
+        element: (
+          <PrivateRoute>
+            <BlockView />
           </PrivateRoute>
         ),
       },

@@ -9,7 +9,8 @@ import { useContext } from "react";
 
 export default function Navbar() {
   const { setTriggerReload, user, setUserAskDisconnect } = useAuth();
-  let pages = ["match", "profile", "message", "notifications", "view history", "horoscope"];
+  // const navigate = useNavigate();
+  let pages = ["match", "profile", "message", "notifications", "view history", "horoscope", "blockView"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -20,7 +21,7 @@ export default function Navbar() {
 
   const isUserReceiveNotif = () => {
     socket.emit("notifications", { userId: user.id });
-    socket.on("number-notif-not-seen", msg => {
+    socket.on("number-notif-not-seen", (msg) => {
       setNumberNotif(msg.number);
     });
   };
@@ -28,7 +29,7 @@ export default function Navbar() {
     const intervalId = setInterval(isUserReceiveNotif, 5000);
     return () => {
       clearInterval(intervalId);
-      socket.off("number-notif-not-seen", reason => {
+      socket.off("number-notif-not-seen", (reason) => {
         console.log(reason);
       });
     };
@@ -36,7 +37,9 @@ export default function Navbar() {
 
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
-    socket.emit("listener-button-deconnection", { userId: user.id });
+    const id = user.id;
+    socket.emit("listener-button-deconnection", { userId: id });
+    console.log("data", user.id);
     await disconnect();
     setTriggerReload(true);
     setUserAskDisconnect(true);
@@ -46,21 +49,14 @@ export default function Navbar() {
   return (
     <nav className={sidebar ? "navbar navbar-deployed" : "navbar"}>
       <div className="burger-icon">
-        <button
-          className={sidebar ? "sidebar-toggle nav-open" : "sidebar-toggle"}
-          onClick={toggleSidebar}
-        >
+        <button className={sidebar ? "sidebar-toggle nav-open" : "sidebar-toggle"} onClick={toggleSidebar}>
           <span className="burger menu-toggle-bar--top"></span>
           <span className="burger menu-toggle-bar--middle"></span>
           <span className="burger menu-toggle-bar--bottom"></span>
         </button>
       </div>
-      <ul
-        className={
-          sidebar ? "navbar-content navbar-content-visible" : "navbar-content"
-        }
-      >
-        {pages.map(page => (
+      <ul className={sidebar ? "navbar-content navbar-content-visible" : "navbar-content"}>
+        {pages.map((page) => (
           <li key={pages.indexOf(page)}>
             {sidebar &&
               (page == "profile" ? (
@@ -70,12 +66,7 @@ export default function Navbar() {
               ) : page == "notifications" ? (
                 <div>
                   <NavLink className={`body navbar-notif`} to={page}>
-                    {numberNotif > 0 && (
-                      <div className="notifications-indicator">
-                        {" "}
-                        {numberNotif}{" "}
-                      </div>
-                    )}
+                    {numberNotif > 0 && <div className="notifications-indicator"> {numberNotif} </div>}
                     {page}
                   </NavLink>
                 </div>
@@ -92,10 +83,7 @@ export default function Navbar() {
         ))}
         <li>
           {sidebar && Object.keys(user)?.length > 0 && (
-            <button
-              className="disconnect-button body"
-              onClick={handleDisconnect}
-            >
+            <button className="disconnect-button body" onClick={handleDisconnect}>
               Disconnect{" "}
             </button>
           )}

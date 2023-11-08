@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { FaDiscord } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { notify } from "../../Global/toast-notify";
 import { isValidEmail } from "src/components/Global/check-email";
@@ -110,11 +109,9 @@ export default function Register() {
           {" "}
           SIGN UP
           <p className="title-1"> And start dating !</p>
-          <button className="button-discord title-1">
-            {" "}
-            <span>Connect with discord</span>
-            <FaDiscord />
-          </button>
+          <div className="button-discord title-1">
+            <span>Find love</span>
+          </div>
         </header>
         <hr className="hr" />
         <form className="container-form">

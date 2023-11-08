@@ -1,7 +1,7 @@
 async function fetchUploadprofilPicture(picture) {
   const formData = new FormData();
   formData.append("profilePicture", picture);
-  const url = "http://localhost:4000/users/uploaProfilePicture";
+  const url = "http://localhost:4000/users/uploadProfilePicture";
   const options = {
     method: "POST",
     credentials: "include",
