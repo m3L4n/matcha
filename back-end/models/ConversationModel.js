@@ -25,7 +25,7 @@ class ConversationModel {
         JOIN users u2 ON c.id_user_2 = u2.id\
         LEFT JOIN messages m ON c.id = m.id_conversation\
         WHERE u1.id = $1 OR u2.id = $1",
-        [currentUserID]
+        [currentUserID],
       )
         .then((result) => next(result))
         .catch((error) => next(error));

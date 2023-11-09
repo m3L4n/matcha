@@ -168,7 +168,7 @@ function generateSetOfUsers() {
       "gastronomy",
       "cinephile",
       "travel",
-      Math.random() * (tagsList.length - 1),
+      tagsList[Math.floor(Math.random() * tagsList.length)],
       "sql lover",
     ];
     const params = [
