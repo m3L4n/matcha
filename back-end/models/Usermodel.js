@@ -175,6 +175,11 @@ class UserModel {
                 AND u.age BETWEEN $4 AND $5\
                 AND u.id != $6\
                 AND u.id NOT IN (\
+                  SELECT b.id_receiver\
+                  FROM block b\
+                  WHERE b.id_receiver = u.id AND b.blocked = true\
+                )\
+                AND u.id NOT IN (\
                   SELECT m.id_receiver\
                   FROM match m\
                   WHERE m.id_requester = $6)\

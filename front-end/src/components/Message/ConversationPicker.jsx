@@ -10,6 +10,7 @@ const ConversationPicker = () => {
   const [conversationPicker, setConversationPicker] = useState(true);
   const [conversationId, setConversationId] = useState("");
   const [conversationPartnerId, setConversationPartnerId] = useState("");
+  // const [conversations, setConversations] = useState([]);
   const isMobile = useMedia({ query: "(max-width: 1259px)" });
 
   const { status, data } = useQuery({
@@ -17,35 +18,22 @@ const ConversationPicker = () => {
     queryFn: getConversations,
   });
 
-  if (status === "error") {
-    conversations = [];
-  }
-
-  let conversations = [];
-  if (conversations.length > 0) {
-    conversations = data?.result?.rows?.map((conversation) => (
-      <Conversation
-        key={conversation?.conversation_id}
-        partnerId={conversation?.chat_partner_id}
-        id={conversation?.conversation_id}
-        firstName={conversation?.chat_partner_name}
-        lastMessage={
-          conversation?.last_message
-            ? conversation?.last_message
-            : "Don't be shy say hi! 👋"
-        }
-        setConversationPicker={setConversationPicker}
-        setConversationId={setConversationId}
-        setConversationPartnerId={setConversationPartnerId}
-      />
-    ));
-  } else {
-    conversations = (
-      <div className="no-conversations body">
-        Dont be shy go back and match some people!
-      </div>
-    );
-  }
+  let conversations = data?.result?.rows?.map((conversation) => (
+    <Conversation
+      key={conversation?.conversation_id}
+      partnerId={conversation?.chat_partner_id}
+      id={conversation?.conversation_id}
+      firstName={conversation?.chat_partner_name}
+      lastMessage={
+        conversation?.last_message
+          ? conversation?.last_message
+          : "Don't be shy say hi! 👋"
+      }
+      setConversationPicker={setConversationPicker}
+      setConversationId={setConversationId}
+      setConversationPartnerId={setConversationPartnerId}
+    />
+  ));
 
   useEffect(() => {
     if (status === "success") {
