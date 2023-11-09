@@ -121,8 +121,8 @@ export default function Register() {
             {" "}
             Username
           </label>
-          <input className="input" id="username" name="username" type="text" onChange={handleFormSignIn} value={user.username} />
-          <label className="label body" id="firstName">
+          <input className="input" id="username" name="username" autoComplete="given-name" type="text" onChange={handleFormSignIn} value={user.username} />
+          <label className="label body" htmlFor="firstName">
             {" "}
             first name
           </label>
@@ -136,7 +136,7 @@ export default function Register() {
             {" "}
             email
           </label>
-          <input className="input" id="email" name="email" type="email" onChange={handleFormSignIn} value={user.email} />
+          <input className="input" id="email" name="email" autoComplete="off" type="email" onChange={handleFormSignIn} value={user.email} />
           <label className="label body" htmlFor="password">
             {" "}
             password

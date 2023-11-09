@@ -50,7 +50,6 @@ export default function UserInformation({
       return <img alt="main" name="profile_picture" id="profile-picture" src={preview} className="profile-picture" />;
     };
 
-    // console.log(relationship);
     return (
       <div className="container__profile-picture">
         {ShowPreviewImage(profilPicture)}

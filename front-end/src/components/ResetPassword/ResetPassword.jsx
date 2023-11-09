@@ -131,7 +131,7 @@ export default function ResetPassword() {
       })
       .then(() => {})
       .catch((error) => {
-        console.log(error);
+        return error;
       });
   }
 

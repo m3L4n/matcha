@@ -15,7 +15,6 @@ export default async function disconnect() {
       }
       return response.json();
     })
-    .then((data) => console.log(data))
     .catch(() => {
       notify("error", "we can't disconnect you, please retry");
     });
