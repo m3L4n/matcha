@@ -4,6 +4,9 @@ import { checkMymeType } from "components/Global/checkMymeType";
 import { notify } from "components/Global/toast-notify";
 export default function UserPictures({ pictureDescription, ourProfile, updatePictures }) {
   function handleMultipleFile(event) {
+    if (event.target.files.length == 0){
+      return 
+    }
     if (checkMymeType(event.target.files[0]) > 0) {
       let clone = structuredClone(pictureDescription);
       if (clone == null) {

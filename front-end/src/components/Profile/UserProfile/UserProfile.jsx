@@ -132,7 +132,6 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   useEffect(() => {
     if (!mutationLocalisation.isLoading) {
       if (coords) {
-        console.log('coords', coords)
         if (Object.keys(coords).length > 0) {
           setLocationInput({ ...locationInput, ["latitude"]: coords.center[1], ["longitude"]: coords.center[0]});
           setInfoProfil({ ...infoProfile, ["city"]: coords.features[0]?.properties?.city, ["position"]: { x: coords.center[1], y: coords.center[0] } });
@@ -305,10 +304,8 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       notify("error", "this locality doesnt exist");
       return;
     }
-    if (result.features[0]){
 
-      setInfoProfil({ ...infoProfile, ["city"]: result.features[0].properties?.city, ["position"]: { x: result.center[0] } });
-    }
+      setInfoProfil({ ...infoProfile, ["city"]: result.features[0].properties?.city, ["position"]: { x: result.center[1], y : result.center[0] } });
   }
 
   const blockUser = (block) => {
