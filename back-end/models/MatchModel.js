@@ -120,7 +120,6 @@ class MatchModel {
         isUserblockedRequester = responseReceiverBlockUser.rows[0].blocked;
       }
       const isblocked = await db.query(`SELECT "blocked" from block WHERE id_receiver = $1 AND id_requester = $2`, [receiverId, requesterId]);
-      // const
       let blocked = false;
       if (isblocked.rowCount > 0) {
         blocked = isblocked.rows[0].blocked;
