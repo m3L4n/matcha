@@ -121,13 +121,10 @@ class MatchModel {
         isUserblockedRequester = responseReceiverBlockUser.rows[0].blocked;
       }
       const isblocked = await db.query(`SELECT "blocked" from block WHERE id_receiver = $1 AND id_requester = $2`, [receiverId, requesterId]);
-      // const
       let blocked = false;
       if (isblocked.rowCount > 0) {
         blocked = isblocked.rows[0].blocked;
       }
-      console.log("blocked", blocked);
-      console.log(" receiver block requester", responseReceiverBlockUser.rows[0]);
       const responseRequester = await db.query('SELECT  match.id_requester, match."like" FROM match  WHERE match.id_requester = $1 AND match.id_receiver= $2 ', [requesterId, receiverId]);
       if (responseRequester.rowCount > 0) {
         const obj = JSON.parse(JSON.stringify(responseRequester.rows[0]));

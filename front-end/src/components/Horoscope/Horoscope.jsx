@@ -1,41 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Horoscope.scoped.css";
 import allDataHoroscope from "./data-horoscope.json";
 import { notify } from "../Global/toast-notify";
 export default function Horoscope() {
   const [dataHorsocope, setDataHoroscope] = useState({});
-  useEffect(() => {
-    const date1 = new Date().setDate(0);
-    console.log(date1, localStorage.getItem("created_horosocope"))
-    if (localStorage.getItem("created_horosocope") < date1) {
-      localStorage.removeItem("created_horosocope");
-      return;
-    }
-    if (localStorage.getItem("created_horoscope") && localStorage.getItem("horoscopeData")) {
-      console.log("herre ici ca passe", localStorage.getItem("horoscopeData"))
-      setDataHoroscope(allDataHoroscope[localStorage.getItem("horoscopeData")]);
-    }
-  }, []);
-  useEffect(() =>{
-    console.log(dataHorsocope);
-  },[dataHorsocope])
+  const [clicked, setClicked] = useState(false);
 
   const handleHoroscope = () => {
-    const date1 = new Date().setDate(0);
-    console.log(localStorage.getItem("created_horoscope"), new Date().setDate(1), new Date().getDate());
-    if (localStorage.getItem("created_horoscope")){
-
-      if (localStorage.getItem("created_horoscope") > date1) {
-        notify("warning", "we cant tell you the futur one per day");
-        return;
-      }
-      return
+    if (!clicked) {
+      const randomInt = Math.floor(Math.random() * 20);
+      const date = new Date().setDate(1);
+      localStorage.setItem("created_horoscope", date);
+      localStorage.setItem("horoscopeData", randomInt);
+      setDataHoroscope(allDataHoroscope[randomInt]);
+      setClicked(true);
+    } else {
+      notify("warning", "you cant do this now, please retry later you might have more chance");
     }
-    const randomInt = Math.floor(Math.random() * 20);
-    const date = new Date().setDate(1);
-    localStorage.setItem("created_horoscope", date);
-    localStorage.setItem("horoscopeData", randomInt);
-    setDataHoroscope(allDataHoroscope[randomInt]);
   };
   return (
     <div className="container-horoscope">

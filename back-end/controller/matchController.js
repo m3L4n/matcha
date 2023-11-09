@@ -6,14 +6,21 @@ class MatchController {
     // to do empecher de liker si block
     const requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
+    const relationship = await MatchModel.getRelationShip(requesterId, receiverId);
+    if (relationship.blocked || relationship.isReceiverBlockRequester) {
+      return res.status(403).json({ status: 403, msg: "user blocked or you are blocked by the user" });
+    }
     const match = await MatchModel.createLike(requesterId, receiverId);
     res.json(checkAndChange(match));
   };
 
   static update = async (req, res) => {
-    // to do empecher de liker si block
     const requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
+    const relationship = await MatchModel.getRelationShip(requesterId, receiverId);
+    if (relationship.blocked || relationship.isReceiverBlockRequester) {
+      return res.status(403).json({ status: 403, msg: "user blocked or you are blocked by the user" });
+    }
     const matchToUpdate = await MatchModel.removeLike(requesterId, receiverId);
     res.json(checkAndChange(matchToUpdate));
   };
@@ -27,10 +34,8 @@ class MatchController {
   static getRelationShip = async (req, res) => {
     const requesterId = req.authUser.id;
     const receiverId = req.params.id;
-    // console.log("in controller", requesterId, receiverId);
     try {
       const match = await MatchModel.getRelationShip(requesterId, receiverId);
-      console.log("match", match);
       return res.status(200).json({ status: 200, result: { ...match } });
     } catch (error) {}
     res.json(checkAndChange(match));

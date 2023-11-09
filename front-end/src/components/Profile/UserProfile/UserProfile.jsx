@@ -132,8 +132,8 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     if (!mutationLocalisation.isLoading) {
       if (coords) {
         if (Object.keys(coords).length > 0) {
-          setLocationInput({ ...locationInput, ["latitude"]: coords.latitude, ["longitude"]: coords.longitude });
-          setInfoProfil({ ...infoProfile, ["city"]: coords.city, ["position"]: { x: coords.latitude, y: coords.longitude } });
+          setLocationInput({ ...locationInput, ["latitude"]: coords.center[1], ["longitude"]: coords.center[0] });
+          setInfoProfil({ ...infoProfile, ["city"]: coords.features[0].properties.city, ["position"]: { x: coords.center[1], y: coords.center[0] } });
         }
       }
     }
@@ -203,6 +203,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   };
   const getLocation = async () => {
     const geoSuccess = async (position) => {
+      console.log(position);
       mutationLocalisation.mutate(position.coords);
     };
 
@@ -285,7 +286,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
   const updateLocationInput = async (event) => {
     event.preventDefault();
-    if ((event.target.name == "longitude" || event.target.name == "latitude") && !isNaN(event.target.valueAsNumber) ) {
+    if ((event.target.name == "longitude" || event.target.name == "latitude") && !isNaN(event.target.valueAsNumber)) {
       setLocationInput({ ...locationInput, [event.target.name]: event.target.valueAsNumber });
       return;
     }
