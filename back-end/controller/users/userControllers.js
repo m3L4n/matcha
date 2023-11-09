@@ -47,10 +47,8 @@ class UserController {
   static #checkUniqueEmailNotOur = async (email, id) => {
     try {
       await UserModel.FindUniqueEmailNotOur(id, email);
-      console.log("here there is a email");
       return false;
     } catch (error) {
-      console.log("here there is a no email");
       return true;
     }
   };
@@ -104,7 +102,6 @@ class UserController {
         .status(404)
         .json({ status: 404, msg: "users doesn't can be created " });
     } catch (error) {
-      console.log("error", error);
       return res
         .status(error.status)
         .json({ status: error.status, msg: error.msg });
@@ -226,7 +223,6 @@ class UserController {
         }
       }
     } catch (error) {
-      console.log(error);
       return res.status(404).json({ status: 404, msg: error.msg });
     }
   };
@@ -404,7 +400,6 @@ class UserController {
 
   static reportAsFakeAccount = async (req, res) => {
     const idReceiver = req.body.id;
-    console.log(idReceiver);
     const resultat = await UserModel.reportAsFakeAccount(idReceiver);
     res.json(checkAndChange(resultat));
   };

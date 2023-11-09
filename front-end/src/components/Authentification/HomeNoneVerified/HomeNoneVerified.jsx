@@ -41,6 +41,13 @@ export default function HomeNoneVerified() {
             "success",
             "check your email, your link will be send in the second"
           );
+
+        }
+        if (response.status == 404){
+          notify(
+            "erorr",
+            "email are not in the db"
+          );
         }
         return response.json();
       })

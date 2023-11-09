@@ -78,7 +78,7 @@ export default function ResetPassword() {
     };
     fetch("http://localhost:4000/users/send-password-reset", options)
       .then((response) => {
-        if (response.status == 401) {
+        if (response.status == 404) {
           notify("error", "email doesnt match");
           return response.json();
         } else if (response.status == 200) {
@@ -87,7 +87,6 @@ export default function ResetPassword() {
         }
         return response.json();
       })
-      .then((data) => console.log(data))
       .catch(() => {
         notify("error", "email doesnt match");
       });

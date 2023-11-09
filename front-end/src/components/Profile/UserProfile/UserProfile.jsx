@@ -324,11 +324,8 @@ export default function UserProfile({
 
   const updateLocationInput = async (event) => {
     event.preventDefault();
-    if (event.target.name == "longitude" || event.target.name == "latitude") {
-      setLocationInput({
-        ...locationInput,
-        [event.target.name]: event.target.valueAsNumber,
-      });
+    if ((event.target.name == "longitude" || event.target.name == "latitude") && !isNaN(event.target.valueAsNumber) ) {
+      setLocationInput({ ...locationInput, [event.target.name]: event.target.valueAsNumber });
       return;
     }
     let result = await fetch(

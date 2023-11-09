@@ -30,12 +30,12 @@ export function PrivateRoute({ children }) {
       }
       if (
         user.age < 0 ||
-        user.beverage.length == 0 ||
-        user.firstname.length == 0 ||
-        user.lastname.length == 0 ||
-        user.email.length == 0 ||
-        user.sexual_preference.length == 0 ||
-        user.description.length == 0
+        user.beverage?.length == 0 ||
+        user.firstname?.length == 0 ||
+        user.lastname?.length == 0 ||
+        user.email?.length == 0 ||
+        user.sexual_preference?.length == 0 ||
+        user.description?.length == 0 || !user.profile_picture
       ) {
         navigate(`/profile/${user.id}`);
       }
