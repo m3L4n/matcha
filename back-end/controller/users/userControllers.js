@@ -97,7 +97,7 @@ class UserController {
         } else {
           return res
             .status(404)
-            .json({ status: 4044, msg: "token not created" });
+            .json({ status: 404, msg: "token not created" });
         }
       }
       return res
