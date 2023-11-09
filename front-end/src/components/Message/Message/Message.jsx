@@ -90,6 +90,8 @@ export default function Message({
           value={messageContent}
           className="search-form--input"
           type="text"
+          name="send-message"
+          id="send-message"
           onChange={e => setMessageContent(e.target.value)}
         />
         <PiPaperPlaneRightFill
