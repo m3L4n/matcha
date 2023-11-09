@@ -19,6 +19,8 @@ export default function ViewHistory() {
   // const d2 = dayjs(userInformation.latest_connection).format("llll");
   const { setTriggerReload } = useAuth();
   const { data: historyData, isLoading: historyLoading } = useQuery(["history"], fetchViewHistory, {
+    staleTime: 10000,
+    cacheTime: 1000,
     onSuccess: (data) => {
       const isError = checkErrorFetch(data);
       if (isError.authorized == false) {

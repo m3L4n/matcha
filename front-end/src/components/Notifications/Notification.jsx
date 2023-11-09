@@ -22,6 +22,8 @@ export default function Notification() {
   dayjs.extend(localizedFormat);
   dayjs.tz.guess();
   const { data: notificationsData, isLoading: notificationsLoading, refetch: refetchNotif } = useQuery(["notifications"], fetchNotifUser, {
+    staleTime: 10000,
+    cacheTime: 1000,
     onSuccess: (data) => {
       const isError = checkErrorFetch(data);
       if (isError.authorized == false) {

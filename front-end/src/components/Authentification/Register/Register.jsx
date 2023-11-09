@@ -51,16 +51,18 @@ export default function Register() {
     }
     setUser({ ...user, [name]: value });
   }
+
   function redirectionToSignIn() {
     navigate("/login");
   }
+
   function creationOfUser() {
     if (!isValidEmail(user.email)) {
       notify("error", "you have to enter a good email ");
       return;
     }
     if (!checkPassword(user.password)) {
-      notify("error", "you password have to have one or more Capslock, number operator specific ");
+      notify("error", "you password have to have one or more Capslock, number operator and specific ");
       return;
     }
     if (user.username.length > 20) {

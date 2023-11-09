@@ -11,6 +11,8 @@ export default function BlockView() {
   const navigate = useNavigate();
   const { setTriggerReload } = useAuth();
   const { data: notificationsData, isLoading: notificationsLoading } = useQuery(["notifications"], fetchBlockView, {
+    staleTime: 10000,
+    cacheTime: 1000,
     onSuccess: (data) => {
       const isError = checkErrorFetch(data);
       if (isError.authorized == false) {
@@ -18,7 +20,11 @@ export default function BlockView() {
       }
     },
   });
-  const allBlock = notificationsLoading ? [] : notificationsData.result ? notificationsData.result : [];
+  let allBlock = notificationsLoading ? [] : notificationsData.result ? notificationsData.result : [];
+  if (!Array.isArray(allBlock)){
+    allBlock = []
+  }
+  console.log(allBlock)
   return (
     <div className="container-history">
       <header className="container-history__header">
