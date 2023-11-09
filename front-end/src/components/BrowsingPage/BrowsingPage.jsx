@@ -138,7 +138,7 @@ export default function BrowsingPage() {
     return toFilter;
   };
 
-  const { status, data: users } = useQuery({
+  const { status, refetch, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
     retry: true,
@@ -169,11 +169,32 @@ export default function BrowsingPage() {
   if (users?.status === "error") {
     return (
       <div className="matchesError">
-        <h2>
-          Cannot find any matches for you 💔
-          <br />
-          (maybe try with a reFRESHING start...)
-        </h2>
+        <h2>Cannot find any matches for you 💔</h2>
+        <button
+          className="retry-button"
+          onClick={() => {
+            setRequestParams({
+              action: "",
+              age: "",
+              location: "",
+              fame: "",
+              tags: ""
+            });
+
+            setFilterParams({
+              ageGap: "",
+              locationGap: "",
+              fameGap: "",
+              commongTags: "",
+              sortBy: "",
+              sortOption: "ascending"
+            });
+
+            refetch();
+          }}
+        >
+          retry
+        </button>
       </div>
     );
   }
