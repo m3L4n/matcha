@@ -129,7 +129,7 @@ class UserController {
               .cookie("jwt", token, {
                 httpOnly: true,
                 sameSite: true,
-                maxAge: 3600000,
+                maxAge: 86400000,
               })
               .status(201)
               .send({ status: 201, userId: user.id, access_token: token });
