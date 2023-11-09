@@ -24,6 +24,7 @@ export default function UserInformation({
   updateLocationInput,
   getLocation,
   locationInput,
+  buttonUpdate,
   blockUser,
   connected,
   reportAsFakeAccount,
@@ -142,7 +143,7 @@ export default function UserInformation({
         {ourProfile && (
           <>
             <UserForm ourProfile={ourProfile} handleChange={handleChange} userInformation={userInformation} />
-            <UserLocalisation updateLocationInput={updateLocationInput} getLocation={getLocation} ourProfile={ourProfile} locationInput={locationInput} />
+            <UserLocalisation updateLocationInput={updateLocationInput} getLocation={getLocation} ourProfile={ourProfile} locationInput={locationInput} buttonUpdate={buttonUpdate} />
             <UserTags allTags={allTags} tags={userInformation.tags} handleChange={handleChange} ourProfile={ourProfile} />
           </>
         )}
