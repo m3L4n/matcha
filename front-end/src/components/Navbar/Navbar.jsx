@@ -29,8 +29,7 @@ export default function Navbar() {
     const intervalId = setInterval(isUserReceiveNotif, 5000);
     return () => {
       clearInterval(intervalId);
-      socket.off("number-notif-not-seen", (reason) => {
-        console.log(reason);
+      socket.off("number-notif-not-seen", () => {
       });
     };
   }, [user]);

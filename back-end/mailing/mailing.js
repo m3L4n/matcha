@@ -27,6 +27,6 @@ module.exports.sendingMail = async ({ from, to, subject, text }) => {
     //which is within the mailOptions
     return await Transporter.sendMail(mailOptions);
   } catch (error) {
-    console.log(error);
+    return error.message
   }
 };

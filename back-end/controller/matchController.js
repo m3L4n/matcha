@@ -37,7 +37,9 @@ class MatchController {
     try {
       const match = await MatchModel.getRelationShip(requesterId, receiverId);
       return res.status(200).json({ status: 200, result: { ...match } });
-    } catch (error) {}
+    } catch (error) {
+      return res.status(404).json({status:404, msg: "cant get relationship"})
+    }
     res.json(checkAndChange(match));
   };
 }

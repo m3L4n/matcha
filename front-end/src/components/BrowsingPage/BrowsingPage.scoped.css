@@ -97,20 +97,38 @@ button[type="submit"]:hover {
   margin: auto;
 }
 
+.loadingMatches, .matchesError {
+  color: var(--primary-light);
+  width: 90%;
+  height: 100vh;
+  display: flex;
+  flex-flow: nowrap column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+.retry-button {
+  border: 1px solid var(--primary-dark);
+  border-radius: 20px;
+  background-color: var(--cream);
+  color: var(--primary-dark);
+  padding: .5em 2em;
+  font-size: 1.5rem;
+  transition: 0.4s;
+  text-transform: capitalize;
+}
+
+.retry-button:hover {
+  background-color: var(--primary-light);
+}
+
 @media (min-width: 2560px) {
   .matches {
     max-width: 70%;
   }
 }
 
-.loadingMatches, matchesError {
-  color: var(--primary-light);
-  width: 90%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .loading__dot {
   animation: dot ease-in-out 1s infinite;

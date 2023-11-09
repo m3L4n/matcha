@@ -13,7 +13,6 @@ function socket_broadcast(io) {
       }
     });
     socket.on("login", async function (data) {
-      console.log("a user " + data.userId + " connected");
       socket.broadcast.emit("alert-connect", { userId: data.userId });
     });
 
@@ -62,7 +61,7 @@ function socket_broadcast(io) {
     // user view his notifications
     socket.on("user-view-notif", async (msg) => {
       try {
-        const result = await notificationsController.updateNotification(msg.userId);
+        await notificationsController.updateNotification(msg.userId);
       } catch (err) {
         return err.message;
       }
@@ -70,9 +69,8 @@ function socket_broadcast(io) {
 
     // user is deconnected so everybody need to be notice
     socket.on("listener-button-deconnection", async (data) => {
-      console.log(data, socket.id);
       try {
-        const result = await socketController.disconnect(socket.id);
+        await socketController.disconnect(socket.id);
         socket.broadcast.emit("alert-disconnect", { userId: data.userId });
       } catch (err) {
         return err.message;

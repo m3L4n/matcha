@@ -92,7 +92,6 @@ class MatchModel {
             )
               .then((dataInserted) => {
                 if (dataInserted.rowCount > 0) {
-                  console.log("create match ok with this arg : like :", like, "block:", block);
                   let elo = 0;
                   if (like == true || block == true) {
                     elo = 1;

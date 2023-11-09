@@ -118,6 +118,7 @@ export default function BrowsingPage() {
         toFilter = toFilter.filter(
           user => user.rate_fame >= minFame && user.rate_fame <= maxFame
         );
+        console.log(toFilter.map(user => console.log(user.rate_fame)));
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
@@ -137,11 +138,17 @@ export default function BrowsingPage() {
     return toFilter;
   };
 
-  const { status, error, data: users } = useQuery({
+  const { status, refetch, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
-    enabled: currentUser.valided,
-    retry: 10
+    retry: true,
+    onSuccess: response => {
+      if (response?.status === "error") {
+        if (response?.code === 400) {
+          notify("error", response?.message);
+        }
+      }
+    }
   });
 
   useEffect(() => {
@@ -159,10 +166,35 @@ export default function BrowsingPage() {
     }
   }, [status, users]);
 
-  if (error) {
+  if (users?.status === "error") {
     return (
       <div className="matchesError">
-        <h2>Cannot find any matches for you ... 💔</h2>
+        <h2>Cannot find any matches for you 💔</h2>
+        <button
+          className="retry-button"
+          onClick={() => {
+            setRequestParams({
+              action: "",
+              age: "",
+              location: "",
+              fame: "",
+              tags: ""
+            });
+
+            setFilterParams({
+              ageGap: "",
+              locationGap: "",
+              fameGap: "",
+              commongTags: "",
+              sortBy: "",
+              sortOption: "ascending"
+            });
+
+            refetch();
+          }}
+        >
+          retry
+        </button>
       </div>
     );
   }

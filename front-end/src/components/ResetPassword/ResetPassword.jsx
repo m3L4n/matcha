@@ -57,7 +57,6 @@ export default function ResetPassword() {
   }, [res]);
 
   async function handleChange(event) {
-    console.log(event.target.value);
     setEmail(event.target.value);
   }
   function handleChangePassWord(event) {

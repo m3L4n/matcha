@@ -16,10 +16,8 @@ class authContrroller {
         },
         body: params,
       };
-      console.log(params);
       const response = await fetch("https://discord.com/api/oauth2/token", options);
       const responseJSON = await response.json();
-      console.log(" coucou c'est la response test", responseJSON);
       const { access_token, token_type } = responseJSON;
       const options1 = {
         method: "GET",
@@ -33,7 +31,6 @@ class authContrroller {
       // if deja dans la db de auth on cree un new username etc et on le transverse dans la db user avec discord true et sans
       // enregister le user dans la db mettre discord a true
       //
-      console.log("Data: ", userDataResponseJSON);
       return res.status(200).redirect("http://localhost:3000/login");
     } catch (error) {
       return res.status(404).json({ status: 404, msg: "cant connect with discord" });
