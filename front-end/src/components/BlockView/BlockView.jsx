@@ -21,10 +21,9 @@ export default function BlockView() {
     },
   });
   let allBlock = notificationsLoading ? [] : notificationsData.result ? notificationsData.result : [];
-  if (!Array.isArray(allBlock)){
-    allBlock = []
+  if (!Array.isArray(allBlock)) {
+    allBlock = [];
   }
-  console.log(allBlock)
   return (
     <div className="container-history">
       <header className="container-history__header">

@@ -72,7 +72,7 @@ export default function SignIn() {
             {" "}
             Username
           </label>
-          <input className="input" name="username" id="username" type="text" value={user.username} onChange={handleChange} />
+          <input className="input" name="username" id="username" autoComplete="given-name" type="text" value={user.username} onChange={handleChange} />
           <label className="label body" htmlFor="password">
             {" "}
             password

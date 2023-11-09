@@ -91,7 +91,6 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   });
   const mutationBlockUser = useMutation(fetchBlockUser, {
     onSuccess: (data) => {
-      console.log(data);
       const isError = checkErrorFetch(data);
 
       if (isError.authorized == false) {
@@ -133,8 +132,12 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
     if (!mutationLocalisation.isLoading) {
       if (coords) {
         if (Object.keys(coords).length > 0) {
-          setLocationInput({ ...locationInput, ["latitude"]: coords.center[1], ["longitude"]: coords.center[0]});
-          setInfoProfil({ ...infoProfile, ["city"]: coords.features[0]?.properties?.city, ["position"]: { x: coords.center[1], y: coords.center[0] } });
+          setLocationInput({ ...locationInput, ["latitude"]: coords.center[1], ["longitude"]: coords.center[0] });
+          setInfoProfil({
+            ...infoProfile,
+            ["city"]: `${coords.features[0]?.properties?.city}, ${coords.features[0]?.properties.postcode}`,
+            ["position"]: { x: coords.center[1], y: coords.center[0] },
+          });
         }
       }
     }
@@ -145,7 +148,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       if (coordKnowNone) {
         if (Object.keys(coordKnowNone).length > 0) {
           setLocationInput({ ...locationInput, ["latitude"]: coordKnowNone.latitude, ["longitude"]: coordKnowNone.longitude });
-          setInfoProfil({ ...infoProfile, ["city"]: coordKnowNone.city, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
+          setInfoProfil({ ...infoProfile, ["city"]: `${coordKnowNone.city}, ${coordKnowNone.postal}`, ["position"]: { x: coordKnowNone.latitude, y: coordKnowNone.longitude } });
         }
       }
     }
@@ -285,28 +288,27 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
   const updateLocationInput = async (event) => {
     event.preventDefault();
-    if ((event.target.name == "longitude" || event.target.name == "latitude") && !isNaN(event.target.valueAsNumber) ) {
-      if (!isNaN(event.target.valueAsNumber)){
+    if ((event.target.name == "longitude" || event.target.name == "latitude") && !isNaN(event.target.valueAsNumber)) {
+      if (!isNaN(event.target.valueAsNumber)) {
         setLocationInput({ ...locationInput, [event.target.name]: event.target.valueAsNumber });
       }
       return;
     }
   };
-  const buttonUpdate = async () =>{
+  const buttonUpdate = async () => {
     let result = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${locationInput.longitude}&lat=${locationInput.latitude}`);
     result = await result.json();
     if (result.status == 401) {
       notify("error", result.description);
       return;
     }
-    console.log(result)
-    if ( result.features.length == 0){
+    if (result.features.length == 0) {
       notify("error", "this locality doesnt exist");
       return;
     }
 
-      setInfoProfil({ ...infoProfile, ["city"]: result.features[0].properties?.city, ["position"]: { x: result.center[1], y : result.center[0] } });
-  }
+    setInfoProfil({ ...infoProfile, ["city"]: `${result.features[0]?.properties?.city}, ${result.features[0]?.properties.postcode}`, ["position"]: { x: result.center[1], y: result.center[0] } });
+  };
 
   const blockUser = (block) => {
     const id = infoProfile.id;
@@ -344,7 +346,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
           updateLocationInput={updateLocationInput}
           getLocation={getLocation}
           blockUser={blockUser}
-        buttonUpdate={buttonUpdate}
+          buttonUpdate={buttonUpdate}
           reportAsFakeAccount={reportAsFakeAccount}
         />
       )}

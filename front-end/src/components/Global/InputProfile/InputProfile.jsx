@@ -59,6 +59,7 @@ export default function InputProfile({ name, value, label, type, handleInput, ou
           id={name}
           name={name}
           value={value}
+          autoComplete="off"
           onInput={handleNumberOrEmail}
           disabled={ourProfile ? false : true}
           onFocus={(event) => triggerControlInput(event, true)}

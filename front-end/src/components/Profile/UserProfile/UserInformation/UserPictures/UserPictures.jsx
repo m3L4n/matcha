@@ -4,8 +4,8 @@ import { checkMymeType } from "components/Global/checkMymeType";
 import { notify } from "components/Global/toast-notify";
 export default function UserPictures({ pictureDescription, ourProfile, updatePictures }) {
   function handleMultipleFile(event) {
-    if (event.target.files.length == 0){
-      return 
+    if (event.target.files.length == 0) {
+      return;
     }
     if (checkMymeType(event.target.files[0]) > 0) {
       let clone = structuredClone(pictureDescription);
@@ -19,6 +19,7 @@ export default function UserPictures({ pictureDescription, ourProfile, updatePic
       clone.push(event.target.files[0]);
       console.log(clone);
       updatePictures(clone);
+      event.target.value = "";
       notify("success", "upload successfull");
       return;
     }
@@ -60,7 +61,7 @@ export default function UserPictures({ pictureDescription, ourProfile, updatePic
           <label htmlFor="image-description" className="title-1">
             upload your photo
           </label>
-          <input type="file" id="image-description" accept="image/*" multiple disabled={ourProfile ? false : true} onChange={handleMultipleFile} />
+          <input type="file" id="image-description" accept="image/*" disabled={ourProfile ? false : true} onChange={handleMultipleFile} />
         </>
       )}
       <div id="body-picture-list" className="container-picture">
