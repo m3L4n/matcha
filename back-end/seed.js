@@ -87,6 +87,24 @@ const generateUser = async (params) => {
   return db.query(query, params);
 };
 
+let tagsList = [
+  "cook",
+  "piercing",
+  "tattoo",
+  "sql lover",
+  "vegan",
+  "wine lover",
+  "cat lover",
+  "dog lover",
+  "chicken lover",
+  "romantic feelings",
+  "flavors of love",
+  "refined meetings",
+  "drinks and conversations",
+  "in search of authentic love",
+  "open to new experiences",
+];
+
 function generateSetOfUsers() {
   for (let i = 0; i < 100; i++) {
     const random = Math.floor(Math.random() * 10);
@@ -99,15 +117,39 @@ function generateSetOfUsers() {
     const sexual_preference = random % 2 == 0 ? "male" : "female";
     const password = bcrypt.hashSync(faker.string.alphanumeric(), 10);
     const description = faker.string.alphanumeric(200);
-    const rate_fame = 1500;
+    const rate_fame = Math.floor(Math.random() * (1800 - 1200 + 1) + 1200);
     const age = Math.floor(Math.random() * (50 - 18) + 18);
     const profile_picture = faker.internet.avatar();
     const valided = true;
     let gps_position = gps[Math.floor(Math.random() * gps.length)];
     let position = `(${gps_position.x}, ${gps_position.y})`;
     const city = faker.location.city();
-    const tag = ["gastronomy", "cinephile", "travel", "cook", "sql lover"];
-    const params = [uuidv4(), username, email, firstName, gender, beverage, sexual_preference, lastName, password, description, rate_fame, position, profile_picture, valided, age, city, tag];
+    const tags = [
+      "gastronomy",
+      "cinephile",
+      "travel",
+      Math.random() * (tagsList.length - 1),
+      "sql lover",
+    ];
+    const params = [
+      uuidv4(),
+      username,
+      email,
+      firstName,
+      gender,
+      beverage,
+      sexual_preference,
+      lastName,
+      password,
+      description,
+      rate_fame,
+      position,
+      profile_picture,
+      valided,
+      age,
+      city,
+      tags,
+    ];
     generateUser(params)
       .then(() => console.log(`fake user ${i} inserted ✅`))
       .catch((error) => console.error(error));

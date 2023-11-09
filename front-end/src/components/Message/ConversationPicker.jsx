@@ -14,35 +14,44 @@ const ConversationPicker = () => {
 
   const { status, data } = useQuery({
     queryKey: ["conversations"],
-    queryFn: getConversations
+    queryFn: getConversations,
   });
 
   if (status === "error") {
     conversations = [];
   }
 
-  let conversations = data?.result?.rows?.map(conversation => (
-    <Conversation
-      key={conversation.conversation_id}
-      partnerId={conversation.chat_partner_id}
-      id={conversation.conversation_id}
-      firstName={conversation.chat_partner_name}
-      lastMessage={
-        conversation.last_message
-          ? conversation.last_message
-          : "Don't be shy say hi! 👋"
-      }
-      setConversationPicker={setConversationPicker}
-      setConversationId={setConversationId}
-      setConversationPartnerId={setConversationPartnerId}
-    />
-  ));
+  let conversations = [];
+  if (conversations.length > 0) {
+    conversations = data?.result?.rows?.map((conversation) => (
+      <Conversation
+        key={conversation?.conversation_id}
+        partnerId={conversation?.chat_partner_id}
+        id={conversation?.conversation_id}
+        firstName={conversation?.chat_partner_name}
+        lastMessage={
+          conversation?.last_message
+            ? conversation?.last_message
+            : "Don't be shy say hi! 👋"
+        }
+        setConversationPicker={setConversationPicker}
+        setConversationId={setConversationId}
+        setConversationPartnerId={setConversationPartnerId}
+      />
+    ));
+  } else {
+    conversations = (
+      <div className="no-conversations body">
+        Dont be shy go back and match some people!
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (status === "success") {
-      setConversationPartnerId(data?.result.rows[0].chat_partner_id);
+      setConversationPartnerId(data?.result.rows[0]?.chat_partner_id);
     }
-  }, [data?.result.rows, status]);
+  }, [data?.result?.rows, status]);
 
   return (
     <section>

@@ -1,5 +1,3 @@
-const { error } = require("./response");
-
 function isNotEmptyButNaN(param) {
   if (param !== "" && (isNaN(param) || !isFinite(param))) {
     return true;
@@ -8,21 +6,28 @@ function isNotEmptyButNaN(param) {
 }
 
 function searchValidation(searchParams) {
-  // TODO implement tags
   if (searchParams.action !== "" && searchParams.action !== "search") {
-    return error("Invalid action criteria");
+    return "Invalid action criteria";
   }
 
   if (isNotEmptyButNaN(searchParams.age)) {
-    return error("Invalid age criteria");
+    return "Invalid age criteria";
   }
 
   if (isNotEmptyButNaN(searchParams.location)) {
-    return error("Invalid location criteria");
+    return "Invalid location criteria";
   }
 
   if (isNotEmptyButNaN(searchParams.fame)) {
-    return error("Invalid fame rating criteria");
+    return "Invalid fame rating criteria";
+  }
+  if (
+    searchParams.action === "search" &&
+    searchParams.fame === "" &&
+    searchParams.age === "" &&
+    searchParams.location === ""
+  ) {
+    return "Empty search criteria";
   }
   return "ok";
 }

@@ -1,20 +1,22 @@
 exports.success = (result) => {
   return {
-    status: 'success',
+    code: 200,
+    status: "success",
     result: result,
   };
-}
+};
 
 exports.error = (message) => {
   return {
-    status: 'error',
+    code: 400,
+    status: "error",
     message: message,
-  }
-}
+  };
+};
 
 exports.isErr = (err) => {
   return err instanceof Error;
-}
+};
 
 exports.checkAndChange = (obj) => {
   if (this.isErr(obj)) {
@@ -22,4 +24,4 @@ exports.checkAndChange = (obj) => {
   } else {
     return this.success(obj);
   }
-}
+};
