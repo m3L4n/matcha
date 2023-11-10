@@ -77,7 +77,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
       if (isError.authorized == false) {
         setTriggerReload(true);
+        return;
       }
+      notify("success", "your position has been updated");
     },
   });
   const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow, {
@@ -86,7 +88,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
       if (isError.authorized == false) {
         setTriggerReload(true);
+        return;
       }
+      notify("success", "your position has been updated");
     },
   });
   const mutationBlockUser = useMutation(fetchBlockUser, {
@@ -306,7 +310,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       notify("error", "this locality doesnt exist");
       return;
     }
-
+    notify("success", "your position has been updated");
     setInfoProfil({ ...infoProfile, ["city"]: `${result.features[0]?.properties?.city}, ${result.features[0]?.properties.postcode}`, ["position"]: { x: result.center[1], y: result.center[0] } });
   };
 

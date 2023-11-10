@@ -29,12 +29,6 @@ function socket_broadcast(io) {
       }
     });
 
-    // socket.on("response_connected", async (data) => {
-    //   const result = await socketController.userIsConnected(data.userId);
-    //   socket.emit("isConnect", { ...result });
-    // });
-
-    // when use trigger the button likety
     socket.on("userLike", async (msg) => {
       const like = msg.like ? true : false;
       try {
@@ -44,7 +38,6 @@ function socket_broadcast(io) {
         return err.message;
       }
     });
-    // the notificatins not seen
     socket.on("notifications", async function (data) {
       try {
         const notif = await notificationsController.findNotifByNoneView(data.userId);
