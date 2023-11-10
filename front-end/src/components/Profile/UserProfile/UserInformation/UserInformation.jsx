@@ -47,9 +47,16 @@ export default function UserInformation({
       if (elem instanceof File) {
         preview = URL.createObjectURL(elem);
       }
-      return <img alt="main" name="profile_picture" id="profile-picture" src={preview} className="profile-picture" />;
+      return (
+        <img
+          alt="main"
+          name="profile_picture"
+          id="profile-picture"
+          src={preview}
+          className="profile-picture"
+        />
+      );
     };
-    console.log(relationship);
     return (
       <div className="container__profile-picture">
         {ShowPreviewImage(profilPicture)}
@@ -58,12 +65,26 @@ export default function UserInformation({
             <label htmlFor="file-ip-1" className="profile-picture__label">
               <CiEdit size={16} />
             </label>
-            <input type="file" id="file-ip-1" name="profil_picture" className="input-file" accept="image/*" onChange={HandleChangeProfilePicture} disabled={ourProfile ? false : true} />
+            <input
+              type="file"
+              id="file-ip-1"
+              name="profil_picture"
+              className="input-file"
+              accept="image/*"
+              onChange={HandleChangeProfilePicture}
+              disabled={ourProfile ? false : true}
+            />
           </>
         ) : (
           (!relationship.blocked || relationship.blocked == null) && (
             <div className="profile-picture__like">
-              <LikeButton id={userInformation.id ? userInformation.id : ""} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like} />
+              <LikeButton
+                id={userInformation.id ? userInformation.id : ""}
+                width={"3rem"}
+                height={"3rem"}
+                sizeIcon={16}
+                likeProps={relationship.like}
+              />
             </div>
           )
         )}
@@ -74,19 +95,23 @@ export default function UserInformation({
     return (
       <div className="container-information-not-profile">
         <p className="body-highlight">
-          {userInformation.firstname} {userInformation.lastname}, {userInformation.age} years
+          {userInformation.firstname} {userInformation.lastname},{" "}
+          {userInformation.age} years
         </p>
         <p>{relationship.match && " there is a match <3"}</p>
         <p>{relationship.userLike && "user like you"}</p>
         <div className="information-line-row">
           <span className="row-information">
-            <p className="body-highlight">gender : </p> <span className="body"> {userInformation.gender}</span>
+            <p className="body-highlight">gender : </p>{" "}
+            <span className="body"> {userInformation.gender}</span>
           </span>
           <span className="row-information">
-            <p className="body-highlight">preference : </p> <span className="body"> {userInformation.sexual_preference}</span>
+            <p className="body-highlight">preference : </p>{" "}
+            <span className="body"> {userInformation.sexual_preference}</span>
           </span>
           <span className="row-information">
-            <p className="body-highlight">favorite beverage : </p> <span className="body"> {userInformation.beverage}</span>
+            <p className="body-highlight">favorite beverage : </p>{" "}
+            <span className="body"> {userInformation.beverage}</span>
           </span>
         </div>
         <div className="container-user-tags">
@@ -104,16 +129,25 @@ export default function UserInformation({
         </div>
         <span className="container-button-action">
           {!relationship.blocked ? (
-            <button onClick={() => blockUser(true)} className="button-action-user body">
+            <button
+              onClick={() => blockUser(true)}
+              className="button-action-user body"
+            >
               {" "}
               block this user
             </button>
           ) : (
-            <button onClick={() => blockUser(false)} className="button-action-user body">
+            <button
+              onClick={() => blockUser(false)}
+              className="button-action-user body"
+            >
               unblock this user
             </button>
           )}
-          <button className="button-action-user body" onClick={reportAsFakeAccount}>
+          <button
+            className="button-action-user body"
+            onClick={reportAsFakeAccount}
+          >
             {" "}
             report as fake account
           </button>
@@ -128,27 +162,55 @@ export default function UserInformation({
         <div className="container-user-information-text">
           <h2 className="title-1"> @{userInformation.username}</h2>
           <p className="body-highlight"> {userInformation.city}</p>
-          <p className="body"> {ourProfile ? "en ligne " : connected ? "en ligne" : "deconnecte"}</p>
+          <p className="body">
+            {" "}
+            {ourProfile ? "en ligne " : connected ? "en ligne" : "deconnecte"}
+          </p>
         </div>
       </header>
       {!ourProfile && <InformationNotOurProfile />}
       <span>
         <p className="body">last connexion : {d2}</p>
-        <p className="body">reported as fake account : {userInformation.fake_account} times</p>
+        <p className="body">
+          reported as fake account : {userInformation.fake_account} times
+        </p>
         <p className="body"> {userInformation.rate_fame} points</p>
       </span>
 
       <div className="container-user-information-body">
         {ourProfile && (
           <>
-            <UserForm ourProfile={ourProfile} handleChange={handleChange} userInformation={userInformation} />
-            <UserLocalisation updateLocationInput={updateLocationInput} getLocation={getLocation} ourProfile={ourProfile} locationInput={locationInput} buttonUpdate={buttonUpdate} />
-            <UserTags allTags={allTags} tags={userInformation.tags} handleChange={handleChange} ourProfile={ourProfile} />
+            <UserForm
+              ourProfile={ourProfile}
+              handleChange={handleChange}
+              userInformation={userInformation}
+            />
+            <UserLocalisation
+              updateLocationInput={updateLocationInput}
+              getLocation={getLocation}
+              ourProfile={ourProfile}
+              locationInput={locationInput}
+              buttonUpdate={buttonUpdate}
+            />
+            <UserTags
+              allTags={allTags}
+              tags={userInformation.tags}
+              handleChange={handleChange}
+              ourProfile={ourProfile}
+            />
           </>
         )}
 
-        <UserDescription userInformation={userInformation} handleChange={handleChange} ourProfile={ourProfile} />
-        <UserPictures pictureDescription={pictureDescription} ourProfile={ourProfile} updatePictures={updatePictures} />
+        <UserDescription
+          userInformation={userInformation}
+          handleChange={handleChange}
+          ourProfile={ourProfile}
+        />
+        <UserPictures
+          pictureDescription={pictureDescription}
+          ourProfile={ourProfile}
+          updatePictures={updatePictures}
+        />
       </div>
     </div>
   );

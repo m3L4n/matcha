@@ -2,9 +2,12 @@ import React from "react";
 import "./UserPictures.scoped.css";
 import { checkMymeType } from "components/Global/checkMymeType";
 import { notify } from "components/Global/toast-notify";
-export default function UserPictures({ pictureDescription, ourProfile, updatePictures }) {
+export default function UserPictures({
+  pictureDescription,
+  ourProfile,
+  updatePictures,
+}) {
   function handleMultipleFile(event) {
-    console.log(event, event.target.files, pictureDescription);
     if (event.target.files.length == 0) {
       return;
     }
@@ -46,7 +49,11 @@ export default function UserPictures({ pictureDescription, ourProfile, updatePic
     return (
       <div className="container-picture__picture">
         {ourProfile && (
-          <button className="picture-delete title-1" onClick={deleteImage} value={index}>
+          <button
+            className="picture-delete title-1"
+            onClick={deleteImage}
+            value={index}
+          >
             X
           </button>
         )}
@@ -61,12 +68,22 @@ export default function UserPictures({ pictureDescription, ourProfile, updatePic
           <label htmlFor="image-description" className="title-1">
             upload your photo
           </label>
-          <input type="file" id="image-description" accept="image/*" disabled={ourProfile ? false : true} onChange={handleMultipleFile} />
+          <input
+            type="file"
+            id="image-description"
+            accept="image/*"
+            disabled={ourProfile ? false : true}
+            onChange={handleMultipleFile}
+          />
         </>
       )}
       <div id="body-picture-list" className="container-picture">
         {pictureDescription?.map((elem, index) => {
-          return <React.Fragment key={index}>{ShowImage(elem, index)}</React.Fragment>;
+          return (
+            <React.Fragment key={index}>
+              {ShowImage(elem, index)}
+            </React.Fragment>
+          );
         })}
       </div>
     </div>

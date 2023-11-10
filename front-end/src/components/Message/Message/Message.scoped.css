@@ -31,11 +31,12 @@
 }
 
 .message-received {
+  text-align: right;
   background-color: var(--primary-light);
 }
 
 .message-sended {
-  text-align: right;
+  text-align: left;
   margin-left: 2em;
   background-color: var(--primary-dark);
 }

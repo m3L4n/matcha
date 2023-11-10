@@ -13,10 +13,10 @@ const checkDatabaseConnection = async () => {
   while (retries) {
     try {
       await pool.query("SELECT NOW()");
-      console.log("Base de données prête");
+      console.log("Database ready");
       return;
     } catch (err) {
-      console.error("Erreur lors de la connexion à la base de données:", err);
+      console.error("Error: When connecting to database", err);
       retries--;
       await new Promise((res) => setTimeout(res, 2000));
     }

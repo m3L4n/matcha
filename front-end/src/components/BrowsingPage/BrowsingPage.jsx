@@ -118,7 +118,6 @@ export default function BrowsingPage() {
         toFilter = toFilter.filter(
           (user) => user.rate_fame >= minFame && user.rate_fame <= maxFame,
         );
-        console.log(toFilter.map((user) => console.log(user.rate_fame)));
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
