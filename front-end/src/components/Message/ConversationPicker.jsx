@@ -15,10 +15,10 @@ const ConversationPicker = () => {
 
   const { status, data } = useQuery({
     queryKey: ["conversations"],
-    queryFn: getConversations,
+    queryFn: getConversations
   });
 
-  let conversations = data?.result?.rows?.map((conversation) => (
+  let conversations = data?.result?.rows?.map(conversation => (
     <Conversation
       key={conversation?.conversation_id}
       partnerId={conversation?.chat_partner_id}

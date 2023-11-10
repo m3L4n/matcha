@@ -1,4 +1,6 @@
-const { notificationsController } = require("../controller/notificationsController");
+const {
+  notificationsController,
+} = require("../controller/notificationsController");
 const { socketController } = require("./socketController/socketController");
 const { MessageModel } = require("../models/MessageModel");
 const { MatchModel } = require("../models/MatchModel");
@@ -20,8 +22,15 @@ function socket_broadcast(io) {
       try {
         if (data.userId != null && data.currentUserId != null) {
           if (!data.ourProfile) {
-            await notificationsController.createNotification(data.userId, data.currentUserId, "view", "view");
-            socket.broadcast.emit("alert-new-notif", { userReciver: data.userId });
+            await notificationsController.createNotification(
+              data.userId,
+              data.currentUserId,
+              "view",
+              "view",
+            );
+            socket.broadcast.emit("alert-new-notif", {
+              userReciver: data.userId,
+            });
           }
         }
       } catch (err) {
@@ -39,7 +48,13 @@ function socket_broadcast(io) {
       const like = msg.like ? true : false;
 
       try {
-        await notificationsController.createNotification(msg.userId, msg.currentUserId, `${like ? "like" : "unlike"}  your profile`, "like", msg.like);
+        await notificationsController.createNotification(
+          msg.userId,
+          msg.currentUserId,
+          `${like ? "like" : "unlike"}  your profile`,
+          "like",
+          msg.like,
+        );
         socket.broadcast.emit("alert-new-notif", { userReciver: msg.userId });
       } catch (err) {
         return err.message;
@@ -48,8 +63,13 @@ function socket_broadcast(io) {
     // the notificatins not seen
     socket.on("notifications", async function (data) {
       try {
-        const notif = await notificationsController.findNotifByNoneView(data.userId);
-        socket.emit("number-notif-not-seen", { data: notif.data, number: notif.number });
+        const notif = await notificationsController.findNotifByNoneView(
+          data.userId,
+        );
+        socket.emit("number-notif-not-seen", {
+          data: notif.data,
+          number: notif.number,
+        });
       } catch (err) {
         return err.message;
       }
@@ -80,9 +100,19 @@ function socket_broadcast(io) {
 
     socket.on("message_sended", async (message) => {
       try {
-        const response = await MessageModel.createMessage(message.idUserRequester, message.idUserReceiver, message.messageContent, message.conversationId);
+        const response = await MessageModel.createMessage(
+          message.idUserRequester,
+          message.idUserReceiver,
+          message.messageContent,
+          message.conversationId,
+        );
+        await notificationsController.createNotification(
+          message.idUserReceiver,
+          message.idUserRequester,
+          "You got a new message!",
+          "messages",
+        );
         io.emit("receive_message", response.rows[0]);
-        await notificationsController.createNotification(message.idUserRequester, message.idUserReceiver, "You got a new message!", "messages");
         return response.rows;
       } catch (e) {
         return e.message;
