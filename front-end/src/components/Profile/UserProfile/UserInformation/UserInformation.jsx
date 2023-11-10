@@ -49,7 +49,7 @@ export default function UserInformation({
       }
       return <img alt="main" name="profile_picture" id="profile-picture" src={preview} className="profile-picture" />;
     };
-
+    console.log(relationship);
     return (
       <div className="container__profile-picture">
         {ShowPreviewImage(profilPicture)}
@@ -63,7 +63,7 @@ export default function UserInformation({
         ) : (
           (!relationship.blocked || relationship.blocked == null) && (
             <div className="profile-picture__like">
-              <LikeButton id={userInformation.id ? userInformation.id : ""} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like ? true : false} />
+              <LikeButton id={userInformation.id ? userInformation.id : ""} width={"3rem"} height={"3rem"} sizeIcon={16} likeProps={relationship.like} />
             </div>
           )
         )}

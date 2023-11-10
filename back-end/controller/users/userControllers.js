@@ -50,6 +50,28 @@ class UserController {
       return true;
     }
   };
+  static #checkInput = async ({ beverage, gender, sexual_preference, firstname, lastname, age, tags, description }) => {
+    if (firstname.length == 0 || !(firstname instanceof String) || lastname.length == 0 || !(lastname instanceof String) || description.length == 0 || !(description instanceof String)) {
+      return false;
+    }
+    if (!["male", "female", "other"].includes(gender) || !["coffee", "matcha"].includes(beverage) || !["male", "female", "both"].includes(sexual_preference)) {
+      return false;
+    }
+    if (!(age instanceof Number) || age < 18) {
+      return false;
+    }
+    if (!(tags instanceof Array)) {
+      return false;
+    }
+    return true;
+  };
+  static #checkFileb64 = (filename) => {
+    const fileStart = filename.slice(0, 22);
+    if (fileStart === "data:image/jpeg;base64,") {
+      return true;
+    }
+    return false;
+  };
 
   static signup = async (req, res, needValidation = false) => {
     const { username, firstName, lastName, email, password } = req.body;
@@ -321,8 +343,10 @@ class UserController {
         const base64String = buffer.toString("base64");
         const dataURL = `data:image/jpeg;base64,${base64String}`;
         picturesArray.push(dataURL);
-      } else {
-        picturesArray.push(file);
+      } else if (file instanceof String) {
+        if (this.#checkFileb64(file)) {
+          picturesArray.push(file);
+        }
       }
     }
     res.json(checkAndChange(await UserModel.uploadImageInDB("pictures", picturesArray, id)));
@@ -333,11 +357,20 @@ class UserController {
     const userInfo = req.body;
     const { id } = req.authUser;
     userInfo.id = id;
+
     const isUniqueEmail = await this.#checkUniqueEmailNotOur(userInfo.email, id);
     if (!isUniqueEmail) {
       return res.status(400).json({
         status: 400,
         msg: "Email has to be unique, you need to put another email",
+      });
+    }
+    console.log(userInfo);
+    const isInputSafe = this.#checkInput({ ...userInfo });
+    if (!isInputSafe) {
+      return res.status(400).json({
+        status: 400,
+        msg: "the input that you fill has incorect info can you retry with good arguments",
       });
     }
     const result = await UserModel.updateAllInformation(userInfo);

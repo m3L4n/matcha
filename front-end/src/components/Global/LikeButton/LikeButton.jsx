@@ -8,6 +8,7 @@ import { queryClient } from "src/main";
 
 const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = false }) => {
   const [like, setLike] = useState(false);
+  const [trigger, setTrigger] = useState(likeProps);
   // const [changeState, setChangeState] = useState(false);
   const { user } = useAuth();
 
@@ -23,7 +24,7 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = fals
 
   useEffect(() => {
     setLike(likeProps);
-  }, [likeProps]);
+  }, [trigger]);
 
   const toggleLike = async (event, id) => {
     event.stopPropagation();
@@ -43,7 +44,8 @@ const LikeButton = ({ id, width = 0, height = 0, sizeIcon = 32, likeProps = fals
     }
     queryClient.invalidateQueries({ queryKey: ["relation"] });
     // queryClient.invalidateQueries({ queryKey: ["id"] });
-    socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like, currentLike: like,  });
+    socket.emit("userLike", { userId: id, currentUserId: user.id, like: !like, currentLike: like });
+    setTrigger(likeProps);
     setLike(!like);
   };
 

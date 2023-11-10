@@ -124,6 +124,9 @@
   background-color: var(--primary-light);
   border-color: #fff;
 }
+.navbar-notif {
+  position: relative;
+}
 .notifications-indicator {
   position: absolute;
   background-color: #fa3e3e;

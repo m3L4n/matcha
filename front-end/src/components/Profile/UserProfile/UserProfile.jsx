@@ -77,7 +77,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
       if (isError.authorized == false) {
         setTriggerReload(true);
+        return;
       }
+      notify("success", "your position has been updated");
     },
   });
   const mutationLocalisationNoneKnow = useMutation(fetchLocalisationiWithoutKnow, {
@@ -86,7 +88,9 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
 
       if (isError.authorized == false) {
         setTriggerReload(true);
+        return;
       }
+      notify("success", "your position has been updated");
     },
   });
   const mutationBlockUser = useMutation(fetchBlockUser, {
@@ -244,6 +248,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   }
 
   const updatePictures = (arrayPicture) => {
+    console.log("arrayPicture", arrayPicture);
     setPicturesDescription(arrayPicture);
   };
 
@@ -269,8 +274,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       infoProfile.tags.length < 5 ||
       infoProfile.description.length == 0 ||
       !infoProfile.city ||
-      !infoProfile.position ||
-      infoProfile.rate_fame < 0
+      !infoProfile.position
     ) {
       notify("error", "you cant save you profile you need to fill all the input");
       return;
@@ -306,7 +310,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       notify("error", "this locality doesnt exist");
       return;
     }
-
+    notify("success", "your position has been updated");
     setInfoProfil({ ...infoProfile, ["city"]: `${result.features[0]?.properties?.city}, ${result.features[0]?.properties.postcode}`, ["position"]: { x: result.center[1], y: result.center[0] } });
   };
 

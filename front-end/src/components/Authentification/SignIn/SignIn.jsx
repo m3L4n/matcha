@@ -14,6 +14,7 @@ export default function SignIn() {
   });
 
   function handleChange(event) {
+    event.preventDefault();
     setUser({ ...user, [event.target.name]: event.target.value });
   }
 
@@ -67,18 +68,20 @@ export default function SignIn() {
           </div>
         </header>
         <hr className="hr" />
-        <div className="container-form">
-          <label className="label body" htmlFor="username">
-            {" "}
-            Username
-          </label>
-          <input className="input" name="username" id="username" autoComplete="given-name" type="text" value={user.username} onChange={handleChange} />
-          <label className="label body" htmlFor="password">
-            {" "}
-            password
-          </label>
-          <input className="input" name="password" id="password" type="password" value={user.password} onChange={handleChange} />
-        </div>
+        <form>
+          <div className="container-form">
+            <label className="label body" htmlFor="username">
+              {" "}
+              Username
+            </label>
+            <input className="input" name="username" id="username" autoComplete="given-name" type="text" value={user.username} onChange={handleChange} />
+            <label className="label body" htmlFor="password">
+              {" "}
+              password
+            </label>
+            <input className="input" name="password" id="password" autoComplete="current-password" type="password" value={user.password} onChange={handleChange} />
+          </div>
+        </form>
         <button className="button-submit title-1" onClick={signIn}>
           {" "}
           Signin
