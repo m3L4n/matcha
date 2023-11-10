@@ -4,7 +4,7 @@ import { checkMymeType } from "components/Global/checkMymeType";
 import { notify } from "components/Global/toast-notify";
 export default function UserPictures({ pictureDescription, ourProfile, updatePictures }) {
   function handleMultipleFile(event) {
-    console.log(event);
+    console.log(event, event.target.files, pictureDescription);
     if (event.target.files.length == 0) {
       return;
     }

@@ -37,7 +37,6 @@ function socket_broadcast(io) {
     // when use trigger the button likety
     socket.on("userLike", async (msg) => {
       const like = msg.like ? true : false;
-
       try {
         await notificationsController.createNotification(msg.userId, msg.currentUserId, `${like ? "like" : "unlike"}  your profile`, "like", msg.like);
         socket.broadcast.emit("alert-new-notif", { userReciver: msg.userId });
