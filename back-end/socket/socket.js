@@ -79,9 +79,10 @@ function socket_broadcast(io) {
 
     socket.on("message_sended", async (message) => {
       try {
+        console.log(message);
         const response = await MessageModel.createMessage(message.idUserRequester, message.idUserReceiver, message.messageContent, message.conversationId);
         io.emit("receive_message", response.rows[0]);
-        await notificationsController.createNotification(message.idUserRequester, message.idUserReceiver, "You got a new message!", "messages");
+        await notificationsController.createNotification(message.idUserReceiver, message.idUserRequester, "You got a new message!", "messages");
         return response.rows;
       } catch (e) {
         return e.message;

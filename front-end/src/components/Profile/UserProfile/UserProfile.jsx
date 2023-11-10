@@ -244,6 +244,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
   }
 
   const updatePictures = (arrayPicture) => {
+    console.log("arrayPicture", arrayPicture);
     setPicturesDescription(arrayPicture);
   };
 
@@ -269,8 +270,7 @@ export default function UserProfile({ allTags, userInformation, ourProfile, rela
       infoProfile.tags.length < 5 ||
       infoProfile.description.length == 0 ||
       !infoProfile.city ||
-      !infoProfile.position ||
-      infoProfile.rate_fame < 0
+      !infoProfile.position
     ) {
       notify("error", "you cant save you profile you need to fill all the input");
       return;

@@ -15,7 +15,7 @@ class notificationsController {
     try {
       // await sleep(1000);
 
-      const relationship = await MatchModel.getRelationShip(id_requester, id_receiver);
+      const relationship = await MatchModel.getRelationShip(id_receiver, id_requester);
       console.log(relationship);
       if (relationship.blocked == true || relationship.isReceiverBlockRequester == true) {
         return {};
