@@ -1,4 +1,5 @@
 const db = require("../db/db");
+const { error } = require("../modules/response");
 
 class MatchModel {
   static #updateElo(idPlayer, idOpponent, actual_outcome = 1) {
@@ -200,11 +201,24 @@ class MatchModel {
                 )
                   .then(() => {
                     db.query(
-                      "INSERT INTO conversations(id_user_1, id_user_2)\
-                      VALUES($1, $2) RETURNING *",
-                      [receiverId, requesterId]
+                      "SELECT id_user_1 FROM conversations WHERE id_user_1 = $1",
+                      [requesterId],
                     )
-                      .then((result) => next(result))
+                      .then((result) => {
+                        if (result.rowCount === 0) {
+                          db.query(
+                            "INSERT INTO conversations(id_user_1, id_user_2)\
+                              VALUES ($1, $2)\
+                              ON CONFLICT \
+                              DO NOTHING \
+                              RETURNING *",
+                            [receiverId, requesterId],
+                          )
+                            .then((result) => next(result))
+                            .catch((error) => next(error));
+                        }
+                        next(result);
+                      })
                       .catch((error) => next(error));
                   })
                   .catch((error) => next(error));
@@ -235,9 +249,14 @@ class MatchModel {
           this.#updateElo(receiverId, requesterId, 0)
             .then(() => {
               if (result.rowCount > 0) {
+                console.log("Ok relation trouver");
                 if (result.rows[0].like) {
                   const { id_requester, id_receiver } = result.rows[0];
-                  if (id_requester == requesterId && id_receiver == receiverId) {
+                  if (
+                    (id_requester == requesterId &&
+                      id_receiver == receiverId) ||
+                    (id_requester == receiverId && id_receiver == requesterId)
+                  ) {
                     db.query(
                       'UPDATE match\
                         SET "like" = false,\

@@ -156,7 +156,10 @@ async function insertTags(client) {
     "open to new experiences",
   ];
   for (const tag of arrayTags) {
-    await client.query(`INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`, [tag]);
+    await client.query(
+      `INSERT INTO tags (tag_name) VALUES ($1) ON CONFLICT (tag_name) DO NOTHING`,
+      [tag],
+    );
   }
 }
 async function createTableNotifications(client) {
@@ -179,7 +182,8 @@ async function createTableConversations(client) {
     id UUID DEFAULT uuid_generate_v4(),
     id_user_1 UUID REFERENCES users(id) ON DELETE SET NULL,
     id_user_2 UUID REFERENCES users(id) ON DELETE SET NULL,
-    PRIMARY KEY (id)
+    UNIQUE (id_user_1, id_user_2),
+    PRIMARY KEY(id)
      );
      `);
 }
