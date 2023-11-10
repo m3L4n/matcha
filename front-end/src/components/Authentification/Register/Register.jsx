@@ -141,7 +141,7 @@ export default function Register() {
             {" "}
             password
           </label>
-          <input className="input" name="password" id="password" type="password" onChange={handleFormSignIn} value={user.password} />
+          <input className="input" name="password" id="password" type="password" autoComplete="current-password" onChange={handleFormSignIn} value={user.password} />
         </form>
         <button className="button-submit title-1" onClick={creationOfUser}>
           {" "}

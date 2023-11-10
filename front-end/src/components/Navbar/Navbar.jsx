@@ -26,11 +26,10 @@ export default function Navbar() {
     });
   };
   useEffect(() => {
-    const intervalId = setInterval(isUserReceiveNotif, 5000);
+    const intervalId = setInterval(isUserReceiveNotif, 3000);
     return () => {
       clearInterval(intervalId);
-      socket.off("number-notif-not-seen", () => {
-      });
+      socket.off("number-notif-not-seen", () => {});
     };
   }, [user]);
 
@@ -41,7 +40,7 @@ export default function Navbar() {
     await disconnect();
     setTriggerReload(true);
     setUserAskDisconnect(true);
-    localStorage.setItem('theme', "light-theme");
+    localStorage.setItem("theme", "light-theme");
     // navigate("/");
   };
 

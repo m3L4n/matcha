@@ -3,7 +3,6 @@ const { MatchModel } = require("../models/MatchModel");
 
 class MatchController {
   static create = async (req, res) => {
-    // to do empecher de liker si block
     const requesterId = req.authUser.id;
     const receiverId = req.body.receiverId;
     const relationship = await MatchModel.getRelationShip(requesterId, receiverId);
@@ -38,9 +37,8 @@ class MatchController {
       const match = await MatchModel.getRelationShip(requesterId, receiverId);
       return res.status(200).json({ status: 200, result: { ...match } });
     } catch (error) {
-      return res.status(404).json({status:404, msg: "cant get relationship"})
+      return res.status(404).json({ status: 404, msg: "cant get relationship" });
     }
-    res.json(checkAndChange(match));
   };
 }
 
