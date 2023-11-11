@@ -87,6 +87,7 @@ export default function Register() {
         }
         if (response.status == 201) {
           notify("success", "your account is created, please verify your email");
+          navigate("/login");
         }
         return response.json();
       })
