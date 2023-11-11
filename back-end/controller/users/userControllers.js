@@ -1,8 +1,6 @@
 const { sendingMail } = require("../../mailing/mailing");
 const { checkAndChange } = require("../../modules/response.js");
-const {
-  sendingEmailVerification,
-} = require("../../mailing/sendEmailVerification");
+const { sendingEmailVerification } = require("../../mailing/sendEmailVerification");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -52,31 +50,11 @@ class UserController {
       return true;
     }
   };
-  static #checkInput = async ({
-    beverage,
-    gender,
-    sexual_preference,
-    firstname,
-    lastname,
-    age,
-    tags,
-    description,
-  }) => {
-    if (
-      firstname.length == 0 ||
-      !(firstname instanceof String) ||
-      lastname.length == 0 ||
-      !(lastname instanceof String) ||
-      description.length == 0 ||
-      !(description instanceof String)
-    ) {
+  static #checkInput = async ({ beverage, gender, sexual_preference, firstname, lastname, age, tags, description }) => {
+    if (firstname.length == 0 || !(firstname instanceof String) || lastname.length == 0 || !(lastname instanceof String) || description.length == 0 || !(description instanceof String)) {
       return false;
     }
-    if (
-      !["male", "female", "other"].includes(gender) ||
-      !["coffee", "matcha"].includes(beverage) ||
-      !["male", "female", "both"].includes(sexual_preference)
-    ) {
+    if (!["male", "female", "other"].includes(gender) || !["coffee", "matcha"].includes(beverage) || !["male", "female", "both"].includes(sexual_preference)) {
       return false;
     }
     if (!(age instanceof Number) || age < 18) {
@@ -97,23 +75,15 @@ class UserController {
 
   static signup = async (req, res, needValidation = false) => {
     const { username, firstName, lastName, email, password } = req.body;
-    if (
-      !this.#checkEMail(email) ||
-      !this.#checkPassword(password) ||
-      !this.#checkUsername(username)
-    ) {
+    if (!this.#checkEMail(email) || !this.#checkPassword(password) || !this.#checkUsername(username)) {
       return res.status(400).json({ status: 400, msg: "parameter non valid" });
     }
     const isUniqueUsername = await this.#checkUniqueUsername(username);
     const isUniqueEmail = await this.#checkUniqueEmail(email);
     if (!isUniqueUsername) {
-      return res
-        .status(400)
-        .json({ status: 400, msg: "username need to be unique" });
+      return res.status(400).json({ status: 400, msg: "username need to be unique" });
     } else if (!isUniqueEmail) {
-      return res
-        .status(400)
-        .json({ status: 400, msg: "email need to be unique" });
+      return res.status(400).json({ status: 400, msg: "email need to be unique" });
     }
     try {
       const valided = false;
@@ -131,22 +101,14 @@ class UserController {
       if (user) {
         const emailSend = await sendingEmailVerification(username); // throw error if doesn't work
         if (emailSend) {
-          return res
-            .status(201)
-            .json({ status: 201, msg: "users successfully create" });
+          return res.status(201).json({ status: 201, msg: "users successfully create" });
         } else {
-          return res
-            .status(404)
-            .json({ status: 404, msg: "token not created" });
+          return res.status(404).json({ status: 404, msg: "token not created" });
         }
       }
-      return res
-        .status(404)
-        .json({ status: 404, msg: "users doesn't can be created " });
+      return res.status(404).json({ status: 404, msg: "users doesn't can be created " });
     } catch (error) {
-      return res
-        .status(error.status)
-        .json({ status: error.status, msg: error.msg });
+      return res.status(error.status).json({ status: error.status, msg: error.msg });
     }
   };
 
@@ -160,13 +122,9 @@ class UserController {
         if (isSame) {
           const verified = user.valided;
           if (verified) {
-            const token = jwt.sign(
-              { id: user.id, username: user.username },
-              process.env.JWT_SECRET,
-              {
-                expiresIn: 1 * 24 * 60 * 60 * 1000,
-              },
-            );
+            const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
+              expiresIn: 1 * 24 * 60 * 60 * 1000,
+            });
             return res
               .cookie("jwt", token, {
                 httpOnly: true,
@@ -176,14 +134,10 @@ class UserController {
               .status(201)
               .send({ status: 201, userId: user.id, access_token: token });
           } else {
-            return res
-              .status(401)
-              .json({ status: 401, msg: "user not verified" });
+            return res.status(401).json({ status: 401, msg: "user not verified" });
           }
         } else {
-          return res
-            .status(403)
-            .json({ status: 403, msg: "username and password doesn't match" });
+          return res.status(403).json({ status: 403, msg: "username and password doesn't match" });
         }
       } else {
         return res.status(403).json({ status: 403, msg: "user doesn't exist" });
@@ -210,7 +164,14 @@ class UserController {
     }
   };
 
-  static disconnectUser = async (_, res) => {
+  static disconnectUser = async (req, res) => {
+    const { id } = req.authUser;
+    try {
+      const result = await UserModel.handleDisconnected(id);
+      console.log(result);
+    } catch (erro) {
+      console.log(erro);
+    }
     res
       .clearCookie("jwt", {
         maxAge: -1000,
@@ -258,9 +219,7 @@ class UserController {
               msg: "email cant be verified now, please retry later",
             });
           } else {
-            return res
-              .status(200)
-              .send("Your account has been successfully verified");
+            return res.status(200).redirect("http://localhost:3000/login");
           }
         }
       }
@@ -274,15 +233,11 @@ class UserController {
     try {
       const token = sendingEmailVerification(username);
       if (!token) {
-        return res
-          .status(400)
-          .json({ status: 400, msg: "email not in the db" });
+        return res.status(400).json({ status: 400, msg: "email not in the db" });
       }
       return res.status(200).json({ status: 200, msg: "email resend" });
     } catch (error) {
-      return res
-        .status(404)
-        .json({ status: 404, msg: "can't send email, please write us" });
+      return res.status(404).json({ status: 404, msg: "can't send email, please write us" });
     }
   };
 
@@ -377,15 +332,9 @@ class UserController {
       const buffer = Buffer.from(file.buffer);
       const base64String = buffer.toString("base64");
       const dataURL = `data:image/jpeg;base64,${base64String}`;
-      return res.json(
-        checkAndChange(
-          await UserModel.uploadImageInDB("profile_picture", dataURL, id),
-        ),
-      );
+      return res.json(checkAndChange(await UserModel.uploadImageInDB("profile_picture", dataURL, id)));
     }
-    return res
-      .status(204)
-      .json({ status: 204, msg: "profil picture unchanged, no change" });
+    return res.status(204).json({ status: 204, msg: "profil picture unchanged, no change" });
   };
 
   static updatePictureDescription = async (req, res) => {
@@ -407,11 +356,7 @@ class UserController {
         }
       }
     }
-    res.json(
-      checkAndChange(
-        await UserModel.uploadImageInDB("pictures", picturesArray, id),
-      ),
-    );
+    res.json(checkAndChange(await UserModel.uploadImageInDB("pictures", picturesArray, id)));
   };
 
   /**  GET INFO PROFIL FOR USER PROFIL */
@@ -420,10 +365,7 @@ class UserController {
     const { id } = req.authUser;
     userInfo.id = id;
 
-    const isUniqueEmail = await this.#checkUniqueEmailNotOur(
-      userInfo.email,
-      id,
-    );
+    const isUniqueEmail = await this.#checkUniqueEmailNotOur(userInfo.email, id);
     if (!isUniqueEmail) {
       return res.status(400).json({
         status: 400,
@@ -444,10 +386,7 @@ class UserController {
   static getAllInfoUser = async (req, res) => {
     const { id } = req.authUser;
     const idReceiver = req.params.id;
-    const infomartionsUser = await UserModel.getAllInformationUser(
-      id,
-      idReceiver,
-    );
+    const infomartionsUser = await UserModel.getAllInformationUser(id, idReceiver);
     res.json(checkAndChange(infomartionsUser));
   };
   /** REPORT AS FAKE ACCOUNT */

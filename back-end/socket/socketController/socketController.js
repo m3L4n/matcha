@@ -6,9 +6,8 @@ class socketController {
   static login = async (idUser, idSocket) => {
     try {
       const result = await socketModel.create(idSocket, idUser);
-      await UserModel.handleConnected(idUser, "true");
     } catch (error) {
-      return error.message
+      return error.message;
     }
   };
 
@@ -19,11 +18,12 @@ class socketController {
         id_user: "",
       };
       socket = await socketModel.findByIdsocket(idSocket);
-      await UserModel.handleConnected(socket.id_user, "false");
+      // const result = await UserModel.handleDisconnected(socket.id_user, "false");
+      // console.log(result);
       await socketModel.deletebySocketId(idSocket);
       return socket.id_user;
     } catch (error) {
-      return error.msg
+      return error.msg;
     }
   };
 
@@ -32,7 +32,7 @@ class socketController {
       const result = await UserModel.isUserConnected(idUser);
       return result;
     } catch (error) {
-      return error.message
+      return error.message;
     }
   };
 
