@@ -144,3 +144,10 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: transparent;
 }
+.leaflet-container {
+  width: 50vw;
+  margin: auto;
+  margin-top: 5rem;
+  min-width: 300px;
+  height: 500px;
+}
