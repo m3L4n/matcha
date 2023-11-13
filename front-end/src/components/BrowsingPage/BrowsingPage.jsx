@@ -6,6 +6,7 @@ import getMatches from "./fetchMatches";
 import { useQuery } from "@tanstack/react-query";
 import { notify } from "../Global/toast-notify";
 import { useAuth } from "src/Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function isNotEmptyButNaN(param) {
   if (param !== "" && (isNaN(param) || !isFinite(param))) {
@@ -15,6 +16,7 @@ function isNotEmptyButNaN(param) {
 }
 
 export default function BrowsingPage() {
+  const navigate = useNavigate();
   const [requestParams, setRequestParams] = useState({
     action: "",
     age: "",
@@ -48,9 +50,7 @@ export default function BrowsingPage() {
     let distLong = longB - longA;
     let distLat = latB - latA;
 
-    let a =
-      Math.pow(Math.sin(distLat / 2), 2) +
-      Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(distLong / 2), 2);
+    let a = Math.pow(Math.sin(distLat / 2), 2) + Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(distLong / 2), 2);
 
     let c = 2 * Math.asin(Math.sqrt(a));
 
@@ -66,17 +66,9 @@ export default function BrowsingPage() {
       }
     } else if (filterParams.sortBy === "location") {
       if (filterParams.sortOption === "ascending") {
-        toSort.sort(
-          (a, b) =>
-            distanceBetweenTwoPoints(a.position, currentUser.position) -
-            distanceBetweenTwoPoints(b.position, currentUser.position),
-        );
+        toSort.sort((a, b) => distanceBetweenTwoPoints(a.position, currentUser.position) - distanceBetweenTwoPoints(b.position, currentUser.position));
       } else {
-        toSort.sort(
-          (a, b) =>
-            distanceBetweenTwoPoints(b.position, currentUser.position) -
-            distanceBetweenTwoPoints(a.position, currentUser.position),
-        );
+        toSort.sort((a, b) => distanceBetweenTwoPoints(b.position, currentUser.position) - distanceBetweenTwoPoints(a.position, currentUser.position));
       }
     } else if (filterParams.sortBy === "fame") {
       if (filterParams.sortOption === "ascending") {
@@ -108,40 +100,26 @@ export default function BrowsingPage() {
         let minAge = currentUserAge - ageGap;
         minAge = minAge < 18 ? 18 : minAge;
         const maxAge = currentUserAge + ageGap;
-        toFilter = toFilter.filter(
-          (user) => Number(user.age) >= minAge && Number(user.age) <= maxAge,
-        );
+        toFilter = toFilter.filter((user) => Number(user.age) >= minAge && Number(user.age) <= maxAge);
       }
       if (filterParams.fameGap !== "") {
         const minFame = currentUser.rate_fame - Number(filterParams.fameGap);
         const maxFame = currentUser.rate_fame + Number(filterParams.fameGap);
-        toFilter = toFilter.filter(
-          (user) => user.rate_fame >= minFame && user.rate_fame <= maxFame,
-        );
+        toFilter = toFilter.filter((user) => user.rate_fame >= minFame && user.rate_fame <= maxFame);
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
-        toFilter = toFilter.filter(
-          (user) =>
-            distanceBetweenTwoPoints(currentUser.position, user.position) <
-            locationGap,
-        );
+        toFilter = toFilter.filter((user) => distanceBetweenTwoPoints(currentUser.position, user.position) < locationGap);
       }
       if (filterParams.commongTags !== "") {
         const commonTags = Number(filterParams.commongTags);
-        toFilter = toFilter.filter(
-          (user) => user.common_tags.length >= commonTags,
-        );
+        toFilter = toFilter.filter((user) => user.common_tags.length >= commonTags);
       }
     }
     return toFilter;
   };
 
-  const {
-    status,
-    refetch,
-    data: users,
-  } = useQuery({
+  const { status, refetch, data: users } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
     retry: true,
@@ -162,9 +140,7 @@ export default function BrowsingPage() {
         sortMatches(filterMatches(users))
           .map((user) => ({
             ...user,
-            common_tags: user.common_tags.filter(
-              (value, index) => user.common_tags.indexOf(value) === index,
-            ),
+            common_tags: user.common_tags.filter((value, index) => user.common_tags.indexOf(value) === index),
           }))
           .filter((match) => match.common_tags.length > 1);
       setMatches(filterAndSort(users?.result ?? []));
@@ -203,29 +179,24 @@ export default function BrowsingPage() {
       </div>
     );
   }
-
+  function handleMapUser() {
+    navigate("/maps", { state: { data: sortMatches(filterMatches(matches)) } });
+  }
   return status === "success" ? (
     <>
       <header className="title">
         <h1 className="header-title header">Matcha</h1>
       </header>
-      <SearchBar
-        requestParams={requestParams}
-        setRequestParams={setRequestParams}
-        setFilterParams={setFilterParams}
-      />
+      <SearchBar requestParams={requestParams} setRequestParams={setRequestParams} setFilterParams={setFilterParams} />
+      <div className="container-button-maps">
+        <button onClick={handleMapUser} className="button-maps body">
+          {" "}
+          See map of user
+        </button>
+      </div>
       <section className="matches">
         {sortMatches(filterMatches(matches)).map((user) => {
-          return (
-            <Card
-              key={user.id}
-              id={user.id}
-              username={user.username}
-              age={user.age}
-              profilePicture={user.profile_picture}
-              city={user.city}
-            />
-          );
+          return <Card key={user.id} id={user.id} username={user.username} age={user.age} profilePicture={user.profile_picture} city={user.city} />;
         })}
       </section>
     </>

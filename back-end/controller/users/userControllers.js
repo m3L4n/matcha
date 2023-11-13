@@ -168,7 +168,6 @@ class UserController {
     const { id } = req.authUser;
     try {
       const result = await UserModel.handleDisconnected(id);
-      console.log(result);
     } catch (erro) {
       console.log(erro);
     }
