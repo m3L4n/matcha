@@ -66,6 +66,7 @@ header img {
   align-items: center;
   gap: 1em;
   color: var(--primary-light);
+  margin-left: 8%;
 }
 
 .search-form--input {
@@ -81,11 +82,6 @@ header img {
 }
 
 @media (min-width: 1260px) {
-  .search-form {
-    position: relative;
-    top: 4em;
-  }
-
   .search-from--send {
     margin-right: 1em;
     cursor: pointer;

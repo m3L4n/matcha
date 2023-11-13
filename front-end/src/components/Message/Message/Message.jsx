@@ -85,7 +85,7 @@ export default function Message({
           );
         })}
       </section>
-      <form className="search-form">
+      <form className="search-form" onSubmit={event => event.preventDefault()}>
         <input
           value={messageContent}
           className="search-form--input"
@@ -93,6 +93,11 @@ export default function Message({
           name="send-message"
           id="send-message"
           onChange={e => setMessageContent(e.target.value)}
+          onKeyDown={e => {
+            if (e.code == "Enter") {
+              sendMessage();
+            }
+          }}
         />
         <PiPaperPlaneRightFill
           className="search-from--send"
