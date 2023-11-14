@@ -14,6 +14,7 @@ import Notification from "components/Notifications/Notification";
 import ViewHistory from "src/components/ViewHistory/ViewHistory";
 import Horoscope from "src/components/Horoscope/Horoscope";
 import BlockView from "src/components/BlockView/BlockView";
+import MapUser from "src/components/MapUser/MapUser";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Notification />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/maps",
+        element: (
+          <PrivateRoute>
+            <MapUser />
           </PrivateRoute>
         ),
       },

@@ -1,0 +1,36 @@
+.leaflet-container {
+  height: 100vh;
+}
+.container-header {
+  text-align: center;
+}
+.header-text {
+  color: var(--primary-light);
+}
+.info-popup {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.info-popup img {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: auto;
+  border-radius: 50%;
+}
+
+.button-go-profile {
+  border: none;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--primary-light);
+  background-color: transparent;
+  color: var(--primary-light);
+  transition: all ease 0.3s;
+  padding: 0.2em;
+}
+
+.button-go-profile:hover {
+  color: black;
+  border-bottom: 1px solid black;
+}
