@@ -25,7 +25,8 @@ function searchValidation(searchParams) {
     searchParams.action === "search" &&
     searchParams.fame === "" &&
     searchParams.age === "" &&
-    searchParams.location === ""
+    searchParams.location === "" &&
+    searchParams.tags === ""
   ) {
     return "Empty search criteria";
   }
