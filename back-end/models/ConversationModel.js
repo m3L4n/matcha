@@ -31,6 +31,36 @@ class ConversationModel {
         .catch((error) => next(error));
     });
   };
+
+  /**
+   * Delete conversation with all it messages
+   * @param {string} requesterId
+   * @param {string} receiverId
+   * @returns {Promise}
+   */
+  static delete = (requesterId, receiverId) => {
+    return new Promise((next) => {
+      db.query(
+        "DELETE FROM conversations\
+        WHERE (id_user_1 = $1 AND id_user_2 = $2)\
+        OR (id_user_1 = $2 AND id_user_2 = $1)\
+        RETURNING id",
+        [requesterId, receiverId],
+      )
+        .then((result) => {
+          const { id: conversationId } = result.rows[0];
+          db.query(
+            "DELETE FROM messages\
+          WHERE id_conversation = $1\
+          RETURNING *",
+            [conversationId],
+          )
+            .then((result) => next(result))
+            .catch((error) => next(error));
+        })
+        .catch((error) => next(error));
+    });
+  };
 }
 
 module.exports = {

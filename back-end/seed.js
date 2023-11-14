@@ -217,7 +217,7 @@ const adminParams = [
   position,
   faker.internet.avatar(),
   true,
-  24,
+  18,
   "Paris",
   [
     "gastronomy",
@@ -229,3 +229,31 @@ const adminParams = [
 ];
 
 generateUser(adminParams).then(() => console.log("fake admin inserted"));
+
+const manouilleParams = [
+  uuidv4(),
+  "manouille",
+  "manouille@gmail.com",
+  "matcha",
+  "female",
+  "matcha",
+  "male",
+  "admin",
+  bcrypt.hashSync("sakura", 10),
+  "Hello world!",
+  1500,
+  position,
+  faker.internet.avatar(),
+  true,
+  18,
+  "Paris",
+  [
+    "gastronomy",
+    "cinephile",
+    "travel",
+    tagsList[Math.floor(Math.random() * tagsList.length)],
+    "sql lover",
+  ],
+];
+
+generateUser(manouilleParams).then(() => console.log("fake admin inserted"));
