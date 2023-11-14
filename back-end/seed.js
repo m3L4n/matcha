@@ -146,7 +146,7 @@ let tagsList = [
 ];
 
 function generateSetOfUsers() {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 500; i++) {
     const random = Math.floor(Math.random() * 10);
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
@@ -191,7 +191,7 @@ function generateSetOfUsers() {
       tags,
     ];
     generateUser(params)
-      .then(() => console.log(`fake user ${i} inserted ✅`))
+      .then(() => console.log(`fake user ${i + 1} inserted ✅`))
       .catch((error) => console.error(error));
   }
 }

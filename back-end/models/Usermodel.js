@@ -55,7 +55,7 @@ class UserModel {
       }
       return emailData.rows[0];
     } catch (err) {
-      throw error;
+      throw err;
     }
   };
   static findbyIwithouthPassword = async (paramToSearch, valueToCompare) => {
