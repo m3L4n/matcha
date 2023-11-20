@@ -156,6 +156,7 @@ export default function BrowsingPage() {
 
   useEffect(() => {
     if (status === "success") {
+      console.log(users?.result ?? []);
       const filterAndSort = users =>
         sortMatches(filterMatches(users))
           .map(user => ({
@@ -164,7 +165,10 @@ export default function BrowsingPage() {
               (value, index) => user.common_tags.indexOf(value) === index
             )
           }))
-          .filter(match => match.common_tags.length > 1);
+          .filter(
+            match =>
+              match.common_tags.length > 1 || requestParams.action === "search"
+          );
       setMatches(filterAndSort(users?.result ?? []));
     }
   }, [status, users]);

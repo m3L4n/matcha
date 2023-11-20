@@ -31,7 +31,7 @@
 }
 
 .message-received {
-  text-align: right;
+  text-align: left;
   background-color: var(--primary-light);
 }
 
