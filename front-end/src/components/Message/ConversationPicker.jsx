@@ -15,7 +15,9 @@ const ConversationPicker = () => {
 
   const { status, data } = useQuery({
     queryKey: ["conversations"],
-    queryFn: getConversations
+    queryFn: getConversations,
+    staleTime: 10000,
+    cacheTime: 1000
   });
 
   let conversations = data?.result?.rows?.map(conversation => (

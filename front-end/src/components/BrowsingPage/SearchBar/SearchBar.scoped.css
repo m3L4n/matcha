@@ -94,3 +94,11 @@ button[type="submit"]:hover {
 .filter:hover {
   color: var(--primary-dark);
 }
+
+.reset-button {
+  margin-left: 1em;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--primary-light);
+  padding: .5em 1em;
+}

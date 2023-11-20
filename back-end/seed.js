@@ -200,6 +200,8 @@ let gps_position = gps[Math.floor(Math.random() * gps.length)];
 let position = `(${gps_position.x}, ${gps_position.y})`;
 let adminUuid = uuidv4();
 
+generateSetOfUsers();
+
 const adminParams = [
   adminUuid,
   "matchadmin",
@@ -215,10 +217,43 @@ const adminParams = [
   position,
   faker.internet.avatar(),
   true,
-  24,
+  18,
   "Paris",
-  ["gastronomy", "cinephile", "travel", "piercing", "sql lover"],
+  [
+    "gastronomy",
+    "cinephile",
+    "travel",
+    tagsList[Math.floor(Math.random() * tagsList.length)],
+    "sql lover",
+  ],
 ];
 
-generateSetOfUsers();
 generateUser(adminParams).then(() => console.log("fake admin inserted"));
+
+const manouilleParams = [
+  uuidv4(),
+  "manouille",
+  "manouille@gmail.com",
+  "matcha",
+  "female",
+  "matcha",
+  "male",
+  "admin",
+  bcrypt.hashSync("sakura", 10),
+  "Hello world!",
+  1500,
+  position,
+  faker.internet.avatar(),
+  true,
+  18,
+  "Paris",
+  [
+    "gastronomy",
+    "cinephile",
+    "travel",
+    tagsList[Math.floor(Math.random() * tagsList.length)],
+    "sql lover",
+  ],
+];
+
+generateUser(manouilleParams).then(() => console.log("fake admin inserted"));

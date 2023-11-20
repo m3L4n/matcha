@@ -5,7 +5,11 @@ import "./SearchBar.scoped.css";
 import FilterModal from "./FilterModal/FilterModal";
 import PropTypes from "prop-types";
 
-export default function SearchBar({ requestParams, setRequestParams, setFilterParams }) {
+export default function SearchBar({
+  requestParams,
+  setRequestParams,
+  setFilterParams
+}) {
   const [filter, setFilter] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState("");
 
@@ -16,16 +20,18 @@ export default function SearchBar({ requestParams, setRequestParams, setFilterPa
   return (
     <nav className="searchForm">
       <form
-        onSubmit={(e) => {
+        onSubmit={e => {
           e.preventDefault();
           const formData = new FormData(e.target);
           const criteria = formData.get("searchBy");
           const searchParams = {
             action: "search",
             age: criteria === "ageGap" ? searchCriteria : requestParams.age,
-            location: criteria === "location" ? searchCriteria : requestParams.location,
-            fame: criteria === "fameRating" ? searchCriteria : requestParams.fame,
-            tags: criteria === "tags" ? searchCriteria : requestParams.tags,
+            location:
+              criteria === "location" ? searchCriteria : requestParams.location,
+            fame:
+              criteria === "fameRating" ? searchCriteria : requestParams.fame,
+            tags: criteria === "tags" ? searchCriteria : requestParams.tags
           };
           setRequestParams(searchParams);
         }}
@@ -36,7 +42,7 @@ export default function SearchBar({ requestParams, setRequestParams, setFilterPa
             className="searchbar"
             placeholder="Search"
             value={searchCriteria}
-            onChange={(e) => {
+            onChange={e => {
               setSearchCriteria(e.target.value);
             }}
           />
@@ -44,13 +50,31 @@ export default function SearchBar({ requestParams, setRequestParams, setFilterPa
             <BsSearch size={16} />
           </button>
         </div>
-        <select className="searchSelect" name="searchBy" id="searchBy">
-          <option value="">Search by:</option>
-          <option value="ageGap">age gap</option>
-          <option value="fameRating">fame rating</option>
-          <option value="location">location</option>
-          <option value="tags">tags</option>
-        </select>
+        <div className="search-utilities">
+          <select className="searchSelect" name="searchBy" id="searchBy">
+            <option value="">Search by:</option>
+            <option value="ageGap">age gap</option>
+            <option value="fameRating">fame rating</option>
+            <option value="location">location</option>
+            <option value="tags">tags</option>
+          </select>
+          {requestParams.action === "search" && (
+            <button
+              className="reset-button"
+              onClick={() => {
+                setRequestParams({
+                  action: "",
+                  age: "",
+                  location: "",
+                  fame: "",
+                  tags: ""
+                });
+              }}
+            >
+              reset search
+            </button>
+          )}
+        </div>
       </form>
       <button className="filter" onClick={toggleMenu}>
         {" "}
@@ -69,6 +93,6 @@ SearchBar.propTypes = {
     age: PropTypes.string,
     location: PropTypes.string,
     game: PropTypes.string,
-    tags: PropTypes.string,
-  }).isRequired,
+    tags: PropTypes.string
+  }).isRequired
 };
