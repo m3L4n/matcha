@@ -8,8 +8,7 @@ import { ThemeContext } from "src/Context/Theme";
 import { useContext } from "react";
 
 export default function Navbar() {
-  const { setTriggerReload, user, setUserAskDisconnect } = useAuth();
-  // const navigate = useNavigate();
+  const { setTriggerReload, user, setUserAskDisconnect, setUser } = useAuth();
   let pages = ["match", "profile", "message", "notifications", "view history", "horoscope", "blockView"];
   const [sidebar, setSidebar] = useState(false);
   const [numberNotif, setNumberNotif] = useState(0);
@@ -36,12 +35,14 @@ export default function Navbar() {
   const toggleSidebar = () => setSidebar(!sidebar);
   const handleDisconnect = async () => {
     const id = user.id;
-    socket.emit("listener-button-deconnection", { userId: id });
+    setUserAskDisconnect(false);
     await disconnect();
+    socket.emit("listener-button-deconnection", { userId: id });
+    setTriggerReload(false);
     setTriggerReload(true);
+    setUser({});
     setUserAskDisconnect(true);
-    localStorage.setItem("theme", "light-theme");
-    // navigate("/");
+    // localStorage.setItem("theme", "light-theme");
   };
 
   return (
