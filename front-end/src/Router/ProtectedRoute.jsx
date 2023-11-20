@@ -16,7 +16,6 @@ export function PrivateRoute({ children }) {
   }, []);
   useEffect(() => {
     if (userAskDisconnect && !authorize) {
-      console.log(user, authorize, userAskDisconnect, window.location.pathname);
       socket.disconnect();
       setUser({});
       setTriggerReload(false);

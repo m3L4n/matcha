@@ -33,9 +33,7 @@ export const AuthProvider = ({ children }) => {
   //     console.log("triger reload");
   //   }
   // }, [triggerReload]);
-  useEffect(() => {
-    console.log(authorize);
-  }, [authorize]);
+
   async function getUserConnected() {
     const option = {
       method: "GET",
