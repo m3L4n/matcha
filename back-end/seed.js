@@ -131,7 +131,6 @@ let tagsList = [
   "cook",
   "piercing",
   "tattoo",
-  "sql lover",
   "vegan",
   "wine lover",
   "cat lover",
