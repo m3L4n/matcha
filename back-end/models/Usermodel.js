@@ -203,7 +203,7 @@ class UserModel {
           const getMatchesOfAllSexes = () => {
             let query =
               "SELECT u.id, u.username, u.position, u.profile_picture, u.age, u.rate_fame, u.city, u.tags,\
-              array_cat(u.tags, $6) common_tags\
+              array_cat(u.tags, $7) common_tags\
               FROM users u\
                 WHERE u.rate_fame BETWEEN $1 AND $2\
                 AND u.age BETWEEN $3 AND $4\
@@ -216,16 +216,20 @@ class UserModel {
                   SELECT m.id_requester\
                   FROM match m\
                   WHERE m.id_receiver = $5\
-                  AND m.like = true)\
-                  AND $7::text[] <@ $6::text[]";
+                  AND m.like = true)";
+            if (searchParams.tags !== "") {
+              query += "AND $6::text[] <@ u.tags::text[]";
+            } else {
+              query += "AND $6::text[] = $7::text[]";
+            }
             return db.query(query, [
               min_fame,
               max_fame,
               min_age,
               max_age,
               currentUserId,
-              tags,
               tagsRequired,
+              tags,
             ]);
           };
 
