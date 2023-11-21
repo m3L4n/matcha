@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "src/Context/AuthContext";
 import { socket } from "src/socket/socket";
 export function PrivateRoute({ children }) {
-  const { user, loading, userAskDisconnect, setUserAskDisconnect } = useAuth();
+  const { user, loading, userAskDisconnect, authorize, setUser, setUserAskDisconnect, setTriggerReload } = useAuth();
   const navigate = useNavigate();
   const location = useLocation().pathname;
 
@@ -14,17 +14,20 @@ export function PrivateRoute({ children }) {
       // socket.disconnect();
     };
   }, []);
-
   useEffect(() => {
-    if (userAskDisconnect) {
+    if (userAskDisconnect && !authorize) {
       socket.disconnect();
-      navigate("/");
+      setUser({});
+      setTriggerReload(false);
+      setTriggerReload(true);
       setUserAskDisconnect(false);
+      navigate("/");
+      return;
     }
-    if (!loading && Object.keys(user).length == 0) {
+    if (!loading && Object.keys(user).length == 0 && !authorize) {
       navigate("/");
     }
-    if (!loading && Object.keys(user).length > 0) {
+    if (!loading && Object.keys(user).length > 0 && authorize) {
       if (!userAskDisconnect) {
         socket.emit("login-reload", { userId: user.id });
       }
@@ -35,13 +38,18 @@ export function PrivateRoute({ children }) {
         user.lastname?.length == 0 ||
         user.email?.length == 0 ||
         user.sexual_preference?.length == 0 ||
-        user.description?.length == 0 || !user.profile_picture
+        user.description?.length == 0 ||
+        !user.profile_picture
       ) {
         navigate(`/profile/${user.id}`);
       }
     }
-    // return () => {};
-  }, [loading, location, user, userAskDisconnect]);
+    return () => {
+      if (userAskDisconnect) {
+        setUserAskDisconnect(false);
+      }
+    };
+  }, [loading, location, user, userAskDisconnect, authorize]);
 
   useEffect(() => {}, []);
 

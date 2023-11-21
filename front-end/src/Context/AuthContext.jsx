@@ -7,6 +7,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
+  const [authorize, setAuthorized] = useState(false);
   const [triggerReload, setTriggerReload] = useState(false);
   const [userAskDisconnect, setUserAskDisconnect] = useState(false);
   // const { data, isLoading, refetch, isInitialLoading, isSuccess, isError } = useQuery(["user"], async function () {
@@ -45,6 +46,8 @@ export const AuthProvider = ({ children }) => {
       .then((response) => {
         if (response.status == 401) {
           setUser({});
+          setAuthorized(false);
+          setUserAskDisconnect(false);
           return {};
         }
         return response.json();
@@ -52,6 +55,7 @@ export const AuthProvider = ({ children }) => {
       .then((data) => {
         if (Object.keys(data)?.length > 0) {
           setUser(data);
+          setAuthorized(true);
         }
         setLoading(false);
         setTriggerReload(false);
@@ -63,5 +67,7 @@ export const AuthProvider = ({ children }) => {
       });
   }
 
-  return <AuthContext.Provider value={{ user, loading, setLoading, setUserAskDisconnect, userAskDisconnect, setUser, setTriggerReload }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, loading, setLoading, setAuthorized, authorize, setUserAskDisconnect, userAskDisconnect, setUser, setTriggerReload }}>{children}</AuthContext.Provider>
+  );
 };

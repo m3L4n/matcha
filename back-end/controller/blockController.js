@@ -1,4 +1,5 @@
 const { BlockModel } = require("../models/BlockModel");
+const { ConversationModel } = require("../models/ConversationModel");
 const { MatchModel } = require("../models/MatchModel");
 const { checkAndChange } = require("../modules/response");
 const { MatchController } = require("./matchController");
@@ -10,6 +11,9 @@ class BlockController {
     try {
       const update = await BlockModel.update(id_receiver, id, block);
       const updateRateFame = await MatchModel.blockUser(id, id_receiver, block);
+      if (block) {
+        await ConversationModel.delete(id, id_receiver);
+      }
       return res.status(200).json({ status: 200, result: "success" });
     } catch (error) {
       return res.status(404).json({ status: 404, message: "error you cant block this user" });
