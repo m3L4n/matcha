@@ -12,20 +12,21 @@ import { useState, useEffect } from "react";
 export default function Message({
   setConversationPicker,
   chatPartnerId,
-  conversationId
+  conversationId,
 }) {
   const [messageContent, setMessageContent] = useState("");
   const [messages, setMessages] = useState([]);
 
   const query = useQuery({
     queryKey: ["chatPartner", chatPartnerId],
-    queryFn: getChatPartner
+    queryFn: getChatPartner,
+    enabled: chatPartnerId !== undefined,
   });
 
   const { status, data, refetch } = useQuery({
     queryKey: ["currentMessages", conversationId],
     queryFn: getMessages,
-    enabled: false
+    enabled: false,
   });
 
   const { user: currentUser } = useAuth();
@@ -38,9 +39,9 @@ export default function Message({
 
   useEffect(() => {
     refetch();
-    socket.on("receive_message", message => {
+    socket.on("receive_message", (message) => {
       if (message.id_conversation == conversationId) {
-        setMessages(messages => messages.concat(message));
+        setMessages((messages) => messages.concat(message));
       }
     });
 
@@ -48,12 +49,12 @@ export default function Message({
   }, [conversationId]);
 
   const sendMessage = () => {
-    if (messageContent !== "") {
+    if (messageContent !== "" && conversationId && chatPartnerId) {
       socket.emit("message_sended", {
         idUserRequester: currentUser.id,
         idUserReceiver: chatPartnerId,
         conversationId: conversationId,
-        messageContent: messageContent
+        messageContent: messageContent,
       });
     }
     setMessageContent("");
@@ -70,7 +71,7 @@ export default function Message({
         <p className="body">{query?.data?.username}</p>
       </header>
       <section className="messages">
-        {messages?.map(message => {
+        {messages?.map((message) => {
           return (
             <p
               key={message.id}
@@ -85,15 +86,18 @@ export default function Message({
           );
         })}
       </section>
-      <form className="search-form" onSubmit={event => event.preventDefault()}>
+      <form
+        className="search-form"
+        onSubmit={(event) => event.preventDefault()}
+      >
         <input
           value={messageContent}
           className="search-form--input"
           type="text"
           name="send-message"
           id="send-message"
-          onChange={e => setMessageContent(e.target.value)}
-          onKeyDown={e => {
+          onChange={(e) => setMessageContent(e.target.value)}
+          onKeyDown={(e) => {
             if (e.code == "Enter") {
               sendMessage();
             }
@@ -111,6 +115,6 @@ export default function Message({
 
 Message.propTypes = {
   setConversationPicker: PropTypes.func.isRequired,
-  chatPartnerId: PropTypes.string.isRequired,
-  conversationId: PropTypes.string.isRequired
+  chatPartnerId: PropTypes.string,
+  conversationId: PropTypes.string.isRequired,
 };

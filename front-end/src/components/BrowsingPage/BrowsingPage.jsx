@@ -22,7 +22,7 @@ export default function BrowsingPage() {
     age: "",
     location: "",
     fame: "",
-    tags: ""
+    tags: "",
   });
 
   const [filterParams, setFilterParams] = useState({
@@ -31,7 +31,7 @@ export default function BrowsingPage() {
     fameGap: "",
     commongTags: "",
     sortBy: "",
-    sortOption: "ascending"
+    sortOption: "ascending",
   });
 
   const [matches, setMatches] = useState([]);
@@ -59,7 +59,7 @@ export default function BrowsingPage() {
     return c * EARTH_RADIUS * 1000;
   }
 
-  const sortMatches = toSort => {
+  const sortMatches = (toSort) => {
     if (filterParams.sortBy === "age") {
       if (filterParams.sortOption === "ascending") {
         toSort.sort((a, b) => a.age - b.age);
@@ -71,13 +71,13 @@ export default function BrowsingPage() {
         toSort.sort(
           (a, b) =>
             distanceBetweenTwoPoints(a.position, currentUser.position) -
-            distanceBetweenTwoPoints(b.position, currentUser.position)
+            distanceBetweenTwoPoints(b.position, currentUser.position),
         );
       } else {
         toSort.sort(
           (a, b) =>
             distanceBetweenTwoPoints(b.position, currentUser.position) -
-            distanceBetweenTwoPoints(a.position, currentUser.position)
+            distanceBetweenTwoPoints(a.position, currentUser.position),
         );
       }
     } else if (filterParams.sortBy === "fame") {
@@ -96,7 +96,7 @@ export default function BrowsingPage() {
     return toSort;
   };
 
-  const filterMatches = toFilter => {
+  const filterMatches = (toFilter) => {
     if (isNotEmptyButNaN(filterParams.ageGap)) {
       notify("Error: invalid age gap filter parameters");
     } else if (isNotEmptyButNaN(filterParams.fameGap)) {
@@ -111,63 +111,66 @@ export default function BrowsingPage() {
         minAge = minAge < 18 ? 18 : minAge;
         const maxAge = currentUserAge + ageGap;
         toFilter = toFilter.filter(
-          user => Number(user.age) >= minAge && Number(user.age) <= maxAge
+          (user) => Number(user.age) >= minAge && Number(user.age) <= maxAge,
         );
       }
       if (filterParams.fameGap !== "") {
         const minFame = currentUser.rate_fame - Number(filterParams.fameGap);
         const maxFame = currentUser.rate_fame + Number(filterParams.fameGap);
         toFilter = toFilter.filter(
-          user => user.rate_fame >= minFame && user.rate_fame <= maxFame
+          (user) => user.rate_fame >= minFame && user.rate_fame <= maxFame,
         );
       }
       if (filterParams.locationGap !== "") {
         const locationGap = Number(filterParams.locationGap);
         toFilter = toFilter.filter(
-          user =>
+          (user) =>
             distanceBetweenTwoPoints(currentUser.position, user.position) <
-            locationGap
+            locationGap,
         );
       }
       if (filterParams.commongTags !== "") {
         const commonTags = Number(filterParams.commongTags);
         toFilter = toFilter.filter(
-          user => user.common_tags.length >= commonTags
+          (user) => user.common_tags.length - 1 >= commonTags,
         );
       }
     }
     return toFilter;
   };
 
-  const { status, refetch, data: users } = useQuery({
+  const {
+    status,
+    refetch,
+    data: users,
+  } = useQuery({
     queryKey: ["matches", requestParams],
     queryFn: getMatches,
     retry: true,
     staleTime: 10000,
     cacheTime: 1000,
-    onSuccess: response => {
+    onSuccess: (response) => {
       if (response?.status === "error") {
         if (response?.code === 400) {
           notify("error", response?.message);
         }
       }
-    }
+    },
   });
 
   useEffect(() => {
     if (status === "success") {
-      console.log(users?.result ?? []);
-      const filterAndSort = users =>
+      const filterAndSort = (users) =>
         sortMatches(filterMatches(users))
-          .map(user => ({
+          .map((user) => ({
             ...user,
             common_tags: user.common_tags.filter(
-              (value, index) => user.common_tags.indexOf(value) === index
-            )
+              (value, index) => user.common_tags.indexOf(value) === index,
+            ),
           }))
           .filter(
-            match =>
-              match.common_tags.length > 1 || requestParams.action === "search"
+            (match) =>
+              match.common_tags.length > 1 || requestParams.action === "search",
           );
       setMatches(filterAndSort(users?.result ?? []));
     }
@@ -185,7 +188,7 @@ export default function BrowsingPage() {
               age: "",
               location: "",
               fame: "",
-              tags: ""
+              tags: "",
             });
 
             setFilterParams({
@@ -194,7 +197,7 @@ export default function BrowsingPage() {
               fameGap: "",
               commongTags: "",
               sortBy: "",
-              sortOption: "ascending"
+              sortOption: "ascending",
             });
 
             refetch();
@@ -225,7 +228,7 @@ export default function BrowsingPage() {
         </button>
       </div>
       <section className="matches">
-        {sortMatches(filterMatches(matches)).map(user => {
+        {sortMatches(filterMatches(matches)).map((user) => {
           return (
             <Card
               key={user.id}

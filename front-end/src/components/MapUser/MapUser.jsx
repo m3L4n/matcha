@@ -27,7 +27,6 @@ export default function MapUser() {
   }, []);
   const { user } = useAuth();
   const getPositionUsers = async (allMatches) => {
-    console.log(allMatches);
     const result = allMatches?.map((elem) => {
       const obj = elem;
       obj.position = [elem.position.x, elem.position.y];
@@ -42,8 +41,15 @@ export default function MapUser() {
         <h1 className="header header-text"> MATCHAMAP</h1>
         <p className="title-1"> the map of possible match </p>
       </header>
-      <MapContainer center={[user?.position?.x, user?.position?.y]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <MapContainer
+        center={[user?.position?.x, user?.position?.y]}
+        zoom={13}
+        scrollWheelZoom={false}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
         <MarkerClusterGroup chunkedLoading>
           {matches.map((elem, index) => {
             return (
@@ -52,7 +58,10 @@ export default function MapUser() {
                   <div className="info-popup">
                     <img src={elem?.profile_picture} alt="popup-avatar" />
                     <h1> {elem?.username}</h1>
-                    <button onClick={() => navigate(`/profile/${elem?.id}`)} className="button-go-profile body">
+                    <button
+                      onClick={() => navigate(`/profile/${elem?.id}`)}
+                      className="button-go-profile body"
+                    >
                       go to profile
                     </button>
                   </div>
@@ -66,7 +75,10 @@ export default function MapUser() {
             <div className="info-popup">
               <img src={user?.profile_picture} alt="popup-avatar" />
               <h1> {user?.username}</h1>
-              <button onClick={() => navigate(`/profile/${user?.id}`)} className="button-go-profile body">
+              <button
+                onClick={() => navigate(`/profile/${user?.id}`)}
+                className="button-go-profile body"
+              >
                 go to our profile
               </button>
             </div>

@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 export default function SearchBar({
   requestParams,
   setRequestParams,
-  setFilterParams
+  setFilterParams,
 }) {
   const [filter, setFilter] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState("");
@@ -20,7 +20,7 @@ export default function SearchBar({
   return (
     <nav className="searchForm">
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target);
           const criteria = formData.get("searchBy");
@@ -31,7 +31,7 @@ export default function SearchBar({
               criteria === "location" ? searchCriteria : requestParams.location,
             fame:
               criteria === "fameRating" ? searchCriteria : requestParams.fame,
-            tags: criteria === "tags" ? searchCriteria : requestParams.tags
+            tags: criteria === "tags" ? searchCriteria : requestParams.tags,
           };
           setRequestParams(searchParams);
         }}
@@ -42,7 +42,7 @@ export default function SearchBar({
             className="searchbar"
             placeholder="Search"
             value={searchCriteria}
-            onChange={e => {
+            onChange={(e) => {
               setSearchCriteria(e.target.value);
             }}
           />
@@ -61,13 +61,14 @@ export default function SearchBar({
           {requestParams.action === "search" && (
             <button
               className="reset-button"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setRequestParams({
                   action: "",
                   age: "",
                   location: "",
                   fame: "",
-                  tags: ""
+                  tags: "",
                 });
               }}
             >
@@ -93,6 +94,6 @@ SearchBar.propTypes = {
     age: PropTypes.string,
     location: PropTypes.string,
     game: PropTypes.string,
-    tags: PropTypes.string
-  }).isRequired
+    tags: PropTypes.string,
+  }).isRequired,
 };

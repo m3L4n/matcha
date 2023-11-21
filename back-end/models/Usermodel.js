@@ -5,14 +5,25 @@ const { searchValidation } = require("../modules/formValidation");
 class UserModel {
   static createUser = async (userData) => {
     try {
-      const { id, username, firstName, lastName, email, password, valided } = userData;
-      const query = "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (username, email) DO NOTHING RETURNING *;";
-      const values = [id, username, firstName, lastName, email, password, valided];
+      const { id, username, firstName, lastName, email, password, valided } =
+        userData;
+      const query =
+        "INSERT INTO users (id, username, firstName, lastName, email, password, valided) VALUES  ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (username, email) DO NOTHING RETURNING *;";
+      const values = [
+        id,
+        username,
+        firstName,
+        lastName,
+        email,
+        password,
+        valided,
+      ];
       const newUser = await db.query(query, values);
       if (newUser.rowCount == 0) {
         const error = new Error();
         error.status = 400;
-        error.msg = "same key in the db , please change username or email, or reconnecte you ";
+        error.msg =
+          "same key in the db , please change username or email, or reconnecte you ";
         throw error;
       }
       return newUser;
@@ -105,9 +116,13 @@ class UserModel {
     const ELO_DIFFERENCE = 300;
     const AGE_DIFFERENCE = 10;
     return new Promise((next) => {
-      db.query("SELECT sexual_preference, rate_fame, position, age, tags FROM users WHERE id = $1", [currentUserId])
+      db.query(
+        "SELECT sexual_preference, rate_fame, position, age, tags FROM users WHERE id = $1",
+        [currentUserId],
+      )
         .then((result) => {
-          const { sexual_preference, rate_fame, position, age, tags } = result.rows[0];
+          const { sexual_preference, rate_fame, position, age, tags } =
+            result.rows[0];
           let min_fame = rate_fame - ELO_DIFFERENCE;
           let max_fame = rate_fame + ELO_DIFFERENCE;
           let min_age = age - AGE_DIFFERENCE < 18 ? 18 : age - AGE_DIFFERENCE;
@@ -144,7 +159,9 @@ class UserModel {
               max_fame = 42000;
             }
             if (searchParams.tags !== "") {
-              tagsRequired = searchParams.tags.split(",").filter((tag) => tag.length > 0);
+              tagsRequired = searchParams.tags
+                .split(",")
+                .filter((tag) => tag.length > 0);
             }
           }
 
@@ -163,6 +180,11 @@ class UserModel {
                   WHERE b.id_receiver = u.id AND b.blocked = true\
                 )\
                 AND u.id NOT IN (\
+                  SELECT b.id_requester\
+                  FROM block b\
+                  WHERE b.id_requester = u.id AND b.blocked = true\
+                )\
+                AND u.id NOT IN (\
                   SELECT m.id_receiver\
                   FROM match m\
                   WHERE m.id_requester = $6)\
@@ -171,7 +193,15 @@ class UserModel {
                   FROM match m\
                   WHERE m.id_receiver = $6\
                   AND m.like = true)",
-              [sexual_preference, min_fame, max_fame, min_age, max_age, currentUserId, tags]
+              [
+                sexual_preference,
+                min_fame,
+                max_fame,
+                min_age,
+                max_age,
+                currentUserId,
+                tags,
+              ],
             );
           };
 
@@ -183,6 +213,16 @@ class UserModel {
                 WHERE u.rate_fame BETWEEN $1 AND $2\
                 AND u.age BETWEEN $3 AND $4\
                 AND u.id != $5\
+                AND u.id NOT IN (\
+                  SELECT b.id_receiver\
+                  FROM block b\
+                  WHERE b.id_receiver = u.id AND b.blocked = true\
+                )\
+                AND u.id NOT IN (\
+                  SELECT b.id_requester\
+                  FROM block b\
+                  WHERE b.id_requester = u.id AND b.blocked = true\
+                )\
                 AND u.id NOT IN (\
                   SELECT m.id_receiver\
                   FROM match m\
@@ -210,11 +250,23 @@ class UserModel {
 
           const getOnlyClosePeople = (users) => {
             return users
-              .filter((user) => Math.floor(distanceBetweenTwoPoints(position, user.position) < max_distance))
-              .sort((a, b) => distanceBetweenTwoPoints(a.position, position) - distanceBetweenTwoPoints(b.position, position));
+              .filter((user) =>
+                Math.floor(
+                  distanceBetweenTwoPoints(position, user.position) <
+                    max_distance,
+                ),
+              )
+              .sort(
+                (a, b) =>
+                  distanceBetweenTwoPoints(a.position, position) -
+                  distanceBetweenTwoPoints(b.position, position),
+              );
           };
 
-          if (sexual_preference === "both" || searchParams.action === "search") {
+          if (
+            sexual_preference === "both" ||
+            searchParams.action === "search"
+          ) {
             getMatchesOfAllSexes()
               .then((result) => next(getOnlyClosePeople(result.rows)))
               .catch((err) => next(err));
@@ -227,9 +279,36 @@ class UserModel {
         .catch((err) => next(err));
     });
   };
-  static updateAllInformation = async ({ firstname, gender, age, email, lastname, sexual_preference, tags, beverage, description, position, city, id }) => {
+  static updateAllInformation = async ({
+    firstname,
+    gender,
+    age,
+    email,
+    lastname,
+    sexual_preference,
+    tags,
+    beverage,
+    description,
+    position,
+    city,
+    id,
+  }) => {
     const query = `UPDATE users SET firstname = $1, lastname = $2, gender = $3, email = $4, sexual_preference = $5, tags = $6, age = $7, beverage = $8, description = $9, position = POINT($10,$11), city = $12 WHERE id = $13`;
-    const values = [firstname, lastname, gender, email, sexual_preference, tags, age, beverage, description, position.x, position.y, city, id];
+    const values = [
+      firstname,
+      lastname,
+      gender,
+      email,
+      sexual_preference,
+      tags,
+      age,
+      beverage,
+      description,
+      position.x,
+      position.y,
+      city,
+      id,
+    ];
     return new Promise((next) => {
       db.query(query, values)
         .then((data) => {
@@ -264,7 +343,10 @@ class UserModel {
   };
   static reportAsFakeAccount = (idReceiver) => {
     return new Promise((next) => {
-      db.query(`UPDATE users SET fake_account = fake_account + 1 WHERE id = $1`, [idReceiver])
+      db.query(
+        `UPDATE users SET fake_account = fake_account + 1 WHERE id = $1`,
+        [idReceiver],
+      )
         .then((data) => {
           return next(data);
         })
@@ -273,14 +355,20 @@ class UserModel {
   };
   static handleConnected = (idUser, connected) => {
     return new Promise((next) => {
-      db.query('UPDATE users set "connected" = $1 , latest_connection = NOW()::timestamp WHERE id = $2', [connected, idUser])
+      db.query(
+        'UPDATE users set "connected" = $1 , latest_connection = NOW()::timestamp WHERE id = $2',
+        [connected, idUser],
+      )
         .then((data) => next(data))
         .catch((error) => next(error));
     });
   };
   static handleDisconnected = (idUser, connected) => {
     return new Promise((next) => {
-      db.query('UPDATE users set "connected" = false  WHERE id = $1 RETURNING *', [idUser])
+      db.query(
+        'UPDATE users set "connected" = false  WHERE id = $1 RETURNING *',
+        [idUser],
+      )
         .then((data) => {
           return next(data.rows);
         })

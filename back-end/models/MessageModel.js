@@ -32,8 +32,15 @@ class MessageModel {
   ) => {
     return new Promise((next) => {
       db.query(
-        "INSERT INTO messages(id_user_requester, id_user_receiver, content, id_conversation) \
-        VALUES ($1, $2, $3, $4) RETURNING *",
+        " WITH conversation_exists AS (\
+          SELECT 1\
+          FROM conversations\
+          WHERE id = $4\
+        )\
+        INSERT INTO messages(id_user_requester, id_user_receiver, content, id_conversation)\
+        SELECT $1, $2, $3, $4\
+        FROM conversation_exists\
+        RETURNING *",
         [idUserRequester, idUserReceiver, content, conversationId],
       )
         .then((result) => next(result))
