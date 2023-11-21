@@ -191,8 +191,12 @@ class UserModel {
                   SELECT m.id_requester\
                   FROM match m\
                   WHERE m.id_receiver = $5\
-                  AND m.like = true)\
-                  AND $6::text[] <@ u.tags::text[]";
+                  AND m.like = true)";
+            if (searchParams.tags !== "") {
+              query += "AND $6::text[] <@ u.tags::text[]";
+            } else {
+              query += "AND $6::text[] = $7::text[]";
+            }
             return db.query(query, [
               min_fame,
               max_fame,
